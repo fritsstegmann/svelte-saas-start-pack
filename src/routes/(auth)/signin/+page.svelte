@@ -25,13 +25,13 @@
 	</div>
 	<div class="mt-6">
 		<button
-			class="w-full rounded-lg border border-accent-500 bg-accent-500 py-2 text-white shadow transition-all duration-200 hover:bg-accent-400 focus:outline-none focus:ring focus:ring-accent-300"
+			class="w-full rounded-lg bg-primary-500 py-2 text-white shadow transition-all duration-200 hover:bg-primary-400 focus:outline-none focus:ring focus:ring-primary-300"
 		>
 			Sign in
 		</button>
 	</div>
 	<div class="mt-4 space-x-2 text-center">
 		<span class="dark:text-gray-300">Don't have account?</span>
-		<a class="font-bold text-accent-500 hover:text-accent-400" href="/signup">Sign up</a>
+		<a class="font-bold text-primary-500 hover:text-primary-400" href="/signup">Sign up</a>
 	</div>
 </form>

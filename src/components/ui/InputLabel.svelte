@@ -1,5 +1,5 @@
-<script lang="ts">
-	/** @var {string | undefined} id */
+<script>
+	/** @type {string | undefined} id */
 	export let id = undefined;
 </script>
 
