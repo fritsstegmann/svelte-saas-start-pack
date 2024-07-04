@@ -4,9 +4,11 @@
 </script>
 
 <form method="post">
-	<div class="mt-4 text-center text-lg dark:text-gray-300">Welcome back</div>
+	<div class="mt-4 text-center text-3xl dark:text-gray-200">Sign in</div>
+	<div class="mt-1 text-center dark:text-gray-300">Welcome back</div>
 	<div class="mt-6">
 		<TextInput
+			id="username"
 			name="username"
 			label="User name"
 			placeHolder="johndoe"
@@ -16,6 +18,7 @@
 	</div>
 	<div class="mt-6">
 		<TextInput
+			id="password"
 			name="password"
 			label="Password"
 			type="password"

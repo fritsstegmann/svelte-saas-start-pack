@@ -12,7 +12,9 @@
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "test:integration": "playwright test",
-    "test:unit": "vitest"
+    "test:unit": "vitest",
+    "generate": "drizzle-kit generate",
+    "migrate": "drizzle-kit migrate"
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
@@ -20,7 +22,9 @@
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
     "@types/eslint": "^8.56.7",
+    "@types/node": "^20.14.9",
     "autoprefixer": "^10.4.19",
+    "drizzle-kit": "^0.22.8",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-svelte": "^2.36.0",
@@ -37,5 +41,14 @@
     "vite": "^5.0.3",
     "vitest": "^1.2.0"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@lucia-auth/adapter-drizzle": "^1.0.7",
+    "@node-rs/argon2": "^1.8.3",
+    "bits-ui": "^0.21.11",
+    "drizzle-orm": "^0.31.2",
+    "lucia": "^3.2.0",
+    "postgres": "^3.4.4",
+    "zod": "^3.23.8"
+  }
 }
