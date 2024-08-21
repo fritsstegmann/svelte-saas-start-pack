@@ -19,8 +19,10 @@ export const actions: Actions = {
 					await db
 						.select()
 						.from(usersTable)
-						.where(eq(usersTable.username, formData.username.toLowerCase()))
+						.where(eq(usersTable.userName, formData.username.toLowerCase()))
 				).at(0);
+
+				console.info('existingUser', existingUser);
 
 				const validPassword = await verify(existingUser?.password ?? '', formData.password, {
 					memoryCost: 39456,
@@ -48,7 +50,8 @@ export const actions: Actions = {
 					path: '.',
 					...sessionCookie.attributes
 				});
-			} catch {
+			} catch (e) {
+				console.error(e);
 				return fail(422, {
 					errors: {
 						username: ['The credentials do not match our records']
@@ -59,7 +62,7 @@ export const actions: Actions = {
 					}
 				});
 			}
-			redirect(303, '/app');
+			redirect(303, '/');
 		}
 	)
 };

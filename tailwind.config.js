@@ -2,13 +2,14 @@ import colors from 'tailwindcss/colors';
 
 /** @type {import('tailwindcss').Config} */
 export default {
+	darkMode: 'selector',
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		extend: {
 			colors: {
-				primary: colors.cyan,
-				secondary: colors.sky,
-				accent: colors.pink,
+				primary: colors.violet,
+				secondary: colors.purple,
+				accent: colors.fuchsia,
 				gray: colors.stone
 			}
 		}

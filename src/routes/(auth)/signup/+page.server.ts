@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import validation from '$lib/server/middleware/validation';
-import { usersTable } from '$lib/server/schema';
+import { userProfilesTable, usersTable } from '$lib/server/schema';
 import { hash } from '@node-rs/argon2';
 import { redirect, type Actions } from '@sveltejs/kit';
 import z from 'zod';
@@ -24,14 +24,12 @@ export const actions: Actions = {
 				}
 			}),
 		async ({ formData }) => {
-			const data = {
-				name: formData.name,
-				username: formData.username,
-				email: formData.email,
+			const userData = {
+				userName: formData.username,
 				password: formData.password
 			};
 
-			data.password = await hash(data.password, {
+			userData.password = await hash(userData.password, {
 				// recommended minimum parameters
 				memoryCost: 39456,
 				timeCost: 6,
@@ -39,9 +37,22 @@ export const actions: Actions = {
 				parallelism: 1
 			});
 
-			await db.insert(usersTable).values(data);
+			const user = (await db.insert(usersTable).values(userData).returning()).at(0);
 
-			redirect(302, '/signin');
+			if (user) {
+				const profileData = {
+					name: formData.name,
+					email: formData.email,
+					avatar: null,
+					userId: user.id
+				};
+
+				await db.insert(userProfilesTable).values(profileData).returning();
+
+				redirect(302, '/signin');
+			}
+
+			redirect(500, '/signup');
 		}
 	)
 };

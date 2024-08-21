@@ -4,8 +4,8 @@
 </script>
 
 <form method="post">
-	<div class="mt-4 text-center text-3xl dark:text-gray-200">Sign in</div>
-	<div class="mt-1 text-center dark:text-gray-300">Welcome back</div>
+	<div class="mt-4 text-center text-2xl dark:text-gray-300">Sign in</div>
+	<div class="mt-4 text-center text dark:text-gray-300">Welcome back</div>
 	<div class="mt-6">
 		<TextInput
 			id="username"

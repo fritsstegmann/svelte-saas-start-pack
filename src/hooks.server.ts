@@ -1,6 +1,9 @@
 // src/hooks.server.ts
+import { db } from '$lib/server/db';
 import { lucia } from '$lib/server/lucia';
+import { usersTable } from '$lib/server/schema';
 import type { Handle } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const sessionId = event.cookies.get(lucia.sessionCookieName);
@@ -26,7 +29,19 @@ export const handle: Handle = async ({ event, resolve }) => {
 			...sessionCookie.attributes
 		});
 	}
-	event.locals.user = user;
+
+	if (user) {
+		const dbUser =
+			(
+				await db
+					.select({ id: usersTable.id, userName: usersTable.userName })
+					.from(usersTable)
+					.where(eq(usersTable.id, user.id))
+			).pop() ?? null;
+
+		event.locals.user = dbUser;
+	}
+
 	event.locals.session = session;
 	return resolve(event);
 };

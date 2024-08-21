@@ -40,7 +40,7 @@
 		<InputLabel {id}>{label}</InputLabel>
 	{/if}
 	<div
-		class={`mt-1 flex h-10 items-center rounded-md border-2 border-gray-300 bg-gray-100 px-2 py-1 focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:placeholder-gray-500 ${clazz}`}
+		class={`mt-1 flex h-10 items-center rounded-md border-2 border-gray-300 bg-gray-100 px-2 py-1 focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-300 ${clazz}`}
 	>
 		{#if $$slots.prefix}
 			<div class="mr-2 empty:hidden">
@@ -50,6 +50,7 @@
 		<input
 			{name}
 			{id}
+			{type}
 			autocomplete="off"
 			on:input={() => {
 				if (errorBag && name && errorBag[name]) {
