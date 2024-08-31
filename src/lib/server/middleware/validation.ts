@@ -21,6 +21,9 @@ export type ExtendedAction<
 
 const validation = <T extends ZodType>(schema: T, func: ExtendedAction<T>) => {
 	return async (event: RequestEvent) => {
+
+        console.info('validation event', event);
+
 		let formData;
 		try {
 			formData = await validateFromRequest(schema, event.request);

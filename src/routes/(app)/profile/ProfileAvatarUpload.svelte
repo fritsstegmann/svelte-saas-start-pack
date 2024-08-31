@@ -3,7 +3,15 @@
     import PrimaryButton from '$components/ui/PrimaryButton.svelte';
     import SecondaryButton from '$components/ui/SecondaryButton.svelte';
 
-    export let show = false;
+    /**
+     * @type {boolean}
+     */
+    let show = $state(false);
+
+    /**
+     * @type {FileList | undefined}
+     */
+    let files = $state();
 </script>
 
 <div class="mt-12 flex flex-col items-center justify-center">
@@ -27,11 +35,49 @@
     </SecondaryButton>
 </div>
 
-<Dialog card={true} bind:show class="bg-white p-4" title="Upload avatar" teleport={true} sticky={true}>
+<Dialog card={true} bind:show class="w-72 bg-white p-4" title="Upload avatar" teleport={true} sticky={true}>
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <!-- svelte-ignore event_directive_deprecated -->
     <div
-        class="mt-4 flex h-32 w-full items-center justify-center rounded-md border-2 border-gray-400 bg-gray-300 p-4 text-gray-800">
-        Drop image here
+        on:dragover={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        }}
+        on:drop={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            files = e.dataTransfer?.files;
+        }}
+        class:border-primary-400={files}
+        class:text-primary-800={files}
+        class:bg-purple-50={files}
+        class:border-gray-400={!files}
+        class:text-gray-800={!files}
+        class:bg-gray-300={!files}
+        class="mt-4 flex h-32 w-full items-center justify-center rounded-md border-2 p-4">
+        {#if files}
+            {files[0].name}
+        {:else}
+            Drop image here
+        {/if}
     </div>
-    <input type="file" name="avatar" class="w-50 my-6 w-52" />
-    <PrimaryButton class="w-full">Upload</PrimaryButton>
+    <form method="post" action="?/uploadAvatar" enctype="multipart/form-data">
+        <input type="file" name="avatar" class="mt-6" bind:files />
+        <PrimaryButton
+            on:click={() => {
+                show = false;
+            }}
+            class="mt-6 w-full">
+            Upload
+        </PrimaryButton>
+    </form>
+    <!-- svelte-ignore event_directive_deprecated -->
+    <button
+        on:click={() => {
+            show = false;
+        }}
+        class="mt-3 w-full text-center">
+        Cancel
+    </button>
 </Dialog>
