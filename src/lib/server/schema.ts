@@ -11,17 +11,17 @@ export const usersTable = pgTable('users', {
 });
 
 export const userProfilesTable = pgTable('user_profiles', {
-    id: serial('id').primaryKey(),
-    name: text('name').notNull(),
-    email: text('email').unique().notNull(),
-    avatar: text('avatar'),
-    userId: integer('userId')
-        .notNull()
-        .references(() => usersTable.id),
-    createdAt: timestamp('createdAt').notNull().defaultNow(),
-    updatedAt: timestamp('updatedAt')
-        .defaultNow()
-        .$onUpdate(() => new Date()),
+	id: serial('id').primaryKey(),
+	name: text('name').notNull(),
+	email: text('email').unique().notNull(),
+	avatar: text('avatar'),
+	userId: integer('userId')
+		.notNull()
+		.references(() => usersTable.id),
+	createdAt: timestamp('createdAt').notNull().defaultNow(),
+	updatedAt: timestamp('updatedAt')
+		.defaultNow()
+		.$onUpdate(() => new Date())
 });
 
 export const sessionTable = pgTable('sessions', {

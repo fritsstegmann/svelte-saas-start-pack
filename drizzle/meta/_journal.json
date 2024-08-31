@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1720032258569,
-      "tag": "0000_modern_talisman",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1720071482462,
-      "tag": "0001_daffy_mister_sinister",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1720072221886,
-      "tag": "0002_colossal_metal_master",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1723653192271,
-      "tag": "0003_mighty_big_bertha",
+      "when": 1725089946698,
+      "tag": "0000_massive_pyro",
       "breakpoints": true
     },
     {
