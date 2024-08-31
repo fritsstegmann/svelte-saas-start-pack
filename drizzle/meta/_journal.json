@@ -29,6 +29,13 @@
       "when": 1723653192271,
       "tag": "0003_mighty_big_bertha",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1724289932402,
+      "tag": "0004_abnormal_mister_fear",
+      "breakpoints": true
     }
   ]
 }
