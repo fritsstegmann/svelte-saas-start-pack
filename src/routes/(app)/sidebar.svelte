@@ -1,18 +1,13 @@
 <script context="module">
-    import { browser } from '$app/environment';
+    let open = writable(true);
 
-    let open = $state(true);
     export function sideBarOpen() {
         return {
             get open() {
                 return open;
             },
             toggle() {
-                open = !open;
-
-                // if (browser) {
-                //     localStorage.setItem('sidebar:open', JSON.stringify(open));
-                // }
+                open.update((open) => !open);
             },
         };
     }
@@ -20,13 +15,14 @@
 
 <script lang="ts">
     import { quintOut } from 'svelte/easing';
+    import { writable } from 'svelte/store';
 
     import { slide } from 'svelte/transition';
 
-    let sidebar = sideBarOpen();
+    let { open } = sideBarOpen();
 </script>
 
-{#if sidebar.open}
+{#if $open}
     <aside
         transition:slide={{
             duration: 300,

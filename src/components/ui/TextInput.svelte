@@ -49,7 +49,6 @@
         <input
             {name}
             {id}
-            {type}
             autocomplete="off"
             on:input={() => {
                 if (errorBag && name && errorBag[name]) {

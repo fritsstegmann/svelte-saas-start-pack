@@ -6,12 +6,22 @@
     /**
      * @type {boolean}
      */
-    let show = $state(false);
+    let show = false;
 
     /**
      * @type {FileList | undefined}
      */
-    let files = $state();
+    let files = undefined;
+
+    $: if (files) {
+        // Note that `files` is of type `FileList`, not an Array:
+        // https://developer.mozilla.org/en-US/docs/Web/API/FileList
+        console.log(files);
+
+        for (const file of files) {
+            console.log(`${file.name}: ${file.size} bytes`);
+        }
+    }
 </script>
 
 <div class="mt-12 flex flex-col items-center justify-center">
@@ -36,8 +46,7 @@
 </div>
 
 <Dialog card={true} bind:show class="w-72 bg-white p-4" title="Upload avatar" teleport={true} sticky={true}>
-    <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <!-- svelte-ignore event_directive_deprecated -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
         on:dragover={(e) => {
             e.preventDefault();
@@ -64,15 +73,8 @@
     </div>
     <form method="post" action="?/uploadAvatar" enctype="multipart/form-data">
         <input type="file" name="avatar" class="mt-6" bind:files />
-        <PrimaryButton
-            on:click={() => {
-                show = false;
-            }}
-            class="mt-6 w-full">
-            Upload
-        </PrimaryButton>
+        <PrimaryButton class="mt-6 w-full">Upload</PrimaryButton>
     </form>
-    <!-- svelte-ignore event_directive_deprecated -->
     <button
         on:click={() => {
             show = false;
