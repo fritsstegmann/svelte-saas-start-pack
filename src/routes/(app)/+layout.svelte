@@ -6,9 +6,9 @@
 </script>
 
 <div class="flex">
-    <Sidebar />
-    <div class="flex-grow">
-        <PageHeader {data} />
+    <Sidebar profile={data.profile} />
+    <div class="h-screen flex-grow overflow-y-scroll">
+        <PageHeader />
         <div class="container mx-auto my-16">
             <div class="mx-4 lg:mx-0">
                 <slot />

@@ -8,61 +8,55 @@ import { eq } from 'drizzle-orm';
 import z from 'zod';
 
 export const actions: Actions = {
-	default: validation(
-		z.object({
-			username: z.string().min(1),
-			password: z.string().min(10)
-		}),
-		async ({ formData, cookies }) => {
-			try {
-				const existingUser = (
-					await db
-						.select()
-						.from(usersTable)
-						.where(eq(usersTable.userName, formData.username.toLowerCase()))
-				).at(0);
+    default: validation(
+        z.object({
+            username: z.string().min(1),
+            password: z.string().min(10),
+        }),
+        async ({ formData, cookies }) => {
+            try {
+                const existingUser = (
+                    await db.select().from(usersTable).where(eq(usersTable.userName, formData.username.toLowerCase()))
+                ).at(0);
 
-				console.info('existingUser', existingUser);
+                const validPassword = await verify(existingUser?.password ?? '', formData.password, {
+                    memoryCost: 39456,
+                    timeCost: 6,
+                    outputLen: 32,
+                    parallelism: 1,
+                });
 
-				const validPassword = await verify(existingUser?.password ?? '', formData.password, {
-					memoryCost: 39456,
-					timeCost: 6,
-					outputLen: 32,
-					parallelism: 1
-				});
+                if (!validPassword) {
+                    return fail(400, {
+                        message: 'Incorrect username or password',
+                    });
+                }
 
-				if (!validPassword) {
-					return fail(400, {
-						message: 'Incorrect username or password'
-					});
-				}
+                if (!existingUser) {
+                    return fail(400, {
+                        message: 'Incorrect username or password',
+                    });
+                }
 
-				if (!existingUser) {
-					return fail(400, {
-						message: 'Incorrect username or password'
-					});
-				}
+                const session = await lucia.createSession(existingUser.id, {});
+                const sessionCookie = lucia.createSessionCookie(session.id);
 
-				const session = await lucia.createSession(existingUser.id, {});
-				const sessionCookie = lucia.createSessionCookie(session.id);
-
-				cookies.set(sessionCookie.name, sessionCookie.value, {
-					path: '.',
-					...sessionCookie.attributes
-				});
-			} catch (e) {
-				console.error(e);
-				return fail(422, {
-					errors: {
-						username: ['The credentials do not match our records']
-					},
-					fields: {
-						username: formData.username,
-						password: ''
-					}
-				});
-			}
-			redirect(303, '/');
-		}
-	)
+                cookies.set(sessionCookie.name, sessionCookie.value, {
+                    path: '.',
+                    ...sessionCookie.attributes,
+                });
+            } catch {
+                return fail(422, {
+                    errors: {
+                        username: ['The credentials do not match our records'],
+                    },
+                    fields: {
+                        username: formData.username,
+                        password: '',
+                    },
+                });
+            }
+            redirect(303, '/');
+        }
+    ),
 };

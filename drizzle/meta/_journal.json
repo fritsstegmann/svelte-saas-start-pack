@@ -15,6 +15,13 @@
       "when": 1724289932402,
       "tag": "0004_abnormal_mister_fear",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1725793636473,
+      "tag": "0005_luxuriant_puff_adder",
+      "breakpoints": true
     }
   ]
 }

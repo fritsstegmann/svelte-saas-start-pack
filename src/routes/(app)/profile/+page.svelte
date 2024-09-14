@@ -1,22 +1,80 @@
 <script>
     import PrimaryButton from '$components/ui/PrimaryButton.svelte';
+    import SecondaryButton from '$components/ui/SecondaryButton.svelte';
     import TextInput from '$components/ui/TextInput.svelte';
+    import { fade } from 'svelte/transition';
     import ProfileAvatarUpload from './ProfileAvatarUpload.svelte';
+    import { quintInOut } from 'svelte/easing';
 
     export let data;
+    export let form;
 </script>
 
 <div class="mx-auto max-w-3xl">
-    <h2 class="text-2xl text-gray-600">Profile settings</h2>
+    <ProfileAvatarUpload profile={data.profile} />
 
-    <ProfileAvatarUpload />
+    {#if form?.message}
+        {#if form?.message.type == 'success'}
+            <div
+                transition:fade={{
+                    easing: quintInOut,
+                    duration: 200,
+                    delay: 0.3,
+                }}
+                class="flex items-center justify-between rounded-lg border border-green-500 bg-green-100 px-5 py-3 text-green-700 shadow">
+                <div>
+                    {form.message.message}
+                </div>
+                <button
+                    on:click={() => {
+                        form.message = undefined;
+                    }}>
+                    close
+                </button>
+            </div>
+        {/if}
+    {/if}
 
-    <div class="mt-12 space-y-4">
-        <TextInput name="name" label="Name" class="bg-white" defaultValue={data.profile?.name} />
-        <TextInput name="email" label="Email" class="bg-white" defaultValue={data.profile?.email} />
-    </div>
+    <form method="post" class="mt-12" action="?/updateProfile">
+        <legend class="text-2xl text-gray-400">Profile settings</legend>
+        <div class="mt-2 space-y-2">
+            <TextInput name="name" label="Name" class="bg-white" defaultValue={data.profile?.name} />
+            <TextInput name="email" label="Email" class="bg-white" defaultValue={data.profile?.email} />
+        </div>
 
-    <div class="mt-8">
-        <PrimaryButton>Update profile</PrimaryButton>
-    </div>
+        <div class="mt-4">
+            <PrimaryButton>Update profile</PrimaryButton>
+        </div>
+    </form>
+
+    <form method="post" class="mt-12" action="?/updatePassword">
+        <legend class="text-2xl text-gray-400">Update password</legend>
+        <div class="mt-2 space-y-2">
+            <TextInput
+                errorBag={form?.errors}
+                name="oldPassword"
+                type="password"
+                label="Old password"
+                class="bg-white"
+                defaultValue={form?.fields?.oldPassword} />
+            <TextInput
+                errorBag={form?.errors}
+                name="newPassword"
+                type="password"
+                label="Password"
+                class="bg-white"
+                defaultValue={form?.fields?.newPassword} />
+            <TextInput
+                name="confirmPassword"
+                type="password"
+                label="Confirm password"
+                class="bg-white"
+                errorBag={form?.errors}
+                defaultValue={form?.fields?.confirmPassword} />
+        </div>
+
+        <div class="mt-4">
+            <SecondaryButton>Update password</SecondaryButton>
+        </div>
+    </form>
 </div>

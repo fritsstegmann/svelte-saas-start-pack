@@ -1,5 +1,6 @@
 <script lang="ts">
     import { browser } from '$app/environment';
+    import UserAvatar from '$components/UserAvatar.svelte';
 
     export let data;
 
@@ -51,13 +52,14 @@
 
 <div class="relative">
     <button
-        class="block flex cursor-pointer items-center space-x-1 rounded-lg border border-gray-300 p-2 hover:bg-white"
+        class="flex cursor-pointer items-center space-x-1 rounded-lg border border-gray-300 p-2 hover:bg-white"
         on:click={() => {
             open = !open;
         }}>
-        <span>
-            {data.user.userName}
-        </span>
+        <div class="flex space-x-2">
+            <UserAvatar profile={data.profile} />
+            <span>{data.profile.name}</span>
+        </div>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
             <path
                 fill-rule="evenodd"
@@ -77,6 +79,5 @@
         <a href="/profile" class="block px-4 py-2 text-gray-800 hover:bg-primary-600 hover:text-gray-100">
             Profile settings
         </a>
-        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-primary-600 hover:text-gray-100">Support</a>
     </div>
 </div>
