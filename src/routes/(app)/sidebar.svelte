@@ -36,12 +36,12 @@
         }}
         class="flex min-h-screen w-80 flex-col justify-between overflow-hidden border-r border-gray-950 bg-gray-700 bg-gradient-to-b from-gray-800/65 to-gray-950 p-4 text-gray-100 transition duration-200">
         <div class="space-y-4">
-            <div class="p-8 text-center text-2xl text-gray-200">SaasKit</div>
+            <div class="p-4 text-center text-2xl text-gray-200">SaasKit</div>
             <ul class="space-y-2">
                 <li>
                     <a
                         href="/"
-                        class="flex cursor-pointer items-center space-x-2 rounded p-4 text-primary-300 hover:bg-gray-600">
+                        class="flex cursor-pointer items-center space-x-2 rounded px-2 py-3 text-primary-300 hover:bg-gray-600">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -57,25 +57,10 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-                <li class="flex cursor-pointer items-center space-x-2 rounded p-4 text-gray-300 hover:bg-gray-600">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        class="size-6">
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3" />
-                    </svg>
-                    <span>Additional page</span>
-                </li>
             </ul>
         </div>
         <div class="rounded-lg bg-gray-800 shadow">
-            <div class="flex items-center justify-between space-x-2 p-4">
+            <div class="flex items-center justify-between space-x-2 px-2 py-3">
                 <div class="flex items-center space-x-2">
                     <UserAvatar {profile} />
                     <span>Frits Stegmann</span>
@@ -106,7 +91,7 @@
                     <div>
                         <a
                             href="/profile"
-                            class="flex items-center space-x-2 overflow-hidden bg-gray-800 p-4 hover:bg-gray-700 hover:text-primary-300">
+                            class="flex items-center space-x-2 overflow-hidden bg-gray-800 px-2 py-3 hover:bg-gray-700 hover:text-primary-300">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -128,7 +113,7 @@
                     </div>
                     <form method="post" action="/signout">
                         <button
-                            class="flex w-full cursor-pointer space-x-2 rounded-b-lg p-4 text-gray-300 hover:bg-gray-700 hover:text-accent-300">
+                            class="flex w-full cursor-pointer space-x-2 rounded-b-lg px-2 py-3 text-gray-300 hover:bg-gray-700 hover:text-accent-300">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"

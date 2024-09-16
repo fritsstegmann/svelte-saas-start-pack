@@ -18,7 +18,7 @@ export function Err<E>(e: E): Result<never, E> {
     };
 }
 
-function isOk<T, E>(result: Result<T, E>) {
+export function isOk<T, E>(result: Result<T, E>) {
     if (Object.hasOwn(result, 'v')) {
         return true;
     } else {
@@ -49,6 +49,8 @@ export async function unwrap<T, E>(result: Promise<Result<T, E>>): Promise<T> {
         // @ts-ignore
         return Promise.resolve(r.v);
     } else {
-        throw new Error('Result is an error');
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        throw new Error(r.e);
     }
 }
