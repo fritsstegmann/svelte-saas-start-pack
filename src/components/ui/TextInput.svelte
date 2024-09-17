@@ -15,7 +15,7 @@
     export let type = 'text';
     /** @type {import('./ErrorBag').ErrorBag | undefined} */
     export let errorBag = undefined;
-    /** @type {string | undefined} */
+    /** @type {string | undefined | unknown} */
     export let defaultValue = undefined;
 
     /** @type {string | undefined} */
@@ -30,7 +30,7 @@
         node.type = type;
     }
 
-    if (value == undefined) {
+    if (value == undefined && typeof defaultValue == 'string') {
         value = defaultValue;
     }
 </script>

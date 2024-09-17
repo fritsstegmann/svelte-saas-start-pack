@@ -43,7 +43,8 @@
         </div>
 
         <div class="mt-4">
-            <PrimaryButton>Update profile</PrimaryButton>
+            <PrimaryButton type="submit">Update profile</PrimaryButton>
+            <SecondaryButton type="button">Verify email</SecondaryButton>
         </div>
     </form>
 

@@ -30,7 +30,7 @@ export const actions: Actions = {
 
         const v = await validate(z.object({}), request);
 
-        if (!v.success) {
+        if (!v.isOk) {
             return v.error;
         }
 
@@ -85,7 +85,7 @@ export const actions: Actions = {
             request
         );
 
-        if (v.success == false) {
+        if (v.isOk == false) {
             return v.error;
         }
 
@@ -129,7 +129,7 @@ export const actions: Actions = {
             message: {
                 type: 'success',
                 message: 'Successfully updated password',
-            },
+            } as { type: string; message: string } | undefined,
         };
     },
     updateProfile: async ({ request, locals }) => {
@@ -145,7 +145,7 @@ export const actions: Actions = {
             request
         );
 
-        if (!v.success) {
+        if (!v.isOk) {
             return v.error;
         }
 
@@ -156,5 +156,12 @@ export const actions: Actions = {
                 email: v.fields.email,
             })
             .where(eq(userProfilesTable.userId, locals.user.id));
+
+        return {
+            message: {
+                type: 'success',
+                message: 'Successfully updated profile',
+            } as { type: string; message: string } | undefined,
+        };
     },
 };

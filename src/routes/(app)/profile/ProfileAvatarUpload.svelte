@@ -14,13 +14,13 @@
     let files = undefined;
 
     /**
-     * @type {{avatar: string}}
+     * @type {{avatar: string?} | undefined}
      */
     export let profile;
 </script>
 
 <div class="my-16 flex flex-col items-center justify-center">
-    {#if profile.avatar}
+    {#if profile?.avatar}
         <img alt="profile" class="size-40 rounded-full" src={profile.avatar} />
     {:else}
         <svg

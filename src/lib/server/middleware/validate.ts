@@ -7,9 +7,9 @@ export default async function validate<T extends ZodType>(
     schema: T,
     request: Request
 ): Promise<
-    | { success: true; fields: z.infer<T>; files: Record<string, File> }
+    | { isOk: true; fields: z.infer<T>; files: Record<string, File> }
     | {
-          success: false;
+          isOk: false;
           error: import('@sveltejs/kit').ActionFailure<{
               fields: Record<string, unknown>;
               errors: Record<string, string[] | null>;
@@ -19,11 +19,11 @@ export default async function validate<T extends ZodType>(
     try {
         const { formData: fields, files } = await validateFromRequest(schema, request);
 
-        return { success: true, fields, files };
+        return { isOk: true, fields, files };
     } catch (exception) {
         if (exception instanceof FormValidationError) {
             return {
-                success: false,
+                isOk: false,
                 error: fail(422, {
                     fields: exception.fields,
                     errors: exception.errors,

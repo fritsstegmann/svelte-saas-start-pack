@@ -63,7 +63,7 @@
             <div class="flex items-center justify-between space-x-2 px-2 py-3">
                 <div class="flex items-center space-x-2">
                     <UserAvatar {profile} />
-                    <span>Frits Stegmann</span>
+                    <span>{profile.name}</span>
                 </div>
                 <button
                     on:click={() => {

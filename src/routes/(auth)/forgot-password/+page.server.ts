@@ -1,8 +1,6 @@
 import { APP_KEY } from '$env/static/private';
 
 import { v4 as uuidv4 } from 'uuid';
-import { sha512 } from '@noble/hashes/sha512';
-import { sha1 } from '@noble/hashes/sha1';
 import { add } from 'date-fns';
 import validation from '$lib/server/middleware/validation';
 import { z } from 'zod';
@@ -10,15 +8,9 @@ import { db } from '$lib/server/db';
 import { forgotPasswordTable, userProfilesTable } from '$lib/server/schema';
 import { eq } from 'drizzle-orm';
 import type { Actions } from './$types';
-import { encodeBase64Url } from 'effect/Encoding';
 import { redirect } from '@sveltejs/kit';
 import { sendMail } from '$lib/server/mail';
-
-function generateSignature(code: string): string {
-    const signature = sha1(sha512(code + APP_KEY) + code);
-
-    return encodeBase64Url(signature.toString());
-}
+import { createUrlWithSignature } from '$lib/server/urlSignature';
 
 export const actions = {
     default: validation(
@@ -46,15 +38,15 @@ export const actions = {
                 const url = `/reset-password?code=${code}&email=${email}`;
 
                 const parsedUrl = new URL(request.url);
-                const completeUrl = parsedUrl.protocol + '//' + parsedUrl.host + url;
+                let completeUrl = parsedUrl.protocol + '//' + parsedUrl.host + url;
 
-                const signature = generateSignature(completeUrl);
+                completeUrl = createUrlWithSignature(completeUrl, APP_KEY);
 
                 await sendMail(
                     'saaskit@example.com',
                     profile.email,
                     'Forgot password email',
-                    `<a href="${completeUrl + '&signature=' + signature}">Reset password</a>`
+                    `<a href="${completeUrl}">Reset password</a>`
                 );
 
                 redirect(302, '/signin');
