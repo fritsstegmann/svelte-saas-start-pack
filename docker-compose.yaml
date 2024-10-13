@@ -10,7 +10,7 @@ services:
         volumes:
             - database:/var/lib/postgresql/data
     fily:
-        image: fritsstegmann/lary:main
+        image: ghcr.io/fritsstegmann/lary:main
         ports:
             - 8333:8333
         volumes:
