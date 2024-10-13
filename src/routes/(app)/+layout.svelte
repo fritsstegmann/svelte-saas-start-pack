@@ -10,7 +10,7 @@
     <div class="h-screen flex-grow overflow-y-scroll">
         <PageHeader />
         <div class="container mx-auto my-16">
-            <div class="mx-4 lg:mx-0">
+            <div class="px-4 lg:mx-0">
                 <slot />
             </div>
         </div>

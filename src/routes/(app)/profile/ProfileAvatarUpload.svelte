@@ -73,7 +73,7 @@
     </div>
     <form method="post" action="?/uploadAvatar" enctype="multipart/form-data">
         <input type="file" name="avatar" class="mt-6" bind:files />
-        <PrimaryButton class="mt-6 w-full">Upload</PrimaryButton>
+        <PrimaryButton type="submit" class="mt-6 w-full">Upload</PrimaryButton>
     </form>
     <button
         on:click={() => {

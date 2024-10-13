@@ -63,7 +63,7 @@
             <div class="flex items-center justify-between space-x-2 px-2 py-3">
                 <div class="flex items-center space-x-2">
                     <UserAvatar {profile} />
-                    <span>{profile.name}</span>
+                    <div class="leading-none">{profile.name}</div>
                 </div>
                 <button
                     on:click={() => {

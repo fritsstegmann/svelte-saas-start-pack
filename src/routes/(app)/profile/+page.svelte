@@ -5,9 +5,15 @@
     import { fade } from 'svelte/transition';
     import ProfileAvatarUpload from './ProfileAvatarUpload.svelte';
     import { quintInOut } from 'svelte/easing';
+    import VerifyEmail from './VerifyEmail.svelte';
 
     export let data;
     export let form;
+
+    /**
+     * @type {boolean}
+     */
+    let showVerifyDialog = false;
 </script>
 
 <div class="mx-auto max-w-3xl">
@@ -44,7 +50,13 @@
 
         <div class="mt-4">
             <PrimaryButton type="submit">Update profile</PrimaryButton>
-            <SecondaryButton type="button">Verify email</SecondaryButton>
+            <SecondaryButton
+                type="button"
+                on:click={() => {
+                    showVerifyDialog = true;
+                }}>
+                Verify email
+            </SecondaryButton>
         </div>
     </form>
 
@@ -79,3 +91,5 @@
         </div>
     </form>
 </div>
+
+<VerifyEmail bind:show={showVerifyDialog} />
