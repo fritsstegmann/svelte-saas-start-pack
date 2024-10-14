@@ -10,18 +10,18 @@
 </script>
 
 <Dialog card={true} bind:show class="w-96 bg-white p-2" title="Verify email" teleport={true} sticky={true}>
-    <form method="post" action="?/uploadAvatar" enctype="multipart/form-data" class="space-y-6">
+    <form method="post" action="?/uploadAvatar" enctype="multipart/form-data" class="space-y-5">
         <TextInput />
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-end space-x-3">
             <button
                 type="button"
                 on:click={() => {
                     show = false;
                 }}
-                class="block w-full px-3 py-2 text-center">
+                class="block px-5 py-1 text-center">
                 Cancel
             </button>
-            <PrimaryButton type="submit" class="w-full">Verify</PrimaryButton>
+            <PrimaryButton type="submit">Verify</PrimaryButton>
         </div>
     </form>
 </Dialog>

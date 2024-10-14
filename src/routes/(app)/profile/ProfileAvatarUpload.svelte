@@ -45,7 +45,7 @@
     </SecondaryButton>
 </div>
 
-<Dialog card={true} bind:show class="w-72 bg-white p-4" title="Upload avatar" teleport={true} sticky={true}>
+<Dialog card={true} bind:show class="w-96 bg-white p-4" title="Upload avatar" teleport={true} sticky={true}>
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
         on:dragover={(e) => {
@@ -71,15 +71,17 @@
             Drop image here
         {/if}
     </div>
-    <form method="post" action="?/uploadAvatar" enctype="multipart/form-data">
+    <form method="post" action="?/uploadAvatar" enctype="multipart/form-data" class="space-y-5">
         <input type="file" name="avatar" class="mt-6" bind:files />
-        <PrimaryButton type="submit" class="mt-6 w-full">Upload</PrimaryButton>
+        <div class="flex items-center justify-end space-x-3">
+            <button
+                type="button"
+                on:click={() => {
+                    show = false;
+                }}>
+                Cancel
+            </button>
+            <PrimaryButton type="submit">Upload</PrimaryButton>
+        </div>
     </form>
-    <button
-        on:click={() => {
-            show = false;
-        }}
-        class="mt-3 w-full text-center">
-        Cancel
-    </button>
 </Dialog>
