@@ -73,9 +73,10 @@
     </div>
     <form method="post" action="?/uploadAvatar" enctype="multipart/form-data" class="space-y-5">
         <input type="file" name="avatar" class="mt-6" bind:files />
-        <div class="flex items-center justify-end space-x-3">
+        <div class="flex items-center justify-end space-x-2">
             <button
                 type="button"
+                class="block px-5 py-1 text-center"
                 on:click={() => {
                     show = false;
                 }}>

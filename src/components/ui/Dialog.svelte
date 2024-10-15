@@ -11,8 +11,13 @@
     export let sticky = false;
     /** @type {boolean} */
     export let card = false;
+
     /** @type {string | undefined} */
     export let title;
+
+    /** @type {string | undefined} */
+    export let description = undefined;
+
     /** @type {boolean | undefined} */
     export let teleport = false;
     /** @type {string | undefined} */
@@ -57,7 +62,7 @@
             <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
             <dialog
                 transition:fade={{ duration: 200 }}
-                class={`fixed inset-x-0 top-28 z-30 overflow-hidden rounded-md bg-white/75 shadow-xl ring ring-white/10 drop-shadow-xl backdrop-blur-xl ease-in-out dark:bg-gray-600/40 dark:ring-0 dark:ring-black/10 ${
+                class={`fixed inset-x-0 top-28 z-30 overflow-hidden rounded-xl bg-white/75 shadow-xl ring ring-white/10 drop-shadow-xl backdrop-blur-xl ease-in-out dark:bg-gray-600/40 dark:ring-0 dark:ring-black/10 ${
                     clazz || ''
                 }`}
                 class:block={show}
@@ -69,7 +74,7 @@
                     show = false;
                 }}>
                 {#if title}
-                    <CardHeader {title} />
+                    <CardHeader {title} {description} />
                 {/if}
                 {#if $$slots.default}
                     <!-- svelte-ignore a11y-no-static-element-interactions -->

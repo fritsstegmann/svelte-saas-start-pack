@@ -1,18 +1,32 @@
 <script>
     import Dialog from '$components/ui/Dialog.svelte';
     import PrimaryButton from '$components/ui/PrimaryButton.svelte';
-    import TextInput from '$components/ui/TextInput.svelte';
+    import SecureCodeInput from './SecureCodeInput.svelte';
 
     /**
      * @type {boolean}
      */
     export let show = false;
+
+    /**
+     * @type {string}
+     */
+    let value = '';
+
+    $: console.info('value', value);
 </script>
 
-<Dialog card={true} bind:show class="w-96 bg-white p-2" title="Verify email" teleport={true} sticky={true}>
-    <form method="post" action="?/uploadAvatar" enctype="multipart/form-data" class="space-y-5">
-        <TextInput />
-        <div class="flex items-center justify-end space-x-3">
+<Dialog
+    card={true}
+    description="Enter the validation code sent to the email address"
+    bind:show
+    class="w-96 bg-white p-2"
+    title="Verify email"
+    teleport={true}
+    sticky={true}>
+    <form method="post" action="?/verifyEmail" class="space-y-8">
+        <SecureCodeInput name="code" size={6} bind:value />
+        <div class="flex items-center justify-end space-x-2">
             <button
                 type="button"
                 on:click={() => {
