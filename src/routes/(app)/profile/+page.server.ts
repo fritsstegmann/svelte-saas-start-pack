@@ -23,6 +23,15 @@ export const load: PageServerLoad = async (event) => {
 };
 
 export const actions: Actions = {
+    verifyEmail: async ({ request, locals }) => {
+        return {
+            message: {
+                type: 'success',
+                message: 'Email has succesfully been verified',
+            } as { type: string; message: string } | undefined,
+        };
+    },
+    getVeriftyEmailCode: async ({ request, locals }) => {},
     uploadAvatar: async ({ request, locals }) => {
         if (!locals.user) {
             redirect(302, '/signin');

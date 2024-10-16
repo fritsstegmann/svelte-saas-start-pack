@@ -1,47 +1,82 @@
-<script>
+<script lang="ts">
     import PrimaryButton from '$components/ui/PrimaryButton.svelte';
     import SecondaryButton from '$components/ui/SecondaryButton.svelte';
     import TextInput from '$components/ui/TextInput.svelte';
-    import { fade } from 'svelte/transition';
+    import { quartInOut } from 'svelte/easing';
     import ProfileAvatarUpload from './ProfileAvatarUpload.svelte';
-    import { quintInOut } from 'svelte/easing';
     import VerifyEmail from './VerifyEmail.svelte';
+    import { fade } from 'svelte/transition';
+    import { applyAction, enhance } from '$app/forms';
 
     export let data;
     export let form;
 
-    /**
-     * @type {boolean}
-     */
     let showVerifyDialog = false;
+
+    function notifications(node: HTMLElement, { duration }: { duration: number }) {
+        const height = parseInt(getComputedStyle(node).height);
+        const paddingTop = parseInt(getComputedStyle(node).paddingTop);
+        const paddingBottom = parseInt(getComputedStyle(node).paddingBottom);
+        const opacity = +getComputedStyle(node).opacity;
+
+        return {
+            duration,
+            css: (t: number) => {
+                const eased = quartInOut(t);
+
+                console.info('height', height);
+
+                const scaledOpacity = opacity / 5;
+                return `
+                    overflow: hidden;
+                    padding-top: ${eased * paddingTop};
+                    padding-bottom: ${eased * paddingBottom};
+                    height: ${eased * height};
+                    opacity: ${scaledOpacity * t * 5};
+                `;
+            },
+        };
+    }
 </script>
 
 <div class="mx-auto max-w-3xl">
-    <ProfileAvatarUpload profile={data.profile} />
-
     {#if form?.message}
-        {#if form?.message.type == 'success'}
+        <div
+            on:introend
+            on:introstart
+            transition:notifications={{
+                duration: 300,
+            }}
+            class="flex h-14 items-center justify-between rounded-lg border border-green-500 bg-green-100 px-5 py-3 text-green-700 shadow">
             <div
                 transition:fade={{
-                    easing: quintInOut,
-                    duration: 200,
-                    delay: 0.3,
-                }}
-                class="flex items-center justify-between rounded-lg border border-green-500 bg-green-100 px-5 py-3 text-green-700 shadow">
-                <div>
-                    {form.message.message}
-                </div>
-                <button
-                    on:click={() => {
-                        form.message = undefined;
-                    }}>
-                    close
-                </button>
+                    duration: 50,
+                }}>
+                {form.message.message}
             </div>
-        {/if}
+            <button
+                transition:fade={{
+                    duration: 50,
+                }}
+                on:click={() => {
+                    form.message = undefined;
+                }}>
+                close
+            </button>
+        </div>
     {/if}
 
-    <form method="post" class="mt-12" action="?/updateProfile">
+    <ProfileAvatarUpload profile={data.profile} />
+
+    <form
+        method="post"
+        class="mt-12"
+        action="?/updateProfile"
+        use:enhance={() => {
+            return async ({ result }) => {
+                await applyAction(result);
+            };
+        }}>
         <legend class="text-2xl text-gray-400">Profile settings</legend>
         <div class="mt-2 space-y-2">
             <TextInput name="name" label="Name" class="bg-white" defaultValue={data.profile?.name} />
@@ -60,7 +95,7 @@
         </div>
     </form>
 
-    <form method="post" class="mt-12" action="?/updatePassword">
+    <form method="post" class="mt-12" action="?/updatePassword" use:enhance={() => {}}>
         <legend class="text-2xl text-gray-400">Update password</legend>
         <div class="mt-2 space-y-2">
             <TextInput
