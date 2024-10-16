@@ -8,6 +8,7 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { createHash } from 'node:crypto';
 import { hash, verify } from '@node-rs/argon2';
 import validate from '$lib/server/middleware/validate';
+import { sendMail } from '$lib/server/mail';
 
 export const load: PageServerLoad = async (event) => {
     if (!event.locals.user) redirect(302, '/signin');
@@ -24,6 +25,23 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
     verifyEmail: async ({ request, locals }) => {
+        if (!locals.user) {
+            redirect(302, '/signin');
+        }
+
+        const profile = (
+            await db.select().from(userProfilesTable).where(eq(userProfilesTable.userId, locals.user.id))
+        ).at(0);
+
+        if (profile) {
+            await sendMail(
+                'saaskit@example.com',
+                profile.email,
+                'Forgot password email',
+                `<a href="${''}">Reset password</a>`
+            );
+        }
+
         return {
             message: {
                 type: 'success',
@@ -31,7 +49,24 @@ export const actions: Actions = {
             } as { type: string; message: string } | undefined,
         };
     },
-    getVeriftyEmailCode: async ({ request, locals }) => {},
+    getVeriftyEmailCode: async ({ request, locals }) => {
+        if (!locals.user) {
+            redirect(302, '/signin');
+        }
+
+        const profile = (
+            await db.select().from(userProfilesTable).where(eq(userProfilesTable.userId, locals.user.id))
+        ).at(0);
+
+        if (profile) {
+            await sendMail(
+                'saaskit@example.com',
+                profile.email,
+                'Forgot password email',
+                `<a href="${''}">Reset password</a>`
+            );
+        }
+    },
     uploadAvatar: async ({ request, locals }) => {
         if (!locals.user) {
             redirect(302, '/signin');
