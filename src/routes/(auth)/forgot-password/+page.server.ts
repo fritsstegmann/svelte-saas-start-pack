@@ -1,6 +1,5 @@
 import { APP_KEY } from '$env/static/private';
 
-import { v4 as uuidv4 } from 'uuid';
 import { add } from 'date-fns';
 import validation from '$lib/server/middleware/validation';
 import { z } from 'zod';
@@ -11,6 +10,19 @@ import type { Actions } from './$types';
 import { redirect } from '@sveltejs/kit';
 import { sendMail } from '$lib/server/mail';
 import { createUrlWithSignature } from '$lib/server/urlSignature';
+import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from '@oslojs/encoding';
+import { sha256 } from '@oslojs/crypto/sha2';
+
+export function generateSessionToken(): string {
+    const tokenBytes = new Uint8Array(20);
+    crypto.getRandomValues(tokenBytes);
+    const token = encodeBase32LowerCaseNoPadding(tokenBytes).toLowerCase();
+    return token;
+}
+
+export function generateSessionId(token: string): string {
+    return encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+}
 
 export const actions = {
     default: validation(
@@ -24,13 +36,16 @@ export const actions = {
 
             if (profile) {
                 const userId = profile.userId;
-                const code = uuidv4();
+
+                // TODO: change away from uuid
+                const code = generateSessionToken();
                 const expiresAt = add(new Date(), {
                     days: 1,
                 });
 
+                // TODO: hash code before storing
                 await db.insert(forgotPasswordTable).values({
-                    code,
+                    code: generateSessionId(code),
                     userId,
                     expiresAt,
                 });

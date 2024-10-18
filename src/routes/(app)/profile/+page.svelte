@@ -24,8 +24,6 @@
             css: (t: number) => {
                 const eased = quartInOut(t);
 
-                console.info('height', height);
-
                 const scaledOpacity = opacity / 5;
                 return `
                     overflow: hidden;

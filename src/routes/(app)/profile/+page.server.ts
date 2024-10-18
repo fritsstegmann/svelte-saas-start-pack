@@ -24,7 +24,7 @@ export const load: PageServerLoad = async (event) => {
 };
 
 export const actions: Actions = {
-    verifyEmail: async ({ request, locals }) => {
+    verifyEmail: async ({ locals }) => {
         if (!locals.user) {
             redirect(302, '/signin');
         }
@@ -49,7 +49,7 @@ export const actions: Actions = {
             } as { type: string; message: string } | undefined,
         };
     },
-    getVeriftyEmailCode: async ({ request, locals }) => {
+    getVeriftyEmailCode: async ({ locals }) => {
         if (!locals.user) {
             redirect(302, '/signin');
         }
