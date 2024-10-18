@@ -78,11 +78,28 @@
         <legend class="text-2xl text-gray-400">Profile settings</legend>
         <div class="mt-2 space-y-2">
             <TextInput name="name" label="Name" class="bg-white" defaultValue={data.profile?.name} />
-            <TextInput name="email" label="Email" class="bg-white" defaultValue={data.profile?.email} />
         </div>
 
         <div class="mt-4">
             <PrimaryButton type="submit">Update profile</PrimaryButton>
+        </div>
+    </form>
+
+    <form
+        method="post"
+        class="mt-12"
+        action="?/updateProfile"
+        use:enhance={() => {
+            return async ({ result }) => {
+                await applyAction(result);
+            };
+        }}>
+        <legend class="text-2xl text-gray-400">Email settings</legend>
+        <div class="mt-2 space-y-2">
+            <TextInput name="email" label="Email" class="bg-white" defaultValue={data.profile?.email} />
+        </div>
+        <div class="mt-4 space-x-1">
+            <PrimaryButton type="submit">Update email</PrimaryButton>
             <SecondaryButton
                 type="button"
                 on:click={() => {
@@ -120,7 +137,7 @@
         </div>
 
         <div class="mt-4">
-            <SecondaryButton>Update password</SecondaryButton>
+            <PrimaryButton type="submit">Update password</PrimaryButton>
         </div>
     </form>
 </div>

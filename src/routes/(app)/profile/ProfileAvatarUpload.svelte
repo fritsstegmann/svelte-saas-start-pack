@@ -21,7 +21,7 @@
 
 <div class="my-16 flex flex-col items-center justify-center">
     {#if profile?.avatar}
-        <img alt="profile" class="size-40 rounded-full" src={profile.avatar} />
+        <img alt="profile" class="size-40 rounded-full shadow-inner ring ring-white" src={profile.avatar} />
     {:else}
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +45,7 @@
     </SecondaryButton>
 </div>
 
-<Dialog card={true} bind:show class="w-96 bg-white p-4" title="Upload avatar" teleport={true} sticky={true}>
+<Dialog card={true} bind:show class="w-96 bg-white p-4" title="Upload avatar" sticky={true}>
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
         on:dragover={(e) => {
