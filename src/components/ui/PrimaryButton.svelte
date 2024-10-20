@@ -7,11 +7,19 @@
 
     /** @type {'submit' | 'button' } */
     export let type = 'button';
+
+    /** @type {string | undefined } */
+    export let formaction = undefined;
+
+    /** @type {boolean | undefined } */
+    export let disabled = undefined;
 </script>
 
 <Button.Root
     on:click
     {type}
+    {disabled}
+    {formaction}
     class={`rounded-lg border-2 border-primary-500 bg-primary-500 px-5 py-1 font-semibold text-white shadow transition-all duration-200 hover:border-primary-400 hover:bg-primary-400 focus:outline-none focus:ring focus:ring-primary-300 ${clazz}`}>
     <slot></slot>
 </Button.Root>

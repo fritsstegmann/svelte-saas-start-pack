@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1725089946698,
-      "tag": "0000_massive_pyro",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1724289932402,
-      "tag": "0004_abnormal_mister_fear",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1725793636473,
-      "tag": "0005_luxuriant_puff_adder",
+      "when": 1729280386865,
+      "tag": "0000_uneven_yellowjacket",
       "breakpoints": true
     }
   ]

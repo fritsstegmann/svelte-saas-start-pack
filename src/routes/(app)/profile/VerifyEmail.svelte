@@ -23,7 +23,7 @@
         use:enhance={() => {
             show = false;
         }}>
-        <SecureCodeInput name="code" size={6} bind:value />
+        <SecureCodeInput name="code" size={7} bind:value />
         <div class="flex items-center justify-end space-x-2">
             <button
                 type="button"

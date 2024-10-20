@@ -97,11 +97,31 @@
         <legend class="text-2xl text-gray-400">Email settings</legend>
         <div class="mt-2 space-y-2">
             <TextInput name="email" label="Email" class="bg-white" defaultValue={data.profile?.email} />
+            {#if data.profile?.emailValidated}
+                <div class="flex justify-start space-x-1 py-1 font-semibold text-green-600">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="size-6">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+
+                    <span>You have verified your email</span>
+                </div>
+            {/if}
         </div>
         <div class="mt-4 space-x-1">
-            <PrimaryButton type="submit">Update email</PrimaryButton>
+            <SecondaryButton type="submit">Update email</SecondaryButton>
             <SecondaryButton
-                type="button"
+                type="submit"
+                disabled={data.profile?.emailValidated}
+                formaction="?/getVerifyEmailCode"
                 on:click={() => {
                     showVerifyDialog = true;
                 }}>
@@ -137,7 +157,7 @@
         </div>
 
         <div class="mt-4">
-            <PrimaryButton type="submit">Update password</PrimaryButton>
+            <SecondaryButton type="submit">Update password</SecondaryButton>
         </div>
     </form>
 </div>

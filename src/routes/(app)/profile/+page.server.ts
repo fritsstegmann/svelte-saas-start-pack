@@ -1,6 +1,6 @@
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { userProfilesTable, usersTable } from '$lib/server/schema';
+import { emailValidationTable, userProfilesTable, usersTable } from '$lib/server/schema';
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
@@ -8,7 +8,8 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { createHash } from 'node:crypto';
 import { hash, verify } from '@node-rs/argon2';
 import validate from '$lib/server/middleware/validate';
-import { sendMail } from '$lib/server/mail';
+import { sendEmailVerificationCode } from '$lib/server/security/verifyEmail';
+import { generateHashFromCode as generateHashFromCode } from '$lib/server/security/utils';
 
 export const load: PageServerLoad = async (event) => {
     if (!event.locals.user) redirect(302, '/signin');
@@ -24,7 +25,7 @@ export const load: PageServerLoad = async (event) => {
 };
 
 export const actions: Actions = {
-    verifyEmail: async ({ locals }) => {
+    verifyEmail: async ({ request, locals }) => {
         if (!locals.user) {
             redirect(302, '/signin');
         }
@@ -34,22 +35,51 @@ export const actions: Actions = {
         ).at(0);
 
         if (profile) {
-            await sendMail(
-                'saaskit@example.com',
-                profile.email,
-                'Forgot password email',
-                `<a href="${''}">Reset password</a>`
+            const v = await validate(
+                z.object({
+                    code: z.string().min(6),
+                }),
+                request
             );
-        }
 
-        return {
-            message: {
-                type: 'success',
-                message: 'Email has succesfully been verified',
-            } as { type: string; message: string } | undefined,
-        };
+            if (v.isOk) {
+                console.info('v', v.fields);
+
+                const hashedCode = generateHashFromCode(v.fields.code);
+
+                console.info('hashedCode', hashedCode);
+
+                const verifyEmail = (
+                    await db.select().from(emailValidationTable).where(eq(emailValidationTable.code, hashedCode))
+                ).at(0);
+
+                if (verifyEmail) {
+                    await db
+                        .update(userProfilesTable)
+                        .set({
+                            emailValidated: true,
+                        })
+                        .where(eq(userProfilesTable.id, profile.id));
+
+                    await db.delete(emailValidationTable).where(eq(emailValidationTable.id, verifyEmail.id));
+                    return {
+                        message: {
+                            type: 'success',
+                            message: 'Email has succesfully been verified',
+                        } as { type: string; message: string } | undefined,
+                    };
+                } else {
+                    return {
+                        message: {
+                            type: 'error',
+                            message: 'Invalid verification code',
+                        } as { type: string; message: string } | undefined,
+                    };
+                }
+            }
+        }
     },
-    getVeriftyEmailCode: async ({ locals }) => {
+    getVerifyEmailCode: async ({ locals }) => {
         if (!locals.user) {
             redirect(302, '/signin');
         }
@@ -59,12 +89,7 @@ export const actions: Actions = {
         ).at(0);
 
         if (profile) {
-            await sendMail(
-                'saaskit@example.com',
-                profile.email,
-                'Forgot password email',
-                `<a href="${''}">Reset password</a>`
-            );
+            await sendEmailVerificationCode(profile.email, locals.user.id);
         }
     },
     uploadAvatar: async ({ request, locals }) => {
