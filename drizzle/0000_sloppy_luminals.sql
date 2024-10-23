@@ -1,28 +1,28 @@
 CREATE TABLE IF NOT EXISTS "email_validations" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"userId" integer NOT NULL,
+	"id" text PRIMARY KEY NOT NULL,
+	"userId" uuid NOT NULL,
 	"email" text NOT NULL,
 	"code" text,
 	"expiresAt" timestamp with time zone NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now(),
+	CONSTRAINT "email_validations_id_unique" UNIQUE("id"),
 	CONSTRAINT "email_validations_code_unique" UNIQUE("code")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "forgot_passwords" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"code" text,
+	"id" text PRIMARY KEY NOT NULL,
 	"email" text NOT NULL,
-	"userId" integer NOT NULL,
+	"userId" uuid NOT NULL,
 	"expiresAt" timestamp with time zone NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now(),
-	CONSTRAINT "forgot_passwords_code_unique" UNIQUE("code")
+	CONSTRAINT "forgot_passwords_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "sessions" (
 	"id" text PRIMARY KEY NOT NULL,
-	"userId" integer NOT NULL,
+	"userId" uuid NOT NULL,
 	"expiresAt" timestamp with time zone NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now()
@@ -32,21 +32,21 @@ CREATE TABLE IF NOT EXISTS "user_profiles" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
 	"email" text NOT NULL,
-	"email_validated" boolean DEFAULT false NOT NULL,
+	"emailVerified" boolean DEFAULT false NOT NULL,
 	"avatar" text,
-	"userId" integer NOT NULL,
+	"userId" uuid NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now(),
 	CONSTRAINT "user_profiles_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"username" text NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"userName" text NOT NULL,
 	"password" text NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now(),
-	CONSTRAINT "users_username_unique" UNIQUE("username")
+	CONSTRAINT "users_userName_unique" UNIQUE("userName")
 );
 --> statement-breakpoint
 DO $$ BEGIN

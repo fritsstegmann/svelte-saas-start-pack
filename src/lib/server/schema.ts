@@ -1,8 +1,11 @@
-import { serial, text, timestamp, pgTable, integer, boolean } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import { serial, text, timestamp, pgTable, integer, boolean, uuid } from 'drizzle-orm/pg-core';
 
 export const usersTable = pgTable('users', {
-    id: serial('id').primaryKey(),
-    userName: text('username').unique().notNull(),
+    id: uuid('id')
+        .default(sql`gen_random_uuid()`)
+        .primaryKey(),
+    userName: text('userName').unique().notNull(),
     password: text('password').notNull(),
     createdAt: timestamp('createdAt').notNull().defaultNow(),
     updatedAt: timestamp('updatedAt')
@@ -14,9 +17,9 @@ export const userProfilesTable = pgTable('user_profiles', {
     id: serial('id').primaryKey(),
     name: text('name').notNull(),
     email: text('email').unique().notNull(),
-    emailValidated: boolean('email_validated').default(false).notNull(),
+    emailVerified: boolean('emailVerified').default(false).notNull(),
     avatar: text('avatar'),
-    userId: integer('userId')
+    userId: uuid('userId')
         .notNull()
         .references(() => usersTable.id),
     createdAt: timestamp('createdAt').notNull().defaultNow(),
@@ -27,7 +30,7 @@ export const userProfilesTable = pgTable('user_profiles', {
 
 export const sessionTable = pgTable('sessions', {
     id: text('id').primaryKey(),
-    userId: integer('userId')
+    userId: uuid('userId')
         .notNull()
         .references(() => usersTable.id),
     expiresAt: timestamp('expiresAt', {
@@ -41,8 +44,8 @@ export const sessionTable = pgTable('sessions', {
 });
 
 export const emailValidationTable = pgTable('email_validations', {
-    id: serial('id').primaryKey(),
-    userId: integer('userId')
+    id: text('id').primaryKey().unique(),
+    userId: uuid('userId')
         .notNull()
         .references(() => usersTable.id),
     email: text('email').notNull(),
@@ -58,10 +61,9 @@ export const emailValidationTable = pgTable('email_validations', {
 });
 
 export const forgotPasswordTable = pgTable('forgot_passwords', {
-    id: serial('id').primaryKey(),
-    code: text('code').unique(),
+    id: text('id').primaryKey().unique(),
     email: text('email').notNull(),
-    userId: integer('userId')
+    userId: uuid('userId')
         .notNull()
         .references(() => usersTable.id),
     expiresAt: timestamp('expiresAt', {

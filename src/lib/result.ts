@@ -1,56 +1,59 @@
-export type Result<T, E> =
-    | {
-          v: T;
-      }
-    | {
-          e: E;
-      };
+export class Result<T, E> {
+    private _v: T | undefined;
+    private _e: E | undefined;
 
-export function Ok<T>(t: T): Result<T, never> {
-    return {
-        v: t,
-    };
-}
-
-export function Err<E>(e: E): Result<never, E> {
-    return {
-        e: e,
-    };
-}
-
-export function isOk<T, E>(result: Result<T, E>) {
-    if (Object.hasOwn(result, 'v')) {
-        return true;
-    } else {
-        return false;
+    isOk(): boolean {
+        if (this._v === undefined && this._e !== undefined) {
+            return false;
+        }
+        if (this._v !== undefined && this._e === undefined) {
+            return true;
+        }
+        throw Error('Invalid state');
     }
-}
 
-export async function match<T, E, TA, EA>(
-    result: Result<T, E>,
-    okBranch: (t: T) => Promise<Result<TA, EA>>,
-    errBranch: (e: E) => Promise<Result<TA, EA>>
-): Promise<Result<TA, EA>> {
-    if (isOk(result)) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        return okBranch(result.v);
-    } else {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        return errBranch(result.e);
+    private constructor(v: T | undefined, e: E | undefined) {
+        this._v = v;
+        this._e = e;
     }
-}
 
-export async function unwrap<T, E>(result: Promise<Result<T, E>>): Promise<T> {
-    const r = await result;
-    if (isOk(r)) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        return Promise.resolve(r.v);
-    } else {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        throw new Error(r.e);
+    static Ok<T>(v: T) {
+        return new Result(v, undefined);
+    }
+
+    static Err<E>(e: E) {
+        return new Result(undefined, e);
+    }
+
+    async fromPromise(promise: Promise<T>) {
+        try {
+            return Result.Ok(await promise);
+        } catch (e) {
+            return Result.Err(e as Error);
+        }
+    }
+
+    unwrap() {
+        if (this.isOk()) {
+            return this._v;
+        } else {
+            throw this._e;
+        }
+    }
+
+    match<K, L>(okBranch: (v: T) => K, errBranch: (e: E) => L) {
+        if (this.isOk()) {
+            return Result.Ok(okBranch(this._v!));
+        } else {
+            return Result.Err(errBranch(this._e!));
+        }
+    }
+
+    unwrapOr(fallback: T) {
+        if (this.isOk()) {
+            return this._v;
+        } else {
+            return fallback;
+        }
     }
 }

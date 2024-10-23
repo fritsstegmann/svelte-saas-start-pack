@@ -1,17 +1,14 @@
-import { lucia } from '$lib/server/lucia';
+import { deleteSessionTokenCookie, getSessionTokenCookie } from '$lib/server/security/cookies';
 import { redirect } from '@sveltejs/kit';
 
 export const actions: import('./$types').Actions = {
-	default: async (event) => {
-		if (!event.locals.user) redirect(302, '/signin');
+    default: async (event) => {
+        if (!event.locals.user) redirect(302, '/signin');
 
-		const sessionId = event.cookies.get(lucia.sessionCookieName);
-		if (sessionId) {
-			const sessionCookie = lucia.createBlankSessionCookie();
-			event.cookies.set(sessionCookie.name, sessionCookie.value, {
-				path: '.',
-				...sessionCookie.attributes
-			});
-		}
-	}
+        const sessionId = getSessionTokenCookie(event.cookies);
+
+        if (sessionId) {
+            deleteSessionTokenCookie(event.cookies);
+        }
+    },
 };

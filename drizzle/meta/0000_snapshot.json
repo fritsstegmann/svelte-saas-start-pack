@@ -1,5 +1,5 @@
 {
-  "id": "24a479a7-bf75-4fe5-a133-dd29e32190f4",
+  "id": "caf78876-45ea-4121-a0c5-692f03c8007d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,13 +10,13 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "text",
           "primaryKey": true,
           "notNull": true
         },
         "userId": {
           "name": "userId",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -71,6 +71,13 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
+        "email_validations_id_unique": {
+          "name": "email_validations_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        },
         "email_validations_code_unique": {
           "name": "email_validations_code_unique",
           "nullsNotDistinct": false,
@@ -86,15 +93,9 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "text",
           "primaryKey": true,
           "notNull": true
-        },
-        "code": {
-          "name": "code",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
         },
         "email": {
           "name": "email",
@@ -104,7 +105,7 @@
         },
         "userId": {
           "name": "userId",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -147,11 +148,11 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "forgot_passwords_code_unique": {
-          "name": "forgot_passwords_code_unique",
+        "forgot_passwords_id_unique": {
+          "name": "forgot_passwords_id_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "code"
+            "id"
           ]
         }
       }
@@ -168,7 +169,7 @@
         },
         "userId": {
           "name": "userId",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -234,8 +235,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "email_validated": {
-          "name": "email_validated",
+        "emailVerified": {
+          "name": "emailVerified",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
@@ -249,7 +250,7 @@
         },
         "userId": {
           "name": "userId",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -301,12 +302,13 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
-        "username": {
-          "name": "username",
+        "userName": {
+          "name": "userName",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -336,11 +338,11 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_username_unique": {
-          "name": "users_username_unique",
+        "users_userName_unique": {
+          "name": "users_userName_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "username"
+            "userName"
           ]
         }
       }

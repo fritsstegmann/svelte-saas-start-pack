@@ -43,11 +43,7 @@ export const actions: Actions = {
             );
 
             if (v.isOk) {
-                console.info('v', v.fields);
-
                 const hashedCode = generateHashFromCode(v.fields.code);
-
-                console.info('hashedCode', hashedCode);
 
                 const verifyEmail = (
                     await db.select().from(emailValidationTable).where(eq(emailValidationTable.code, hashedCode))
@@ -57,7 +53,7 @@ export const actions: Actions = {
                     await db
                         .update(userProfilesTable)
                         .set({
-                            emailValidated: true,
+                            emailVerified: true,
                         })
                         .where(eq(userProfilesTable.id, profile.id));
 
