@@ -1,7 +1,6 @@
 import { APP_KEY } from '$env/static/private';
 
 import { add } from 'date-fns';
-import validation from '$lib/server/middleware/validation';
 import { z } from 'zod';
 import { db } from '$lib/server/db';
 import { forgotPasswordTable, userProfilesTable } from '$lib/server/schema';
@@ -11,15 +10,19 @@ import { redirect } from '@sveltejs/kit';
 import { sendMail } from '$lib/server/mail';
 import { createUrlWithSignature } from '$lib/server/urlSignature';
 import { generateHashFromCode, generateSecureCode } from '$lib/server/security/utils';
+import validate from '$lib/server/middleware/validate';
 
 export const actions = {
-    default: validation(
-        z.object({
-            email: z.string(),
-        }),
-        async ({ formData, request }) => {
-            const { email } = formData;
+    default: async ({ request }) => {
+        const validationResult = await validate(
+            z.object({
+                email: z.string(),
+            }),
+            request
+        );
 
+        if (validationResult.isOk) {
+            const { email } = validationResult.fields;
             const profile = (await db.select().from(userProfilesTable).where(eq(userProfilesTable.email, email))).at(0);
 
             if (profile) {
@@ -31,7 +34,7 @@ export const actions = {
                 });
 
                 await db.insert(forgotPasswordTable).values({
-                    code: generateHashFromCode(code),
+                    id: generateHashFromCode(code),
                     email,
                     userId,
                     expiresAt,
@@ -53,6 +56,8 @@ export const actions = {
 
                 redirect(302, '/signin');
             }
+        } else {
+            return validationResult.error;
         }
-    ),
+    },
 } satisfies Actions;

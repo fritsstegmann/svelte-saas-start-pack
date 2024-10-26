@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import validation from '$lib/server/middleware/validation';
+import validate from '$lib/server/middleware/validate';
 import { userProfilesTable, usersTable } from '$lib/server/schema';
 import { hash } from '@node-rs/argon2';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
@@ -7,44 +7,49 @@ import { eq } from 'drizzle-orm';
 import z from 'zod';
 
 export const actions: Actions = {
-    default: validation(
-        z
-            .object({
-                name: z.string().min(1, 'User name is a required field'),
-                email: z
-                    .string()
-                    .email()
-                    .min(1, 'Email is a required field')
-                    .refine(async (current) => {
-                        const count = (await db.select().from(usersTable).where(eq(usersTable.userName, current)))
-                            .length;
+    default: async ({ request }) => {
+        const data = await validate(
+            z
+                .object({
+                    name: z.string().min(1, 'User name is a required field'),
+                    email: z
+                        .string()
+                        .email()
+                        .min(1, 'Email is a required field')
+                        .refine(async (current) => {
+                            const count = (await db.select().from(usersTable).where(eq(usersTable.userName, current)))
+                                .length;
 
-                        return count < 1;
-                    }, 'Email has been taken'),
-                username: z
-                    .string()
-                    .min(3)
-                    .refine(async (current) => {
-                        const count = (await db.select().from(usersTable).where(eq(usersTable.userName, current)))
-                            .length;
+                            return count < 1;
+                        }, 'Email has been taken'),
+                    username: z
+                        .string()
+                        .min(3)
+                        .refine(async (current) => {
+                            const count = (await db.select().from(usersTable).where(eq(usersTable.userName, current)))
+                                .length;
 
-                        return count < 1;
-                    }, 'User name has been taken'),
-                password: z.string().min(10),
-                confirmPassword: z.string().min(10),
-            })
-            .superRefine(({ confirmPassword, password }, ctx) => {
-                if (confirmPassword !== password) {
-                    ctx.addIssue({
-                        code: 'custom',
-                        message: 'The passwords did not match',
-                    });
-                }
-            }),
-        async ({ formData }) => {
+                            return count < 1;
+                        }, 'User name has been taken'),
+                    password: z.string().min(10),
+                    confirmPassword: z.string().min(10),
+                })
+                .superRefine(({ confirmPassword, password }, ctx) => {
+                    if (confirmPassword !== password) {
+                        ctx.addIssue({
+                            code: 'custom',
+                            message: 'The passwords did not match',
+                        });
+                    }
+                }),
+
+            request
+        );
+
+        if (data.isOk) {
             const userData = {
-                userName: formData.username,
-                password: formData.password,
+                userName: data.fields.username,
+                password: data.fields.password,
             };
 
             userData.password = await hash(userData.password, {
@@ -59,8 +64,8 @@ export const actions: Actions = {
 
                 if (user) {
                     const profileData = {
-                        name: formData.name,
-                        email: formData.email,
+                        name: data.fields.name,
+                        email: data.fields.email,
                         avatar: null,
                         userId: user.id,
                     };
@@ -71,11 +76,13 @@ export const actions: Actions = {
                 }
             } catch {
                 return fail(400, {
-                    fields: formData,
+                    fields: data.fields,
                 });
             }
-
-            return redirect(500, '/signup');
+        } else {
+            return data.error;
         }
-    ),
+
+        return redirect(500, '/signup');
+    },
 };

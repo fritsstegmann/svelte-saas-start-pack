@@ -34,14 +34,14 @@
             easing: quintInOut,
             axis: 'x',
         }}
-        class="flex min-h-screen w-80 flex-col justify-between overflow-hidden border-r border-gray-100 bg-gradient-to-b from-gray-200 to-gray-200 p-4 text-gray-100 transition duration-200">
+        class="flex min-h-screen w-80 flex-col justify-between overflow-hidden border-r border-primary-100 bg-gradient-to-b from-primary-500 to-primary-600 p-4 text-gray-100 transition duration-200">
         <div class="space-y-4">
-            <div class="p-4 text-center text-2xl text-gray-800">SaasKit</div>
+            <div class="p-4 text-center text-2xl text-primary-200">SaasKit</div>
             <ul class="space-y-2">
                 <li>
                     <a
                         href="/"
-                        class="flex cursor-pointer items-center space-x-2 rounded px-2 py-3 text-gray-600 hover:bg-gray-300 hover:backdrop-filter">
+                        class="flex cursor-pointer items-center space-x-2 rounded px-2 py-3 text-primary-100 transition duration-300 hover:bg-primary-700 hover:backdrop-filter">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -71,12 +71,12 @@
                     }}>
                     <svg
                         class:rotate-90={openProfileMenu}
+                        class="size-6 transition duration-300"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke-width="1.5"
-                        stroke="currentColor"
-                        class="size-6">
+                        stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                     </svg>
                 </button>
@@ -91,7 +91,7 @@
                     <div>
                         <a
                             href="/profile"
-                            class="flex items-center space-x-2 overflow-hidden px-2 py-3 hover:bg-black/10">
+                            class="flex items-center space-x-2 overflow-hidden px-2 py-3 transition duration-300 hover:bg-black/10">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -112,7 +112,8 @@
                         </a>
                     </div>
                     <form method="post" action="/signout">
-                        <button class="flex w-full cursor-pointer space-x-2 rounded-b-lg px-2 py-3 hover:bg-black/10">
+                        <button
+                            class="flex w-full cursor-pointer space-x-2 rounded-b-lg px-2 py-3 transition duration-300 hover:bg-black/10">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"

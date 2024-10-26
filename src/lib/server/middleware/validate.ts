@@ -11,8 +11,8 @@ export default async function validate<T extends ZodType>(
     | {
           isOk: false;
           error: import('@sveltejs/kit').ActionFailure<{
-              fields: Record<string, unknown>;
-              errors: Record<string, string[] | null>;
+              fields: z.infer<T>;
+              errors: Record<keyof z.infer<T>, string[] | null>;
           }>;
       }
 > {
@@ -25,8 +25,8 @@ export default async function validate<T extends ZodType>(
             return {
                 isOk: false,
                 error: fail(422, {
-                    fields: exception.fields,
-                    errors: exception.errors,
+                    fields: exception.fields as z.infer<T>,
+                    errors: exception.errors as Record<keyof z.infer<T>, string[] | null>,
                 }),
             };
         }
