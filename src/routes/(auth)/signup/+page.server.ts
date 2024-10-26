@@ -1,6 +1,7 @@
 import { db } from '$lib/server/db';
 import validate from '$lib/server/middleware/validate';
 import { userProfilesTable, usersTable } from '$lib/server/schema';
+import { hashPassword } from '$lib/server/security/utils';
 import { hash } from '@node-rs/argon2';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
@@ -52,12 +53,7 @@ export const actions: Actions = {
                 password: data.fields.password,
             };
 
-            userData.password = await hash(userData.password, {
-                memoryCost: 39456,
-                timeCost: 6,
-                outputLen: 32,
-                parallelism: 1,
-            });
+            userData.password = await hashPassword(userData.password);
 
             try {
                 const user = (await db.insert(usersTable).values(userData).returning()).at(0);
@@ -72,7 +68,7 @@ export const actions: Actions = {
 
                     await db.insert(userProfilesTable).values(profileData).returning();
 
-                    return redirect(302, '/signin');
+                    redirect(302, '/signin');
                 }
             } catch {
                 return fail(400, {
