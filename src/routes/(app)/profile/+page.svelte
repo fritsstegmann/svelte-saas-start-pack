@@ -1,5 +1,4 @@
 <script lang="ts">
-    import PrimaryButton from '$components/ui/PrimaryButton.svelte';
     import SecondaryButton from '$components/ui/SecondaryButton.svelte';
     import TextInput from '$components/ui/TextInput.svelte';
     import { quartInOut } from 'svelte/easing';
@@ -81,7 +80,7 @@
         </div>
 
         <div class="mt-4">
-            <PrimaryButton type="submit">Update profile</PrimaryButton>
+            <SecondaryButton type="submit">Update profile</SecondaryButton>
         </div>
     </form>
 
@@ -97,7 +96,7 @@
         <legend class="text-2xl text-gray-400">Email settings</legend>
         <div class="mt-2 space-y-2">
             <TextInput name="email" label="Email" class="bg-white" defaultValue={data.profile?.email} />
-            {#if data.profile?.emailValidated}
+            {#if data.profile?.emailVerified}
                 <div class="flex justify-start space-x-1 py-1 font-semibold text-green-600">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +119,7 @@
             <SecondaryButton type="submit">Update email</SecondaryButton>
             <SecondaryButton
                 type="submit"
-                disabled={data.profile?.emailValidated}
+                disabled={data.profile?.emailVerified}
                 formaction="?/getVerifyEmailCode"
                 on:click={() => {
                     showVerifyDialog = true;
