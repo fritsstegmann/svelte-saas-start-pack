@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto';
 import { hash, verify } from '@node-rs/argon2';
 import validate from '$lib/server/middleware/validate';
 import { sendEmailVerificationCode } from '$lib/server/security/verifyEmail';
-import { generateHashFromCode as generateHashFromCode } from '$lib/server/security/utils';
+import { generateHashFromCode as generateHashFromCode, hashPassword, verifyPassword } from '$lib/server/security/utils';
 
 export const load: PageServerLoad = async (event) => {
     if (!event.locals.user) redirect(302, '/signin');
@@ -160,12 +160,7 @@ export const actions: Actions = {
             redirect(307, '/signout');
         }
 
-        const validPassword = await verify(existingUser?.password ?? '', v.fields.oldPassword, {
-            memoryCost: 39456,
-            timeCost: 6,
-            outputLen: 32,
-            parallelism: 1,
-        });
+        const validPassword = await verifyPassword(existingUser?.password ?? '', v.fields.oldPassword);
 
         if (!validPassword) {
             return fail(400, {
@@ -176,12 +171,7 @@ export const actions: Actions = {
             });
         }
 
-        const newPassword = await hash(v.fields.newPassword, {
-            memoryCost: 39456,
-            timeCost: 6,
-            outputLen: 32,
-            parallelism: 1,
-        });
+        const newPassword = await hashPassword(v.fields.newPassword);
 
         await db
             .update(usersTable)
