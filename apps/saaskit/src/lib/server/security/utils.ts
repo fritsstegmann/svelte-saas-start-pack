@@ -29,7 +29,7 @@ export async function hashPassword(password: string): Promise<string> {
     const hPassword = await hash(password, {
         // recommended minimum parameters
         memoryCost: 39456,
-        timeCost: 6,
+        timeCost: 12,
         outputLen: 32,
         parallelism: 1,
     });
