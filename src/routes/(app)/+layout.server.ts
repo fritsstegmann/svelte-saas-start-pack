@@ -10,7 +10,10 @@ export const load: LayoutServerLoad = async (event) => {
     const { pathname } = event.url;
 
     const profile = (
-        await db.select().from(userProfilesTable).where(eq(userProfilesTable.userId, event.locals.user.id))
+        await db
+            .select()
+            .from(userProfilesTable)
+            .where(eq(userProfilesTable.userId, event.locals.user.id))
     ).at(0);
 
     return {

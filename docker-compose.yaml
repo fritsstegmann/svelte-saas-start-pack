@@ -11,6 +11,7 @@ services:
             - database:/var/lib/postgresql/data
     valkey:
         image: valkey/valkey:latest
+        command: valkey-server --save 60 1
         ports:
             - 6379:6379
         volumes:

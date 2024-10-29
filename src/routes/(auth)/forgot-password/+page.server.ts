@@ -9,7 +9,10 @@ import type { Actions } from './$types';
 import { redirect } from '@sveltejs/kit';
 import { sendMail } from '$lib/server/mail';
 import { createUrlWithSignature } from '$lib/server/urlSignature';
-import { generateHashFromCode, generateSecureCode } from '$lib/server/security/utils';
+import {
+    generateHashFromCode,
+    generateSecureCode,
+} from '$lib/server/security/utils';
 import validate from '$lib/server/middleware/validate';
 
 export const actions = {
@@ -23,7 +26,12 @@ export const actions = {
 
         if (validationResult.isOk) {
             const { email } = validationResult.fields;
-            const profile = (await db.select().from(userProfilesTable).where(eq(userProfilesTable.email, email))).at(0);
+            const profile = (
+                await db
+                    .select()
+                    .from(userProfilesTable)
+                    .where(eq(userProfilesTable.email, email))
+            ).at(0);
 
             if (profile) {
                 const userId = profile.userId;
@@ -43,7 +51,8 @@ export const actions = {
                 const url = `/reset-password?code=${code}&email=${email}`;
 
                 const parsedUrl = new URL(request.url);
-                let completeUrl = parsedUrl.protocol + '//' + parsedUrl.host + url;
+                let completeUrl =
+                    parsedUrl.protocol + '//' + parsedUrl.host + url;
 
                 completeUrl = createUrlWithSignature(completeUrl, APP_KEY);
 

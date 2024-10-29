@@ -12,7 +12,10 @@
 
     let showVerifyDialog = false;
 
-    function notifications(node: HTMLElement, { duration }: { duration: number }) {
+    function notifications(
+        node: HTMLElement,
+        { duration }: { duration: number }
+    ) {
         const height = parseInt(getComputedStyle(node).height);
         const paddingTop = parseInt(getComputedStyle(node).paddingTop);
         const paddingBottom = parseInt(getComputedStyle(node).paddingBottom);
@@ -76,7 +79,11 @@
         }}>
         <legend class="text-2xl text-gray-400">Profile settings</legend>
         <div class="mt-2 space-y-2">
-            <TextInput name="name" label="Name" class="bg-white" defaultValue={data.profile?.name} />
+            <TextInput
+                name="name"
+                label="Name"
+                class="bg-white"
+                defaultValue={data.profile?.name} />
         </div>
 
         <div class="mt-4">
@@ -95,9 +102,14 @@
         }}>
         <legend class="text-2xl text-gray-400">Email settings</legend>
         <div class="mt-2 space-y-2">
-            <TextInput name="email" label="Email" class="bg-white" defaultValue={data.profile?.email} />
+            <TextInput
+                name="email"
+                label="Email"
+                class="bg-white"
+                defaultValue={data.profile?.email} />
             {#if data.profile?.emailVerified}
-                <div class="flex justify-start space-x-1 py-1 font-semibold text-green-600">
+                <div
+                    class="flex justify-start space-x-1 py-1 font-semibold text-green-600">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -129,7 +141,11 @@
         </div>
     </form>
 
-    <form method="post" class="mt-12" action="?/updatePassword" use:enhance={() => {}}>
+    <form
+        method="post"
+        class="mt-12"
+        action="?/updatePassword"
+        use:enhance={() => {}}>
         <legend class="text-2xl text-gray-400">Update password</legend>
         <div class="mt-2 space-y-2">
             <TextInput

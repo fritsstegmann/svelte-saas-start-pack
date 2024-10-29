@@ -8,6 +8,13 @@
             "when": 1729664749120,
             "tag": "0000_sloppy_luminals",
             "breakpoints": true
+        },
+        {
+            "idx": 1,
+            "version": "7",
+            "when": 1730183616539,
+            "tag": "0001_loose_franklin_storm",
+            "breakpoints": true
         }
     ]
 }

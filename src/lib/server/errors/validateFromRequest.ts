@@ -43,7 +43,10 @@ function objectFromFormData(formData: FormData): Record<string, unknown> {
     return result;
 }
 
-async function validateForm<T>(schema: z.ZodType<T>, body: Record<string, unknown> | FormData): Promise<T> {
+async function validateForm<T>(
+    schema: z.ZodType<T>,
+    body: Record<string, unknown> | FormData
+): Promise<T> {
     try {
         if (body instanceof FormData) {
             const requestData = objectFromFormData(body);
@@ -56,9 +59,15 @@ async function validateForm<T>(schema: z.ZodType<T>, body: Record<string, unknow
     } catch (e) {
         if (e instanceof z.ZodError) {
             if (body instanceof FormData) {
-                throw new FormValidationError(mapValidationErrors(e.errors), objectFromFormData(body));
+                throw new FormValidationError(
+                    mapValidationErrors(e.errors),
+                    objectFromFormData(body)
+                );
             } else {
-                throw new FormValidationError(mapValidationErrors(e.errors), body);
+                throw new FormValidationError(
+                    mapValidationErrors(e.errors),
+                    body
+                );
             }
         }
 
@@ -82,7 +91,10 @@ export default async function validateFromRequest<T, K extends string>(
         files = filesFromFormData(formData);
     }
 
-    const validatedData = await validateForm<z.infer<typeof schema>>(schema, formData);
+    const validatedData = await validateForm<z.infer<typeof schema>>(
+        schema,
+        formData
+    );
 
     return { formData: validatedData, files };
 }

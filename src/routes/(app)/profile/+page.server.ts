@@ -1,37 +1,65 @@
-import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { error, fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { emailValidationTable, userProfilesTable, usersTable } from '$lib/server/schema';
+import {
+    emailValidationTable,
+    userProfilesTable,
+    usersTable,
+} from '$lib/server/schema';
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { createHash } from 'node:crypto';
-import { hash, verify } from '@node-rs/argon2';
 import validate from '$lib/server/middleware/validate';
 import { sendEmailVerificationCode } from '$lib/server/security/verifyEmail';
-import { generateHashFromCode as generateHashFromCode, hashPassword, verifyPassword } from '$lib/server/security/utils';
+import {
+    generateHashFromCode as generateHashFromCode,
+    hashPassword,
+    verifyPassword,
+} from '$lib/server/security/utils';
+import { TokenBucket } from '$lib/server/ratelimit';
+import { passwordConfirmValid } from '$lib/server/security/confirmPassword';
 
-export const load: PageServerLoad = async (event) => {
-    if (!event.locals.user) redirect(302, '/signin');
+export const load: PageServerLoad = async ({ locals }) => {
+    if (!locals.user) redirect(302, '/signin');
+
+    if (!passwordConfirmValid(locals.user.lastPasswordConfirmAt)) {
+        redirect(302, '/confirm-password?redirect=/profile');
+    }
 
     const profile = (
-        await db.select().from(userProfilesTable).where(eq(userProfilesTable.userId, event.locals.user.id))
+        await db
+            .select()
+            .from(userProfilesTable)
+            .where(eq(userProfilesTable.userId, locals.user.id))
     ).at(0);
 
     return {
-        user: event.locals.user,
+        user: locals.user,
         profile,
     };
 };
 
 export const actions: Actions = {
-    verifyEmail: async ({ request, locals }) => {
+    verifyEmail: async ({ request, locals, getClientAddress }) => {
         if (!locals.user) {
             redirect(302, '/signin');
         }
 
+        const bucket = new TokenBucket('verifyEmail', 1, 1);
+        if (!(await bucket.consume(getClientAddress(), 1))) {
+            error(429);
+        }
+
+        if (!passwordConfirmValid(locals.user.lastPasswordConfirmAt)) {
+            redirect(302, '/confirm-password?redirect=/profile');
+        }
+
         const profile = (
-            await db.select().from(userProfilesTable).where(eq(userProfilesTable.userId, locals.user.id))
+            await db
+                .select()
+                .from(userProfilesTable)
+                .where(eq(userProfilesTable.userId, locals.user.id))
         ).at(0);
 
         if (profile) {
@@ -46,7 +74,10 @@ export const actions: Actions = {
                 const hashedCode = generateHashFromCode(v.fields.code);
 
                 const verifyEmail = (
-                    await db.select().from(emailValidationTable).where(eq(emailValidationTable.code, hashedCode))
+                    await db
+                        .select()
+                        .from(emailValidationTable)
+                        .where(eq(emailValidationTable.id, hashedCode))
                 ).at(0);
 
                 if (verifyEmail) {
@@ -57,7 +88,9 @@ export const actions: Actions = {
                         })
                         .where(eq(userProfilesTable.id, profile.id));
 
-                    await db.delete(emailValidationTable).where(eq(emailValidationTable.id, verifyEmail.id));
+                    await db
+                        .delete(emailValidationTable)
+                        .where(eq(emailValidationTable.id, verifyEmail.id));
                     return {
                         message: {
                             type: 'success',
@@ -75,13 +108,25 @@ export const actions: Actions = {
             }
         }
     },
-    getVerifyEmailCode: async ({ locals }) => {
+    getVerifyEmailCode: async ({ locals, getClientAddress }) => {
         if (!locals.user) {
             redirect(302, '/signin');
         }
 
+        const bucket = new TokenBucket('getVerifyEmailCode', 1, 1);
+        if (!(await bucket.consume(getClientAddress(), 1))) {
+            error(429);
+        }
+
+        if (!passwordConfirmValid(locals.user.lastPasswordConfirmAt)) {
+            redirect(302, '/confirm-password?redirect=/profile');
+        }
+
         const profile = (
-            await db.select().from(userProfilesTable).where(eq(userProfilesTable.userId, locals.user.id))
+            await db
+                .select()
+                .from(userProfilesTable)
+                .where(eq(userProfilesTable.userId, locals.user.id))
         ).at(0);
 
         if (profile) {
@@ -154,13 +199,21 @@ export const actions: Actions = {
             return v.error;
         }
 
-        const existingUser = (await db.select().from(usersTable).where(eq(usersTable.id, locals.user.id))).at(0);
+        const existingUser = (
+            await db
+                .select()
+                .from(usersTable)
+                .where(eq(usersTable.id, locals.user.id))
+        ).at(0);
 
         if (!existingUser) {
             redirect(307, '/signout');
         }
 
-        const validPassword = await verifyPassword(existingUser?.password ?? '', v.fields.oldPassword);
+        const validPassword = await verifyPassword(
+            existingUser?.password ?? '',
+            v.fields.oldPassword
+        );
 
         if (!validPassword) {
             return fail(400, {
@@ -187,6 +240,45 @@ export const actions: Actions = {
             } as { type: string; message: string } | undefined,
         };
     },
+    updateEmail: async ({ getClientAddress, request, locals }) => {
+        if (!locals.user) {
+            redirect(302, '/signin');
+        }
+
+        const bucket = new TokenBucket('updateEmail', 2, 1);
+        if (!(await bucket.consume(getClientAddress(), 1))) {
+            error(429);
+        }
+
+        if (!passwordConfirmValid(locals.user.lastPasswordConfirmAt)) {
+            redirect(302, '/confirm-password?redirect=/profile');
+        }
+
+        const v = await validate(
+            z.object({
+                email: z.string().min(1).max(256),
+            }),
+            request
+        );
+
+        if (!v.isOk) {
+            return v.error;
+        }
+
+        await db
+            .update(userProfilesTable)
+            .set({
+                email: v.fields.email,
+            })
+            .where(eq(userProfilesTable.userId, locals.user.id));
+
+        return {
+            message: {
+                type: 'success',
+                message: 'Successfully updated email',
+            } as { type: string; message: string } | undefined,
+        };
+    },
     updateProfile: async ({ request, locals }) => {
         if (!locals.user) {
             redirect(302, '/signin');
@@ -194,8 +286,7 @@ export const actions: Actions = {
 
         const v = await validate(
             z.object({
-                name: z.string(),
-                email: z.string(),
+                name: z.string().min(1).max(256),
             }),
             request
         );
@@ -208,7 +299,6 @@ export const actions: Actions = {
             .update(userProfilesTable)
             .set({
                 name: v.fields.name,
-                email: v.fields.email,
             })
             .where(eq(userProfilesTable.userId, locals.user.id));
 

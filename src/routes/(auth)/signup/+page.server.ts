@@ -18,8 +18,12 @@ export const actions: Actions = {
                         .email()
                         .min(1, 'Email is a required field')
                         .refine(async (current) => {
-                            const count = (await db.select().from(usersTable).where(eq(usersTable.userName, current)))
-                                .length;
+                            const count = (
+                                await db
+                                    .select()
+                                    .from(usersTable)
+                                    .where(eq(usersTable.userName, current))
+                            ).length;
 
                             return count < 1;
                         }, 'Email has been taken'),
@@ -27,8 +31,12 @@ export const actions: Actions = {
                         .string()
                         .min(3)
                         .refine(async (current) => {
-                            const count = (await db.select().from(usersTable).where(eq(usersTable.userName, current)))
-                                .length;
+                            const count = (
+                                await db
+                                    .select()
+                                    .from(usersTable)
+                                    .where(eq(usersTable.userName, current))
+                            ).length;
 
                             return count < 1;
                         }, 'User name has been taken'),
@@ -56,7 +64,9 @@ export const actions: Actions = {
             userData.password = await hashPassword(userData.password);
 
             try {
-                const user = (await db.insert(usersTable).values(userData).returning()).at(0);
+                const user = (
+                    await db.insert(usersTable).values(userData).returning()
+                ).at(0);
 
                 if (user) {
                     const profileData = {
@@ -66,7 +76,10 @@ export const actions: Actions = {
                         userId: user.id,
                     };
 
-                    await db.insert(userProfilesTable).values(profileData).returning();
+                    await db
+                        .insert(userProfilesTable)
+                        .values(profileData)
+                        .returning();
 
                     redirect(302, '/signin');
                 }

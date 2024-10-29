@@ -1,8 +1,27 @@
 // src/hooks.server.ts
+import { RATE_LIMIT_SHA, THROTTLING_SHA } from '$env/static/private';
 import { TokenBucket } from '$lib/server/ratelimit';
-import { deleteSessionTokenCookie, getSessionTokenCookie } from '$lib/server/security/cookies';
+import { installRateLimit } from '$lib/server/ratelimit/install';
+import { redis } from '$lib/server/redis';
+import {
+    deleteSessionTokenCookie,
+    getSessionTokenCookie,
+} from '$lib/server/security/cookies';
 import { validateSessionToken } from '$lib/server/security/session';
+import { installThrottling } from '$lib/server/throttling/install';
 import { type Handle } from '@sveltejs/kit';
+
+const rateLimitSha = (await redis.scriptExists(RATE_LIMIT_SHA))[0];
+
+if (!rateLimitSha) {
+    await installRateLimit();
+}
+
+const throttlingSha = (await redis.scriptExists(THROTTLING_SHA))[0];
+
+if (!throttlingSha) {
+    await installThrottling();
+}
 
 export const handle: Handle = async ({ event, resolve }) => {
     event.locals.user = null;

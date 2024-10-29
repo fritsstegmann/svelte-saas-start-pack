@@ -77,12 +77,16 @@
                     show = false;
                 }}>
                 {#if title}
-                    <CardHeader {title} {description} />
+                    <CardHeader
+                        {title}
+                        {description} />
                 {/if}
                 {#if $$slots.default}
                     <!-- svelte-ignore a11y-no-static-element-interactions -->
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
-                    <div class:p-4={card} on:click|stopPropagation>
+                    <div
+                        class:p-4={card}
+                        on:click|stopPropagation>
                         <slot />
                     </div>
                 {/if}

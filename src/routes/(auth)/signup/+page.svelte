@@ -5,7 +5,9 @@
 
 <form method="post">
     <div class="mt-4 text-xl dark:text-gray-300">Sign up</div>
-    <div class="mt-1 text-base text-gray-700 dark:text-gray-300">Welcome, we'd love to have you</div>
+    <div class="mt-1 text-base text-gray-700 dark:text-gray-300">
+        Welcome, we'd love to have you
+    </div>
     <div class="mt-3">
         <TextInput
             name="name"
@@ -54,6 +56,10 @@
     </div>
     <div class="mt-4 space-x-2">
         <span class="dark:text-gray-300">Already have an account?</span>
-        <a class="font-bold text-primary-500 hover:text-primary-400" href="/signin">Sign in</a>
+        <a
+            class="font-bold text-primary-500 hover:text-primary-400"
+            href="/signin">
+            Sign in
+        </a>
     </div>
 </form>

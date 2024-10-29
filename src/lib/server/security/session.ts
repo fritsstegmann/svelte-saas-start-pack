@@ -9,7 +9,10 @@ export function generateSessionToken(): string {
     return generateSecureCode();
 }
 
-export async function createSession(token: string, userId: string): Promise<Session> {
+export async function createSession(
+    token: string,
+    userId: string
+): Promise<Session> {
     const session = {
         id: token,
         userId,
@@ -25,7 +28,9 @@ export async function createSession(token: string, userId: string): Promise<Sess
     return session;
 }
 
-export async function validateSessionToken(token: string): Promise<SessionValidateResult> {
+export async function validateSessionToken(
+    token: string
+): Promise<SessionValidateResult> {
     const sessionId = generateHashFromCode(token);
     const result = await db
         .select({ user: usersTable, session: sessionTable })
@@ -44,8 +49,13 @@ export async function validateSessionToken(token: string): Promise<SessionValida
         return null;
     }
 
-    if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 25 * (daysValid / 2)) {
-        session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * daysValid);
+    if (
+        Date.now() >=
+        session.expiresAt.getTime() - 1000 * 60 * 60 * 25 * (daysValid / 2)
+    ) {
+        session.expiresAt = new Date(
+            Date.now() + 1000 * 60 * 60 * 24 * daysValid
+        );
         await db
             .update(sessionTable)
             .set({

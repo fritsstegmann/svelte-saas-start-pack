@@ -6,7 +6,10 @@ import { db } from '$lib/server/db';
 import { z } from 'zod';
 import { checkUrlSignature } from '$lib/server/urlSignature';
 import { APP_KEY } from '$env/static/private';
-import { generateHashFromCode as generateHashFromCode, hashPassword } from '$lib/server/security/utils';
+import {
+    generateHashFromCode as generateHashFromCode,
+    hashPassword,
+} from '$lib/server/security/utils';
 import validate from '$lib/server/middleware/validate';
 
 export const load: PageServerLoad = async (event) => {
@@ -20,7 +23,12 @@ export const load: PageServerLoad = async (event) => {
         redirect(302, '/signin');
     }
 
-    const passwordReset = (await db.select().from(forgotPasswordTable).where(eq(forgotPasswordTable.id, code))).at(0);
+    const passwordReset = (
+        await db
+            .select()
+            .from(forgotPasswordTable)
+            .where(eq(forgotPasswordTable.id, code))
+    ).at(0);
 
     if (!passwordReset) {
         redirect(302, '/signin');
@@ -59,7 +67,12 @@ export const actions = {
                 await db
                     .select()
                     .from(forgotPasswordTable)
-                    .where(and(eq(forgotPasswordTable.email, email), eq(forgotPasswordTable.id, hashedCode)))
+                    .where(
+                        and(
+                            eq(forgotPasswordTable.email, email),
+                            eq(forgotPasswordTable.id, hashedCode)
+                        )
+                    )
             ).at(0);
 
             if (passwordReset) {
@@ -76,7 +89,9 @@ export const actions = {
                     })
                     .where(eq(usersTable.id, passwordReset.userId));
 
-                await db.delete(forgotPasswordTable).where(eq(forgotPasswordTable.id, passwordReset.id));
+                await db
+                    .delete(forgotPasswordTable)
+                    .where(eq(forgotPasswordTable.id, passwordReset.id));
             }
         } else {
             return data.error;

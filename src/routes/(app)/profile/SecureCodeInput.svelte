@@ -43,7 +43,9 @@
             /**
              * @type {HTMLDivElement | null}
              */
-            const nextItem = ref.querySelector('div:nth-child(' + nextIndex + ')');
+            const nextItem = ref.querySelector(
+                'div:nth-child(' + nextIndex + ')'
+            );
 
             if (nextItem === null) {
                 focusItem.blur();
@@ -55,9 +57,16 @@
     };
 </script>
 
-<div bind:this={ref} class="flex items-center justify-around space-x-2">
-    <input type="hidden" {name} {value} />
+<div
+    bind:this={ref}
+    class="flex items-center justify-around space-x-2">
+    <input
+        type="hidden"
+        {name}
+        {value} />
     {#each { length: size } as _}
-        <SecureCodeInputElement on:update={keyDown} on:clear={() => {}} />
+        <SecureCodeInputElement
+            on:update={keyDown}
+            on:clear={() => {}} />
     {/each}
 </div>

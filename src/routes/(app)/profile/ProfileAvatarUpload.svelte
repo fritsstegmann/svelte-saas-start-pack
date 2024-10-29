@@ -21,7 +21,10 @@
 
 <div class="my-16 flex flex-col items-center justify-center">
     {#if profile?.avatar}
-        <img alt="profile" class="size-40 rounded-full shadow-inner ring ring-white" src={profile.avatar} />
+        <img
+            alt="profile"
+            class="size-40 rounded-full shadow-inner ring ring-white"
+            src={profile.avatar} />
     {:else}
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +48,12 @@
     </SecondaryButton>
 </div>
 
-<Dialog card={true} bind:show class="w-96 bg-white p-4" title="Upload avatar" sticky={true}>
+<Dialog
+    card={true}
+    bind:show
+    class="w-96 bg-white p-4"
+    title="Upload avatar"
+    sticky={true}>
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
         on:dragover={(e) => {
@@ -71,8 +79,16 @@
             Drop image here
         {/if}
     </div>
-    <form method="post" action="?/uploadAvatar" enctype="multipart/form-data" class="space-y-5">
-        <input type="file" name="avatar" class="mt-6" bind:files />
+    <form
+        method="post"
+        action="?/uploadAvatar"
+        enctype="multipart/form-data"
+        class="space-y-5">
+        <input
+            type="file"
+            name="avatar"
+            class="mt-6"
+            bind:files />
         <div class="flex items-center justify-end space-x-2">
             <button
                 type="button"

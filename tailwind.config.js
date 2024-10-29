@@ -7,7 +7,13 @@ export default {
     theme: {
         fontFamily: {
             inter: ['Inter'],
-            sansTest: ['Red Hat Display', 'Noto Sans Display', 'Inter Tight', 'Arial', 'Open Sans'],
+            sansTest: [
+                'Red Hat Display',
+                'Noto Sans Display',
+                'Inter Tight',
+                'Arial',
+                'Open Sans',
+            ],
             // sans: ['Open Sans'],
             serif: ['Georgia'],
         },

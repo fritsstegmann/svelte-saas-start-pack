@@ -8,6 +8,7 @@ declare global {
             user: {
                 id: string;
                 userName: string;
+                lastPasswordConfirmAt: Date;
             } | null;
             session: {
                 id: string;

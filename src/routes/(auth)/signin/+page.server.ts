@@ -48,10 +48,18 @@ export const actions: Actions = {
                     await db
                         .select()
                         .from(usersTable)
-                        .where(eq(usersTable.userName, data.fields.username.toLowerCase()))
+                        .where(
+                            eq(
+                                usersTable.userName,
+                                data.fields.username.toLowerCase()
+                            )
+                        )
                 ).at(0);
 
-                const validPassword = await verifyPassword(user?.password ?? '', data.fields.password);
+                const validPassword = await verifyPassword(
+                    user?.password ?? '',
+                    data.fields.password
+                );
 
                 if (!validPassword) {
                     if (!(await throttler.consume(data.fields.username))) {
@@ -67,7 +75,9 @@ export const actions: Actions = {
                     }
                     return fail(422, {
                         errors: {
-                            username: ['The credentials do not match our records. invalid password'],
+                            username: [
+                                'The credentials do not match our records. invalid password',
+                            ],
                         },
                         fields: {
                             username: data.fields.username,
@@ -90,7 +100,9 @@ export const actions: Actions = {
                     }
                     return fail(422, {
                         errors: {
-                            username: ['The credentials do not match our records. missing user'],
+                            username: [
+                                'The credentials do not match our records. missing user',
+                            ],
                         },
                         fields: {
                             username: data.fields.username,
@@ -101,7 +113,17 @@ export const actions: Actions = {
 
                 await throttler.reset(data.fields.username);
 
-                const session = await createSession(generateSecureCode(), user.id);
+                await db
+                    .update(usersTable)
+                    .set({
+                        lastPasswordConfirmAt: new Date(),
+                    })
+                    .where(eq(usersTable.id, user.id));
+
+                const session = await createSession(
+                    generateSecureCode(),
+                    user.id
+                );
 
                 setSessionTokenCookie(cookies, session.id, session.expiresAt);
             } catch {

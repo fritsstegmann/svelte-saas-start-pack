@@ -9,11 +9,19 @@ export class Throttler {
     }
 
     public async consume(key: string): Promise<boolean> {
-        const result = await redis.EVALSHA(THROTTLING_SHA, {
-            keys: [`${this.storageKey}:${key}`],
-            arguments: [Math.floor(Date.now() / 1000).toString()],
-        });
-        return Boolean(result[0]);
+        const result: { [key: number]: string } = (await redis.EVALSHA(
+            THROTTLING_SHA,
+            {
+                keys: [`${this.storageKey}:${key}`],
+                arguments: [Math.floor(Date.now() / 1000).toString()],
+            }
+        )) as { [key: number]: string };
+
+        if (result && result[0]) {
+            return Boolean(result[0]);
+        } else {
+            return false;
+        }
     }
 
     public async reset(key: string): Promise<void> {

@@ -6,7 +6,8 @@
 <form method="post">
     <div class="mt-4 text-xl dark:text-gray-300">Forgot password</div>
     <div class="mt-1 text-base text-gray-700 dark:text-gray-300">
-        If we have your email on record, you'll receive an email with the next step
+        If we have your email on record, you'll receive an email with the next
+        step
     </div>
     <div class="mt-6">
         <TextInput

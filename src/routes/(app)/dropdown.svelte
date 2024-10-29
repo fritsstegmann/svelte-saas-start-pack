@@ -60,7 +60,11 @@
             <UserAvatar profile={data.profile} />
             <span>{data.profile.name}</span>
         </div>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-4">
             <path
                 fill-rule="evenodd"
                 d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z"
@@ -76,7 +80,9 @@
         aria-orientation="vertical"
         aria-labelledby="menu-button"
         tabindex="-1">
-        <a href="/profile" class="block px-4 py-2 text-gray-800 hover:bg-primary-600 hover:text-gray-100">
+        <a
+            href="/profile"
+            class="block px-4 py-2 text-gray-800 hover:bg-primary-600 hover:text-gray-100">
             Profile settings
         </a>
     </div>

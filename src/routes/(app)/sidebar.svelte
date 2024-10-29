@@ -77,7 +77,10 @@
                         viewBox="0 0 24 24"
                         stroke-width="1.5"
                         stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                     </svg>
                 </button>
             </div>
@@ -111,7 +114,9 @@
                             <span>Profile settings</span>
                         </a>
                     </div>
-                    <form method="post" action="/signout">
+                    <form
+                        method="post"
+                        action="/signout">
                         <button
                             class="flex w-full cursor-pointer space-x-2 rounded-b-lg px-2 py-3 transition duration-300 hover:bg-black/10">
                             <svg

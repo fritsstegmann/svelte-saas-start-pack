@@ -1,6 +1,5 @@
-import { REDIS_URL } from '$env/static/private';
 import { createClient } from 'redis';
 
 export const redis = await createClient({
-    url: REDIS_URL,
+    url: import.meta.env.REDIS_URL,
 }).connect();

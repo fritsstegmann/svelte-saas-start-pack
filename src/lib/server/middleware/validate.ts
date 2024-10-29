@@ -17,7 +17,10 @@ export default async function validate<T extends ZodType>(
       }
 > {
     try {
-        const { formData: fields, files } = await validateFromRequest(schema, request);
+        const { formData: fields, files } = await validateFromRequest(
+            schema,
+            request
+        );
 
         return { isOk: true, fields, files };
     } catch (exception) {
@@ -26,7 +29,10 @@ export default async function validate<T extends ZodType>(
                 isOk: false,
                 error: fail(422, {
                     fields: exception.fields as z.infer<T>,
-                    errors: exception.errors as Record<keyof z.infer<T>, string[] | null>,
+                    errors: exception.errors as Record<
+                        keyof z.infer<T>,
+                        string[] | null
+                    >,
                 }),
             };
         }

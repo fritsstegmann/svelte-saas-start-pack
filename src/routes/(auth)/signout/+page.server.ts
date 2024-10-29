@@ -1,4 +1,7 @@
-import { deleteSessionTokenCookie, getSessionTokenCookie } from '$lib/server/security/cookies';
+import {
+    deleteSessionTokenCookie,
+    getSessionTokenCookie,
+} from '$lib/server/security/cookies';
 import { redirect } from '@sveltejs/kit';
 
 export const actions: import('./$types').Actions = {

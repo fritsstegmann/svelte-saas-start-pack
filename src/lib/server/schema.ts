@@ -1,5 +1,12 @@
 import { sql } from 'drizzle-orm';
-import { serial, text, timestamp, pgTable, boolean, uuid } from 'drizzle-orm/pg-core';
+import {
+    serial,
+    text,
+    timestamp,
+    pgTable,
+    boolean,
+    uuid,
+} from 'drizzle-orm/pg-core';
 
 export const usersTable = pgTable('users', {
     id: uuid('id')
@@ -7,6 +14,7 @@ export const usersTable = pgTable('users', {
         .primaryKey(),
     userName: text('userName').unique().notNull(),
     password: text('password').notNull(),
+    lastPasswordConfirmAt: timestamp('lastPasswordConfirmAt'),
     createdAt: timestamp('createdAt').notNull().defaultNow(),
     updatedAt: timestamp('updatedAt')
         .defaultNow()
@@ -49,7 +57,6 @@ export const emailValidationTable = pgTable('email_validations', {
         .notNull()
         .references(() => usersTable.id),
     email: text('email').notNull(),
-    code: text('code').unique(),
     expiresAt: timestamp('expiresAt', {
         withTimezone: true,
         mode: 'date',

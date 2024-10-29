@@ -60,7 +60,9 @@
             use:typeAction
             class="w-full flex-grow bg-inherit focus:outline-none"
             bind:value />
-        <slot name="suffix" class="empty:hidden" />
+        <slot
+            name="suffix"
+            class="empty:hidden" />
     </div>
     <slot name="hint" />
     {#if name && errorBag && errorBag[name]}
