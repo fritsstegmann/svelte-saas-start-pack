@@ -19,7 +19,7 @@
     export let profile;
 </script>
 
-<div class="my-16 flex flex-col items-center justify-center">
+<div class="flex flex-col items-center justify-center">
     {#if profile?.avatar}
         <img
             alt="profile"

@@ -7,7 +7,7 @@ import { add } from 'date-fns';
 export async function sendEmailVerificationCode(email: string, userId: string) {
     const code = generateShortCode();
     const expiresAt = add(new Date(), {
-        minutes: 1,
+        minutes: 5,
     });
 
     const hashedCode = generateHashFromCode(code);
@@ -22,7 +22,7 @@ export async function sendEmailVerificationCode(email: string, userId: string) {
     await sendMail(
         'saaskit@example.com',
         email,
-        'Forgot password email',
+        'Email verification code',
         `Verifcation code for email: ${code}`
     );
 }

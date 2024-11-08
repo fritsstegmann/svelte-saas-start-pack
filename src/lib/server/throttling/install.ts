@@ -35,7 +35,5 @@ export async function installThrottling() {
         return {1}
     `;
 
-    const shaValue = await redis.scriptLoad(script);
-
-    console.info('installThrottling', shaValue);
+    await redis.scriptLoad(script);
 }

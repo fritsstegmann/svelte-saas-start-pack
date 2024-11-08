@@ -2,7 +2,6 @@ import { db } from '$lib/server/db';
 import validate from '$lib/server/middleware/validate';
 import { userProfilesTable, usersTable } from '$lib/server/schema';
 import { hashPassword } from '$lib/server/security/utils';
-import { hash } from '@node-rs/argon2';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import z from 'zod';

@@ -28,9 +28,7 @@ export async function createSession(
     return session;
 }
 
-export async function validateSessionToken(
-    token: string
-): Promise<SessionValidateResult> {
+export async function validateSessionToken(token: string) {
     const sessionId = generateHashFromCode(token);
     const result = await db
         .select({ user: usersTable, session: sessionTable })
@@ -80,6 +78,7 @@ export type SessionValidateResult = {
 export type User = {
     id: string;
     userName: string;
+    lastPasswordConfirmAt: Date | null;
 };
 
 export type Session = {

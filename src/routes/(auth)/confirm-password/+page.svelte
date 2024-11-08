@@ -1,9 +1,12 @@
 <script lang="ts">
+    import { enhance } from '$app/forms';
     import TextInput from '$components/ui/TextInput.svelte';
     export let form;
 </script>
 
-<form method="post">
+<form
+    method="post"
+    use:enhance>
     <div class="mt-4 text-xl dark:text-gray-300">Confirm password</div>
     <div class="mt-1 text-base text-gray-700 dark:text-gray-300">
         To use this feature we need to confirm your password

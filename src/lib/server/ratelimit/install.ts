@@ -34,7 +34,5 @@ export async function installRateLimit() {
         return {1}
     `;
 
-    const shaValue = await redis.scriptLoad(script);
-
-    console.info('installRateLimit', shaValue);
+    await redis.scriptLoad(script);
 }

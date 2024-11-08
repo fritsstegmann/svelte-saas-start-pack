@@ -1,332 +1,429 @@
 {
-    "id": "caf78876-45ea-4121-a0c5-692f03c8007d",
-    "prevId": "00000000-0000-0000-0000-000000000000",
-    "version": "7",
-    "dialect": "postgresql",
-    "tables": {
-        "public.email_validations": {
-            "name": "email_validations",
-            "schema": "",
-            "columns": {
-                "id": {
-                    "name": "id",
-                    "type": "text",
-                    "primaryKey": true,
-                    "notNull": true
-                },
-                "userId": {
-                    "name": "userId",
-                    "type": "uuid",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "email": {
-                    "name": "email",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "code": {
-                    "name": "code",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": false
-                },
-                "expiresAt": {
-                    "name": "expiresAt",
-                    "type": "timestamp with time zone",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "type": "timestamp",
-                    "primaryKey": false,
-                    "notNull": true,
-                    "default": "now()"
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "type": "timestamp",
-                    "primaryKey": false,
-                    "notNull": false,
-                    "default": "now()"
-                }
-            },
-            "indexes": {},
-            "foreignKeys": {
-                "email_validations_userId_users_id_fk": {
-                    "name": "email_validations_userId_users_id_fk",
-                    "tableFrom": "email_validations",
-                    "tableTo": "users",
-                    "columnsFrom": ["userId"],
-                    "columnsTo": ["id"],
-                    "onDelete": "no action",
-                    "onUpdate": "no action"
-                }
-            },
-            "compositePrimaryKeys": {},
-            "uniqueConstraints": {
-                "email_validations_id_unique": {
-                    "name": "email_validations_id_unique",
-                    "nullsNotDistinct": false,
-                    "columns": ["id"]
-                },
-                "email_validations_code_unique": {
-                    "name": "email_validations_code_unique",
-                    "nullsNotDistinct": false,
-                    "columns": ["code"]
-                }
-            }
+  "id": "e0ca5f3d-697f-4f03-a5e1-a37ba3141303",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.change_email_requests": {
+      "name": "change_email_requests",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
         },
-        "public.forgot_passwords": {
-            "name": "forgot_passwords",
-            "schema": "",
-            "columns": {
-                "id": {
-                    "name": "id",
-                    "type": "text",
-                    "primaryKey": true,
-                    "notNull": true
-                },
-                "email": {
-                    "name": "email",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "userId": {
-                    "name": "userId",
-                    "type": "uuid",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "expiresAt": {
-                    "name": "expiresAt",
-                    "type": "timestamp with time zone",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "type": "timestamp",
-                    "primaryKey": false,
-                    "notNull": true,
-                    "default": "now()"
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "type": "timestamp",
-                    "primaryKey": false,
-                    "notNull": false,
-                    "default": "now()"
-                }
-            },
-            "indexes": {},
-            "foreignKeys": {
-                "forgot_passwords_userId_users_id_fk": {
-                    "name": "forgot_passwords_userId_users_id_fk",
-                    "tableFrom": "forgot_passwords",
-                    "tableTo": "users",
-                    "columnsFrom": ["userId"],
-                    "columnsTo": ["id"],
-                    "onDelete": "no action",
-                    "onUpdate": "no action"
-                }
-            },
-            "compositePrimaryKeys": {},
-            "uniqueConstraints": {
-                "forgot_passwords_id_unique": {
-                    "name": "forgot_passwords_id_unique",
-                    "nullsNotDistinct": false,
-                    "columns": ["id"]
-                }
-            }
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
         },
-        "public.sessions": {
-            "name": "sessions",
-            "schema": "",
-            "columns": {
-                "id": {
-                    "name": "id",
-                    "type": "text",
-                    "primaryKey": true,
-                    "notNull": true
-                },
-                "userId": {
-                    "name": "userId",
-                    "type": "uuid",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "expiresAt": {
-                    "name": "expiresAt",
-                    "type": "timestamp with time zone",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "type": "timestamp",
-                    "primaryKey": false,
-                    "notNull": true,
-                    "default": "now()"
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "type": "timestamp",
-                    "primaryKey": false,
-                    "notNull": false,
-                    "default": "now()"
-                }
-            },
-            "indexes": {},
-            "foreignKeys": {
-                "sessions_userId_users_id_fk": {
-                    "name": "sessions_userId_users_id_fk",
-                    "tableFrom": "sessions",
-                    "tableTo": "users",
-                    "columnsFrom": ["userId"],
-                    "columnsTo": ["id"],
-                    "onDelete": "no action",
-                    "onUpdate": "no action"
-                }
-            },
-            "compositePrimaryKeys": {},
-            "uniqueConstraints": {}
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         },
-        "public.user_profiles": {
-            "name": "user_profiles",
-            "schema": "",
-            "columns": {
-                "id": {
-                    "name": "id",
-                    "type": "serial",
-                    "primaryKey": true,
-                    "notNull": true
-                },
-                "name": {
-                    "name": "name",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "email": {
-                    "name": "email",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "emailVerified": {
-                    "name": "emailVerified",
-                    "type": "boolean",
-                    "primaryKey": false,
-                    "notNull": true,
-                    "default": false
-                },
-                "avatar": {
-                    "name": "avatar",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": false
-                },
-                "userId": {
-                    "name": "userId",
-                    "type": "uuid",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "type": "timestamp",
-                    "primaryKey": false,
-                    "notNull": true,
-                    "default": "now()"
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "type": "timestamp",
-                    "primaryKey": false,
-                    "notNull": false,
-                    "default": "now()"
-                }
-            },
-            "indexes": {},
-            "foreignKeys": {
-                "user_profiles_userId_users_id_fk": {
-                    "name": "user_profiles_userId_users_id_fk",
-                    "tableFrom": "user_profiles",
-                    "tableTo": "users",
-                    "columnsFrom": ["userId"],
-                    "columnsTo": ["id"],
-                    "onDelete": "no action",
-                    "onUpdate": "no action"
-                }
-            },
-            "compositePrimaryKeys": {},
-            "uniqueConstraints": {
-                "user_profiles_email_unique": {
-                    "name": "user_profiles_email_unique",
-                    "nullsNotDistinct": false,
-                    "columns": ["email"]
-                }
-            }
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
         },
-        "public.users": {
-            "name": "users",
-            "schema": "",
-            "columns": {
-                "id": {
-                    "name": "id",
-                    "type": "uuid",
-                    "primaryKey": true,
-                    "notNull": true,
-                    "default": "gen_random_uuid()"
-                },
-                "userName": {
-                    "name": "userName",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "password": {
-                    "name": "password",
-                    "type": "text",
-                    "primaryKey": false,
-                    "notNull": true
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "type": "timestamp",
-                    "primaryKey": false,
-                    "notNull": true,
-                    "default": "now()"
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "type": "timestamp",
-                    "primaryKey": false,
-                    "notNull": false,
-                    "default": "now()"
-                }
-            },
-            "indexes": {},
-            "foreignKeys": {},
-            "compositePrimaryKeys": {},
-            "uniqueConstraints": {
-                "users_userName_unique": {
-                    "name": "users_userName_unique",
-                    "nullsNotDistinct": false,
-                    "columns": ["userName"]
-                }
-            }
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
         }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "change_email_requests_userId_users_id_fk": {
+          "name": "change_email_requests_userId_users_id_fk",
+          "tableFrom": "change_email_requests",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "change_email_requests_id_unique": {
+          "name": "change_email_requests_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
     },
-    "enums": {},
-    "schemas": {},
-    "_meta": {
-        "columns": {},
-        "schemas": {},
-        "tables": {}
+    "public.email_validations": {
+      "name": "email_validations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "email_validations_userId_users_id_fk": {
+          "name": "email_validations_userId_users_id_fk",
+          "tableFrom": "email_validations",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "email_validations_id_unique": {
+          "name": "email_validations_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
+    },
+    "public.forgot_passwords": {
+      "name": "forgot_passwords",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "forgot_passwords_userId_users_id_fk": {
+          "name": "forgot_passwords_userId_users_id_fk",
+          "tableFrom": "forgot_passwords",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "forgot_passwords_id_unique": {
+          "name": "forgot_passwords_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
+    },
+    "public.sessions": {
+      "name": "sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "sessions_userId_users_id_fk": {
+          "name": "sessions_userId_users_id_fk",
+          "tableFrom": "sessions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.user_profiles": {
+      "name": "user_profiles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "emailVerified": {
+          "name": "emailVerified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "avatar": {
+          "name": "avatar",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_profiles_userId_users_id_fk": {
+          "name": "user_profiles_userId_users_id_fk",
+          "tableFrom": "user_profiles",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_profiles_email_unique": {
+          "name": "user_profiles_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        },
+        "user_profiles_userId_unique": {
+          "name": "user_profiles_userId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "userId"
+          ]
+        }
+      }
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "userName": {
+          "name": "userName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lastPasswordConfirmAt": {
+          "name": "lastPasswordConfirmAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_userName_unique": {
+          "name": "users_userName_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "userName"
+          ]
+        }
+      }
     }
+  },
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
 }

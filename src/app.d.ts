@@ -8,12 +8,14 @@ declare global {
             user: {
                 id: string;
                 userName: string;
-                lastPasswordConfirmAt: Date;
+                lastPasswordConfirmAt: Date | null;
+                twoFaEnabled: boolean | null;
             } | null;
             session: {
                 id: string;
                 userId: string;
                 expiresAt: Date;
+                twoFaVerified: boolean | null;
             } | null;
         }
         // interface PageData {}

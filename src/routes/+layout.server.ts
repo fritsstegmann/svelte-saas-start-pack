@@ -10,13 +10,11 @@ const guestPaths = [
 ];
 
 export const load = async (event: LayoutServerLoadEvent) => {
-    const { pathname: pathName } = event.url;
     if (!guestPaths.includes(event.url.pathname)) {
         if (!event.locals.user) redirect(302, '/signin');
     }
 
     return {
-        pathName,
         username: event.locals.user?.userName,
     };
 };

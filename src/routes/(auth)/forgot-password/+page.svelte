@@ -15,7 +15,7 @@
             name="email"
             label="Email"
             placeHolder="john@example.com"
-            value={form?.fields?.username}
+            value={form?.fields?.email}
             errorBag={form?.errors} />
     </div>
     <div class="mt-8">

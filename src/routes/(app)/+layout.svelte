@@ -2,21 +2,29 @@
     import { fade } from 'svelte/transition';
     import PageHeader from './page_header.svelte';
     import Sidebar from './sidebar.svelte';
+    import { cubicIn, cubicOut } from 'svelte/easing';
 
     export let data;
+
+    $: p = data.pathname.startsWith('/profile') ? 'profile' : data.pathname;
+
+    const timing = 100;
 </script>
 
 <div class="flex">
     <Sidebar profile={data.profile} />
     <div class="h-screen flex-grow overflow-y-scroll">
         <PageHeader />
-        <div class="container mx-auto my-16">
-            {#key data.pathname}
+
+        <div class="container mx-auto my-16 px-8 lg:px-0">
+            {#key p}
                 <div
-                    class="px-4 lg:mx-0"
-                    transition:fade={{
-                        duration: 100,
-                    }}>
+                    in:fade={{
+                        easing: cubicOut,
+                        duration: timing,
+                        delay: timing + 100,
+                    }}
+                    out:fade={{ easing: cubicIn, duration: timing }}>
                     <slot />
                 </div>
             {/key}

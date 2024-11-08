@@ -40,7 +40,8 @@
         <InputLabel {id}>{label}</InputLabel>
     {/if}
     <div
-        class={`mt-1 flex h-10 items-center rounded-md border-2 border-gray-300 bg-gray-100 px-2 py-1 focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-300 ${clazz}`}>
+        class={`mt-1 flex h-10 items-center rounded-md border-2 border-gray-300 bg-gray-100 px-2 py-1 transition duration-300 focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-300 ${clazz}`}
+    >
         {#if $$slots.prefix}
             <div class="mr-2 empty:hidden">
                 <slot name="prefix" />
@@ -59,10 +60,12 @@
             placeholder={placeHolder}
             use:typeAction
             class="w-full flex-grow bg-inherit focus:outline-none"
-            bind:value />
+            bind:value
+        />
         <slot
             name="suffix"
-            class="empty:hidden" />
+            class="empty:hidden"
+        />
     </div>
     <slot name="hint" />
     {#if name && errorBag && errorBag[name]}

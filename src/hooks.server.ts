@@ -8,8 +8,9 @@ import {
     getSessionTokenCookie,
 } from '$lib/server/security/cookies';
 import { validateSessionToken } from '$lib/server/security/session';
+import { validateUserSession } from '$lib/server/svelte';
 import { installThrottling } from '$lib/server/throttling/install';
-import { type Handle } from '@sveltejs/kit';
+import { redirect, type Handle } from '@sveltejs/kit';
 
 const rateLimitSha = (await redis.scriptExists(RATE_LIMIT_SHA))[0];
 
@@ -49,8 +50,18 @@ export const handle: Handle = async ({ event, resolve }) => {
     } else {
         const { session, user } = sessionResult;
 
-        event.locals.user = user;
+        event.locals.user = {
+            id: user.id,
+            lastPasswordConfirmAt: user.lastPasswordConfirmAt,
+            userName: user.userName,
+            twoFaEnabled: user.twoFaEnabled,
+        };
         event.locals.session = session;
+
+        validateUserSession({
+            locals: event.locals,
+            url: event.url,
+        });
     }
 
     return resolve(event);
