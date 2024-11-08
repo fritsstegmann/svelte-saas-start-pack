@@ -2,7 +2,7 @@ import colors from 'tailwindcss/colors';
 
 /** @type {import('tailwindcss').Config} */
 export default {
-    darkMode: 'selector',
+    darkMode: 'class',
     content: ['./src/**/*.{html,js,svelte,ts}'],
     theme: {
         fontFamily: {
@@ -22,7 +22,7 @@ export default {
                 primary: colors.violet,
                 secondary: colors.purple,
                 accent: colors.fuchsia,
-                gray: colors.stone,
+                gray: colors.neutral,
             },
         },
     },

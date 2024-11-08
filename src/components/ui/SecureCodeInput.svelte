@@ -26,7 +26,7 @@
      */
     const codes = Array(size);
 
-    /** @type {import('../../../../components/ui/ErrorBag').ErrorBag | undefined} */
+    /** @type {import('./ErrorBag').ErrorBag | undefined} */
     export let errorBag = undefined;
 
     /**
@@ -76,7 +76,7 @@
         />
     {/each}
 </div>
-<ul class="ms-2 pt-2 font-semibold">
+<ul class="pt-2 font-semibold">
     {#if name && errorBag && errorBag[name]}
         <li class="text-ms mt-1 text-red-500">{errorBag[name]}</li>
     {/if}
