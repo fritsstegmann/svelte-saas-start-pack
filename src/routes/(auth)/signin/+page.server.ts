@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { usersTable } from '$lib/server/schema';
+import { userPasswordsTable, usersTable } from '$lib/server/schema';
 import { createSession } from '$lib/server/security/session';
 import { setSessionTokenCookie } from '$lib/server/security/cookies';
 import { redirect, type Actions, fail, error } from '@sveltejs/kit';
@@ -20,8 +20,9 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
     default: async ({ request, cookies, getClientAddress }) => {
-        const bucket = new TokenBucket('signin', 2, 1);
-        const throttler = new Throttler('login:throttler');
+        const bucket = new TokenBucket('security', 2, 1);
+        const throttler = new Throttler('signin');
+
         if (!(await bucket.consume(getClientAddress(), 1))) {
             return fail(422, {
                 errors: {
@@ -56,8 +57,15 @@ export const actions: Actions = {
                         )
                 ).at(0);
 
+                const userDb = (
+                    await db
+                        .select()
+                        .from(userPasswordsTable)
+                        .where(eq(userPasswordsTable.id, user?.id ?? ''))
+                ).at(0);
+
                 const validPassword = await verifyPassword(
-                    user?.password ?? '',
+                    userDb?.password ?? '',
                     data.fields.password
                 );
 
@@ -160,7 +168,7 @@ export const actions: Actions = {
                     },
                 });
             }
-            return data;
+            return data.error;
         }
         redirect(303, '/');
     },

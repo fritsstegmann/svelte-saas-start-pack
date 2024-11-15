@@ -18,6 +18,9 @@ export default {
             serif: ['Georgia'],
         },
         extend: {
+            transitionProperty: {
+                width: 'width',
+            },
             colors: {
                 primary: colors.violet,
                 secondary: colors.purple,

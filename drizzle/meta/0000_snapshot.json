@@ -1,5 +1,5 @@
 {
-  "id": "e0ca5f3d-697f-4f03-a5e1-a37ba3141303",
+  "id": "4217a7fb-58eb-450b-81c6-86614a5393c7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -236,6 +236,13 @@
           "primaryKey": false,
           "notNull": true
         },
+        "twoFaVerified": {
+          "name": "twoFaVerified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
@@ -269,6 +276,64 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+    },
+    "public.user_passwords": {
+      "name": "user_passwords",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_passwords_id_users_id_fk": {
+          "name": "user_passwords_id_users_id_fk",
+          "tableFrom": "user_passwords",
+          "tableTo": "users",
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_passwords_id_unique": {
+          "name": "user_passwords_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
     },
     "public.user_profiles": {
       "name": "user_profiles",
@@ -361,6 +426,71 @@
         }
       }
     },
+    "public.user_totps": {
+      "name": "user_totps",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "totpSecret": {
+          "name": "totpSecret",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_totps_id_users_id_fk": {
+          "name": "user_totps_id_users_id_fk",
+          "tableFrom": "user_totps",
+          "tableTo": "users",
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_totps_id_unique": {
+          "name": "user_totps_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        },
+        "user_totps_totpSecret_unique": {
+          "name": "user_totps_totpSecret_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "totpSecret"
+          ]
+        }
+      }
+    },
     "public.users": {
       "name": "users",
       "schema": "",
@@ -378,11 +508,12 @@
           "primaryKey": false,
           "notNull": true
         },
-        "password": {
-          "name": "password",
-          "type": "text",
+        "twoFaEnabled": {
+          "name": "twoFaEnabled",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": false
         },
         "lastPasswordConfirmAt": {
           "name": "lastPasswordConfirmAt",

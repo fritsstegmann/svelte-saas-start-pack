@@ -32,8 +32,17 @@ CREATE TABLE IF NOT EXISTS "sessions" (
 	"id" text PRIMARY KEY NOT NULL,
 	"userId" uuid NOT NULL,
 	"expiresAt" timestamp with time zone NOT NULL,
+	"twoFaVerified" boolean DEFAULT false NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now()
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "user_passwords" (
+	"id" uuid PRIMARY KEY NOT NULL,
+	"password" text NOT NULL,
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now(),
+	CONSTRAINT "user_passwords_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user_profiles" (
@@ -49,10 +58,19 @@ CREATE TABLE IF NOT EXISTS "user_profiles" (
 	CONSTRAINT "user_profiles_userId_unique" UNIQUE("userId")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "user_totps" (
+	"id" uuid PRIMARY KEY NOT NULL,
+	"totpSecret" text,
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now(),
+	CONSTRAINT "user_totps_id_unique" UNIQUE("id"),
+	CONSTRAINT "user_totps_totpSecret_unique" UNIQUE("totpSecret")
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"userName" text NOT NULL,
-	"password" text NOT NULL,
+	"twoFaEnabled" boolean DEFAULT false NOT NULL,
 	"lastPasswordConfirmAt" timestamp,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now(),
@@ -84,7 +102,19 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
+ ALTER TABLE "user_passwords" ADD CONSTRAINT "user_passwords_id_users_id_fk" FOREIGN KEY ("id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
  ALTER TABLE "user_profiles" ADD CONSTRAINT "user_profiles_userId_users_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "user_totps" ADD CONSTRAINT "user_totps_id_users_id_fk" FOREIGN KEY ("id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

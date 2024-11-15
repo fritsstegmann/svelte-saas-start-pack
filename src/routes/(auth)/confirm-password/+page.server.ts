@@ -3,7 +3,7 @@ import type { Actions, PageServerLoad } from './$types';
 import validate from '$lib/server/middleware/validate';
 import { fail, redirect } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
-import { usersTable } from '$lib/server/schema';
+import { userPasswordsTable, usersTable } from '$lib/server/schema';
 import { eq } from 'drizzle-orm';
 import { verifyPassword } from '$lib/server/security/utils';
 import {
@@ -28,16 +28,23 @@ export const actions = {
         if (validationResult.isOk) {
             const { password } = validationResult.fields;
 
-            const user = (
+            const result = (
                 await db
-                    .select()
+                    .select({
+                        user: usersTable,
+                        userPassword: userPasswordsTable,
+                    })
                     .from(usersTable)
+                    .leftJoin(
+                        userPasswordsTable,
+                        eq(usersTable.id, userPasswordsTable.id)
+                    )
                     .where(eq(usersTable.id, locals.user.id))
             ).at(0);
 
-            if (user) {
+            if (result?.user && result?.userPassword) {
                 const validPassword = await verifyPassword(
-                    user.password,
+                    result.userPassword.password,
                     password
                 );
                 if (validPassword) {
@@ -46,7 +53,7 @@ export const actions = {
                         .set({
                             lastPasswordConfirmAt: new Date(),
                         })
-                        .where(eq(usersTable.id, user.id));
+                        .where(eq(usersTable.id, result.user.id));
                 } else {
                     return fail(422, {
                         errors: {

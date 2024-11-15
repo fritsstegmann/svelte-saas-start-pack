@@ -1,6 +1,10 @@
 import { db } from '$lib/server/db';
 import validate from '$lib/server/middleware/validate';
-import { userProfilesTable, usersTable } from '$lib/server/schema';
+import {
+    userPasswordsTable,
+    userProfilesTable,
+    usersTable,
+} from '$lib/server/schema';
 import { hashPassword } from '$lib/server/security/utils';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
@@ -60,11 +64,14 @@ export const actions: Actions = {
                 password: data.fields.password,
             };
 
-            userData.password = await hashPassword(userData.password);
-
             try {
                 const user = (
-                    await db.insert(usersTable).values(userData).returning()
+                    await db
+                        .insert(usersTable)
+                        .values({
+                            userName: data.fields.username,
+                        })
+                        .returning()
                 ).at(0);
 
                 if (user) {
@@ -78,6 +85,14 @@ export const actions: Actions = {
                     await db
                         .insert(userProfilesTable)
                         .values(profileData)
+                        .returning();
+
+                    await db
+                        .insert(userPasswordsTable)
+                        .values({
+                            id: user.id,
+                            password: await hashPassword(userData.password),
+                        })
                         .returning();
 
                     redirect(302, '/signin');

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import SecureCodeInput from '../../../(app)/profile/components/SecureCodeInput.svelte';
+    import SecureCodeInput from '$components/ui/SecureCodeInput.svelte';
 
     export let form;
     export let data;

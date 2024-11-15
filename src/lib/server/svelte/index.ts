@@ -35,6 +35,6 @@ export function validateConfirmedPassword(
     if (!locals.user) redirect(302, '/signin');
 
     if (!passwordConfirmValid(locals.user.lastPasswordConfirmAt)) {
-        redirect(302, `/confirm-password?redirect=/${redirectUrl}`);
+        redirect(302, `/confirm-password?redirect=${redirectUrl}`);
     }
 }

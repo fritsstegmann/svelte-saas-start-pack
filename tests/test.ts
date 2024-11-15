@@ -1,6 +1,12 @@
 import { expect, test } from '@playwright/test';
 
-test('home page has expected h1', async ({ page }) => {
-    await page.goto('/');
-    await expect(page.locator('h1')).toBeVisible();
+test('exspect signin to have username and password input', async ({ page }) => {
+    await page.goto('/signin');
+
+    await expect(page.locator('input[name="username"]')).toBeVisible();
+    await expect(page.locator('input[name="password"]')).toBeVisible();
+
+    await page.locator('button').click();
+
+    await expect(page.locator('.text-red-500')).toBeVisible();
 });
