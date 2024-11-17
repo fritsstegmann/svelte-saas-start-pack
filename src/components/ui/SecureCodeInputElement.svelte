@@ -1,37 +1,49 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
 
-    let currentKey = '';
+    export let value = '';
+
+    let ref: HTMLDivElement | undefined = undefined;
 
     const dispatch = createEventDispatcher();
 </script>
 
 <div
-    tabindex={-1}
+    tabindex="-1"
     role="button"
-    on:keydown={(e) => {
-        if (e.ctrlKey && e.code === 'KeyV') {
-            // TODO: implement copy pasta
-            // TODO: get value from clipboard
-            // TODO: validate clipbaord content
-            // TODO: send clipboard content to parent
-            // TODO: parent to popuplate contents of inputs
-        }
-
-        if (e.code == 'Backspace') {
-            if (currentKey != '') {
-                dispatch('clear');
-                currentKey = '';
-                return;
-            }
-        }
-        if (e.key.match(/^[a-z0-9]{1}$/)) {
-            dispatch('update', e.key);
-            currentKey = e.key;
-            return;
+    onfocus={() => {
+        if (ref) {
+            ref.focus();
         }
     }}
-    class="flex h-12 w-10 select-none items-center justify-center rounded-lg bg-white text-base shadow focus:outline-none focus:ring focus:ring-purple-500 dark:bg-gray-600 dark:text-gray-200"
+    class="flex h-12 w-10 select-none items-center justify-center rounded-lg bg-white text-base shadow focus-within:outline-none focus-within:ring focus-within:ring-purple-500 dark:bg-gray-600 dark:text-gray-200"
 >
-    {currentKey}
+    <input
+        bind:this={ref}
+        type="text"
+        onpaste={async (e) => {
+            const v = e.clipboardData?.getData('text/plain');
+            dispatch('paste', v);
+        }}
+        onkeydown={async (e) => {
+            if (e.code == 'Backspace') {
+                e.stopPropagation();
+                e.preventDefault();
+                if (value != '') {
+                    dispatch('clear');
+                    value = '';
+                    return;
+                }
+            }
+            if (e.ctrlKey == false && e.key.match(/^[a-z0-9]{1}$/)) {
+                e.stopPropagation();
+                e.preventDefault();
+                dispatch('update', e.key);
+                value = e.key;
+                return;
+            }
+        }}
+        class="color-transparent width-0 hidden-0 sr-only bg-transparent"
+    />
+    {value}
 </div>

@@ -123,6 +123,7 @@
                         </div>
                     </div>
                     <button
+                        aria-label="sidebar toggle"
                         on:click={() => {
                             openProfileMenu = !openProfileMenu;
                         }}

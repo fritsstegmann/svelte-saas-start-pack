@@ -8,9 +8,16 @@ const config = {
         adapter: adapter(),
         alias: {
             $components: 'src/components',
+            $i18n: 'src/paraglide',
             $lib: 'src/lib',
             $server: 'src/lib/server',
         },
+    },
+    compilerOptions: {
+        // disable all warnings coming from node_modules and all accessibility warnings
+        warningFilter: (warning) =>
+            !warning.filename?.includes('node_modules') &&
+            !warning.code.startsWith('a11y'),
     },
 };
 

@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "dev": "vite dev",
-        "build": "vite build",
+        "build": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide && vite build",
         "preview": "vite preview",
         "test": "npm run test:integration && npm run test:unit",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -16,7 +16,9 @@
         "generate": "drizzle-kit generate",
         "migrate": "drizzle-kit migrate",
         "storybook": "storybook dev -p 6006",
-        "build-storybook": "storybook build"
+        "build-storybook": "storybook build",
+        "i18n:watch": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --watch",
+        "postinstall": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide"
     },
     "devDependencies": {
         "@chromatic-com/storybook": "^3.2.2",
@@ -25,10 +27,11 @@
         "@storybook/addon-essentials": "^8.4.2",
         "@storybook/addon-interactions": "^8.4.2",
         "@storybook/addon-styling-webpack": "^1.0.1",
-        "@storybook/addon-svelte-csf": "^4.1.7",
+        "@storybook/addon-svelte-csf": "^5.0.0-next.11",
         "@storybook/blocks": "^8.4.2",
-        "@storybook/svelte": "^8.4.2",
-        "@storybook/sveltekit": "^8.4.2",
+        "@storybook/svelte": "^8.4.4",
+        "@storybook/sveltekit": "^8.4.4",
+        "@storybook/svelte-vite": "^8.4.4",
         "@storybook/test": "^8.4.2",
         "@sveltejs/adapter-auto": "^3.0.0",
         "@sveltejs/kit": "^2.0.0",
@@ -48,7 +51,7 @@
         "prettier": "^3.1.1",
         "prettier-plugin-svelte": "^3.1.2",
         "sass": "^1.77.8",
-        "storybook": "^8.4.2",
+        "storybook": "^8.4.4",
         "storybook-dark-mode": "^4.0.2",
         "storybook-tailwind-dark-mode": "^1.0.22",
         "svelte-check": "^3.6.0",
@@ -57,7 +60,8 @@
         "typescript": "^5.0.0",
         "typescript-eslint": "^8.0.0-alpha.20",
         "vite": "^5.0.3",
-        "vitest": "^1.2.0"
+        "vitest": "^1.2.0",
+        "@inlang/paraglide-js": "1.11.3"
     },
     "type": "module",
     "dependencies": {

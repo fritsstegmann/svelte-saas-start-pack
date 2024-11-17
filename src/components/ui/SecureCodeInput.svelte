@@ -1,52 +1,35 @@
-<script>
+<script lang="ts">
     import SecureCodeInputElement from './SecureCodeInputElement.svelte';
 
-    /**
-     * @type {string | undefined}
-     */
-    export let name = undefined;
+    export let name: string | undefined = undefined;
+    export let size: number;
+    export let value: string | undefined = undefined;
 
-    /**
-     * @type {number}
-     */
-    export let size;
+    export let values: Array<string> = Array(size);
 
-    /**
-     * @type {string | undefined}
-     */
-    export let value = undefined;
+    let ref: HTMLDivElement;
 
-    /**
-     * @type {HTMLDivElement}
-     */
-    let ref;
+    const codes: string[] = Array(size);
 
-    /**
-     * @type {string[]}
-     */
-    const codes = Array(size);
+    export let errorBag: import('./ErrorBag').ErrorBag | undefined = undefined;
 
-    /** @type {import('./ErrorBag').ErrorBag | undefined} */
-    export let errorBag = undefined;
+    function findFocusedItem(): HTMLDivElement | null {
+        const focusItem: HTMLDivElement | null = ref.querySelector(
+            'div:has(input:focus)'
+        );
 
-    /**
-     * @param {{detail: string}} param0
-     */
-    const keyDown = ({ detail }) => {
-        /**
-         * @type {HTMLDivElement | null}
-         */
-        const focusItem = ref.querySelector('div:focus');
+        return focusItem;
+    }
+
+    const keyDown = ({ detail }: { detail: string }) => {
+        const focusItem = findFocusedItem();
         if (focusItem) {
             const index = Array.prototype.indexOf.call(ref.children, focusItem);
 
             codes[index] = detail;
 
             const nextIndex = index + 2;
-            /**
-             * @type {HTMLDivElement | null}
-             */
-            const nextItem = ref.querySelector(
+            const nextItem: HTMLDivElement | null = ref.querySelector(
                 'div:nth-child(' + nextIndex + ')'
             );
 
@@ -58,10 +41,13 @@
             }
         }
     };
+
+    let width = size * 5;
 </script>
 
 <div
     bind:this={ref}
+    style={`max-width: ${width}rem;`}
     class="flex items-center justify-around space-x-2"
 >
     <input
@@ -69,10 +55,43 @@
         {name}
         {value}
     />
-    {#each { length: size } as _}
+    {#each { length: size } as _, i}
         <SecureCodeInputElement
             on:update={keyDown}
-            on:clear={() => {}}
+            bind:value={values[i]}
+            on:paste={(e) => {
+                if (i == 0 && e.detail.length == size) {
+                    values.forEach((_: string, i: number) => {
+                        values[i] = e.detail[i];
+                    });
+
+                    values = [...values];
+                    value = values.join('');
+
+                    findFocusedItem()?.blur();
+                }
+            }}
+            on:clear={() => {
+                const focusItem: HTMLDivElement | null = findFocusedItem();
+                if (focusItem) {
+                    const index = Array.prototype.indexOf.call(
+                        ref.children,
+                        focusItem
+                    );
+
+                    const nextIndex = index - 1;
+                    const nextItem: HTMLDivElement | null = ref.querySelector(
+                        'div:nth-child(' + nextIndex + ')'
+                    );
+
+                    if (nextItem === null) {
+                        focusItem.blur();
+                        value = codes.join('');
+                    } else {
+                        nextItem.focus();
+                    }
+                }
+            }}
         />
     {/each}
 </div>

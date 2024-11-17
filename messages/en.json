@@ -1,0 +1,7 @@
+{
+    "$schema": "https://inlang.com/schema/inlang-message-format",
+    "missingInput": "This field is required",
+    "invalidCredentials": "The credentials do not match our records.",
+    "tooManyRequests": "Too many requests",
+    "successfullUpdate": "Successfully updated profile"
+}

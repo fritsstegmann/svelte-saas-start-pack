@@ -23,13 +23,6 @@
 
     export { clazz as class };
 
-    /**
-     * @param {HTMLInputElement} node
-     */
-    function typeAction(node) {
-        node.type = type;
-    }
-
     if (value == undefined && typeof defaultValue == 'string') {
         value = defaultValue;
     }
@@ -58,7 +51,7 @@
             }}
             data-lpignore
             placeholder={placeHolder}
-            use:typeAction
+            {type}
             class="w-full flex-grow bg-inherit focus:outline-none"
             bind:value
         />

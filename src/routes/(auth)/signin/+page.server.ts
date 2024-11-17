@@ -10,9 +10,10 @@ import { TokenBucket } from '$lib/server/ratelimit';
 import type { PageServerLoad } from './$types';
 import validate from '$lib/server/middleware/validate';
 import { Throttler } from '$lib/server/throttling';
+import * as m from '../../../paraglide/messages';
 
 export const load: PageServerLoad = async (event) => {
-    const bucket = new TokenBucket('signin', 2, 1);
+    const bucket = new TokenBucket('security', 2, 1);
     if (!(await bucket.consume(event.getClientAddress(), 1))) {
         error(429);
     }
@@ -26,7 +27,7 @@ export const actions: Actions = {
         if (!(await bucket.consume(getClientAddress(), 1))) {
             return fail(422, {
                 errors: {
-                    username: ['request limit exceeded, wait a second'],
+                    username: [m.tooManyRequests()],
                 },
                 fields: {
                     username: '',
@@ -37,8 +38,18 @@ export const actions: Actions = {
 
         const data = await validate(
             z.object({
-                username: z.string().min(1).max(256),
-                password: z.string().min(10).max(256),
+                username: z
+                    .string({
+                        message: m.missingInput(),
+                    })
+                    .min(1)
+                    .max(256),
+                password: z
+                    .string({
+                        message: m.missingInput(),
+                    })
+                    .min(10)
+                    .max(256),
             }),
             request
         );
@@ -83,9 +94,7 @@ export const actions: Actions = {
                     }
                     return fail(422, {
                         errors: {
-                            username: [
-                                'The credentials do not match our records. invalid password',
-                            ],
+                            username: [m.invalidCredentials()],
                         },
                         fields: {
                             username: data.fields.username,
@@ -98,7 +107,7 @@ export const actions: Actions = {
                     if (!(await throttler.consume(data.fields.username))) {
                         return fail(422, {
                             errors: {
-                                username: ['Too many requests'],
+                                username: [m.tooManyRequests()],
                             },
                             fields: {
                                 username: data.fields.username,
@@ -108,9 +117,7 @@ export const actions: Actions = {
                     }
                     return fail(422, {
                         errors: {
-                            username: [
-                                'The credentials do not match our records. missing user',
-                            ],
+                            username: [m.tooManyRequests()],
                         },
                         fields: {
                             username: data.fields.username,
@@ -121,6 +128,11 @@ export const actions: Actions = {
 
                 await throttler.reset(data.fields.username);
 
+                const session = await createSession(
+                    generateSecureCode(),
+                    user.id
+                );
+
                 await db
                     .update(usersTable)
                     .set({
@@ -128,17 +140,12 @@ export const actions: Actions = {
                     })
                     .where(eq(usersTable.id, user.id));
 
-                const session = await createSession(
-                    generateSecureCode(),
-                    user.id
-                );
-
                 setSessionTokenCookie(cookies, session.id, session.expiresAt);
             } catch {
                 if (!(await throttler.consume(data.fields.username))) {
                     return fail(422, {
                         errors: {
-                            username: ['Too many requests'],
+                            username: [m.tooManyRequests()],
                         },
                         fields: {
                             username: data.fields.username,
@@ -160,7 +167,7 @@ export const actions: Actions = {
             if (!(await throttler.consume(data.error.data.fields.username))) {
                 return fail(422, {
                     errors: {
-                        username: ['Too many requests'],
+                        username: [m.tooManyRequests()],
                     },
                     fields: {
                         username: data.error.data.fields.username,

@@ -1,43 +1,18 @@
 <script lang="ts">
     import SecondaryButton from '$components/ui/SecondaryButton.svelte';
     import TextInput from '$components/ui/TextInput.svelte';
-    import { quartInOut } from 'svelte/easing';
     import VerifyEmail from '../components/VerifyEmail.svelte';
     import { fade } from 'svelte/transition';
     import { applyAction, enhance } from '$app/forms';
     import ChangeEmail from '../components/ChangeEmail.svelte';
+    import height from '$components/transition/height';
+    import type { ActionData } from './$types.js';
 
     export let data;
-    export let form;
+    export let form: ActionData;
 
     let showVerifyDialog = false;
     let showChangeEmailDialog = false;
-
-    function notifications(
-        node: HTMLElement,
-        { duration }: { duration: number }
-    ) {
-        const height = parseInt(getComputedStyle(node).height);
-        const paddingTop = parseInt(getComputedStyle(node).paddingTop);
-        const paddingBottom = parseInt(getComputedStyle(node).paddingBottom);
-        const opacity = +getComputedStyle(node).opacity;
-
-        return {
-            duration,
-            css: (t: number) => {
-                const eased = quartInOut(t);
-
-                const scaledOpacity = opacity / 5;
-                return `
-                    overflow: hidden;
-                    padding-top: ${eased * paddingTop};
-                    padding-bottom: ${eased * paddingBottom};
-                    height: ${eased * height};
-                    opacity: ${scaledOpacity * t * 5};
-                `;
-            },
-        };
-    }
 </script>
 
 <div class="w-full">
@@ -45,10 +20,10 @@
         <div
             on:introend
             on:introstart
-            transition:notifications={{
+            transition:height={{
                 duration: 300,
             }}
-            class="flex h-14 items-center justify-between rounded-lg border border-green-500 bg-green-100 px-5 py-3 text-green-700 shadow"
+            class="mb-6 flex h-14 items-center justify-between rounded-lg border border-green-500 bg-green-100 px-5 py-3 text-green-700 shadow"
         >
             <div
                 transition:fade={{
@@ -62,12 +37,15 @@
                     duration: 50,
                 }}
                 on:click={() => {
-                    form.message = undefined;
+                    if (form) {
+                        form.message = undefined;
+                    }
                 }}
             >
                 close
             </button>
         </div>
+        }
     {/if}
 
     <div class="text-2xl font-medium text-primary-600">Security</div>
@@ -76,8 +54,21 @@
         class="mt-12"
         method="post"
         use:enhance={() => {
-            return async ({ result }) => {
-                await applyAction(result);
+            return async ({ result, action }) => {
+                if (result.type === 'success') {
+                    await applyAction(result);
+
+                    if (action.search === '?/getEmailChangeCode') {
+                        showChangeEmailDialog = true;
+                    }
+                    if (action.search === '?/getVerifyEmailCode') {
+                        showVerifyDialog = true;
+                    }
+                } else {
+                    if (result.type === 'failure') {
+                        form = result.data as ActionData;
+                    }
+                }
             };
         }}
     >
@@ -88,6 +79,7 @@
                 label="Email"
                 class="bg-white"
                 defaultValue={data.profile?.email}
+                errorBag={form?.errors}
             />
             {#if data.profile?.emailVerified}
                 <div
@@ -116,9 +108,7 @@
             <SecondaryButton
                 type="submit"
                 formaction="?/getEmailChangeCode"
-                on:click={() => {
-                    showChangeEmailDialog = true;
-                }}
+                on:click={() => {}}
             >
                 Update email
             </SecondaryButton>
@@ -126,9 +116,6 @@
                 type="submit"
                 disabled={data.profile?.emailVerified}
                 formaction="?/getVerifyEmailCode"
-                on:click={() => {
-                    showVerifyDialog = true;
-                }}
             >
                 Verify email
             </SecondaryButton>
@@ -144,20 +131,18 @@
         <legend class="text-2xl text-gray-400">Update password</legend>
         <div class="mt-2 space-y-2">
             <TextInput
-                errorBag={form?.errors}
                 name="oldPassword"
                 type="password"
                 label="Old password"
                 class="bg-white"
-                defaultValue={form?.fields?.oldPassword}
+                errorBag={form?.errors}
             />
             <TextInput
-                errorBag={form?.errors}
                 name="newPassword"
                 type="password"
                 label="Password"
                 class="bg-white"
-                defaultValue={form?.fields?.newPassword}
+                errorBag={form?.errors}
             />
             <TextInput
                 name="confirmPassword"
@@ -165,7 +150,6 @@
                 label="Confirm password"
                 class="bg-white"
                 errorBag={form?.errors}
-                defaultValue={form?.fields?.confirmPassword}
             />
         </div>
 

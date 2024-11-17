@@ -24,6 +24,7 @@ import {
     validateConfirmedPassword,
     validateUserSession,
 } from '$lib/server/svelte';
+import { missingInput } from '$i18n/messages';
 
 export const load: PageServerLoad = async ({ locals, url }) => {
     const { user } = validateUserSession({ locals, url });
@@ -64,7 +65,11 @@ export const actions: Actions = {
         if (profile) {
             const v = await validate(
                 z.object({
-                    code: z.string().min(7),
+                    code: z
+                        .string({
+                            message: missingInput(),
+                        })
+                        .min(7),
                 }),
                 request
             );
@@ -120,7 +125,13 @@ export const actions: Actions = {
 
         const v = await validate(
             z.object({
-                email: z.string().min(1).max(256).email(),
+                email: z
+                    .string({
+                        message: missingInput(),
+                    })
+                    .min(1)
+                    .max(256)
+                    .email(),
             }),
             request
         );
@@ -166,14 +177,12 @@ export const actions: Actions = {
             redirect(302, '/signin');
         }
 
-        const bucket = new TokenBucket('verifyEmail', 1, 1);
+        const bucket = new TokenBucket('security', 1, 1);
         if (!(await bucket.consume(getClientAddress(), 1))) {
             error(429);
         }
 
-        if (!passwordConfirmValid(locals.user.lastPasswordConfirmAt)) {
-            redirect(302, '/confirm-password?redirect=/profile/security');
-        }
+        validateConfirmedPassword({ locals }, '/profile/security');
 
         const profile = (
             await db
@@ -185,7 +194,11 @@ export const actions: Actions = {
         if (profile) {
             const v = await validate(
                 z.object({
-                    code: z.string().min(6),
+                    code: z
+                        .string({
+                            message: missingInput(),
+                        })
+                        .min(6),
                 }),
                 request
             );
@@ -225,6 +238,8 @@ export const actions: Actions = {
                         } as { type: string; message: string } | undefined,
                     };
                 }
+            } else {
+                return v.error;
             }
         }
     },
@@ -261,9 +276,21 @@ export const actions: Actions = {
         const v = await validate(
             z
                 .object({
-                    oldPassword: z.string().min(10),
-                    newPassword: z.string().min(10),
-                    confirmPassword: z.string().min(10),
+                    oldPassword: z
+                        .string({
+                            message: missingInput(),
+                        })
+                        .min(10),
+                    newPassword: z
+                        .string({
+                            message: missingInput(),
+                        })
+                        .min(10),
+                    confirmPassword: z
+                        .string({
+                            message: missingInput(),
+                        })
+                        .min(10),
                 })
                 .superRefine(({ confirmPassword, newPassword }, ctx) => {
                     if (confirmPassword !== newPassword) {

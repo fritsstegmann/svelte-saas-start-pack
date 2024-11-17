@@ -70,7 +70,11 @@ export const actions = {
                 const redirectUrl = url.searchParams.get('redirect');
 
                 if (redirectUrl) {
-                    redirect(302, redirectUrl);
+                    if (redirectUrl.startsWith('/')) {
+                        redirect(302, `http://localhost:5173${redirectUrl}`);
+                    } else {
+                        redirect(302, `http://localhost:5173/${redirectUrl}`);
+                    }
                 } else {
                     redirect(302, '/');
                 }

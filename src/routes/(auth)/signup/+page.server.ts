@@ -1,3 +1,4 @@
+import { missingInput } from '$i18n/messages';
 import { db } from '$lib/server/db';
 import validate from '$lib/server/middleware/validate';
 import {
@@ -6,7 +7,7 @@ import {
     usersTable,
 } from '$lib/server/schema';
 import { hashPassword } from '$lib/server/security/utils';
-import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { error, fail, redirect, type Actions } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import z from 'zod';
 
@@ -15,23 +16,28 @@ export const actions: Actions = {
         const data = await validate(
             z
                 .object({
-                    name: z.string().min(1, 'User name is a required field'),
+                    name: z.string({
+                        message: missingInput(),
+                    }),
                     email: z
-                        .string()
+                        .string({
+                            message: missingInput(),
+                        })
                         .email()
-                        .min(1, 'Email is a required field')
                         .refine(async (current) => {
                             const count = (
                                 await db
                                     .select()
-                                    .from(usersTable)
-                                    .where(eq(usersTable.userName, current))
+                                    .from(userProfilesTable)
+                                    .where(eq(userProfilesTable.email, current))
                             ).length;
 
                             return count < 1;
                         }, 'Email has been taken'),
                     username: z
-                        .string()
+                        .string({
+                            message: missingInput(),
+                        })
                         .min(3)
                         .refine(async (current) => {
                             const count = (
@@ -43,18 +49,26 @@ export const actions: Actions = {
 
                             return count < 1;
                         }, 'User name has been taken'),
-                    password: z.string().min(10),
-                    confirmPassword: z.string().min(10),
+                    password: z
+                        .string({
+                            message: missingInput(),
+                        })
+                        .min(10),
+                    confirmPassword: z
+                        .string({
+                            message: missingInput(),
+                        })
+                        .min(10),
                 })
                 .superRefine(({ confirmPassword, password }, ctx) => {
                     if (confirmPassword !== password) {
                         ctx.addIssue({
+                            path: ['confirmPassword'],
                             code: 'custom',
                             message: 'The passwords did not match',
                         });
                     }
                 }),
-
             request
         );
 
@@ -64,48 +78,40 @@ export const actions: Actions = {
                 password: data.fields.password,
             };
 
-            try {
-                const user = (
-                    await db
-                        .insert(usersTable)
-                        .values({
-                            userName: data.fields.username,
-                        })
-                        .returning()
-                ).at(0);
+            const user = (
+                await db
+                    .insert(usersTable)
+                    .values({
+                        userName: data.fields.username,
+                    })
+                    .returning()
+            ).at(0);
 
-                if (user) {
-                    const profileData = {
-                        name: data.fields.name,
-                        email: data.fields.email,
-                        avatar: null,
-                        userId: user.id,
-                    };
+            if (user) {
+                const profileData = {
+                    name: data.fields.name,
+                    email: data.fields.email,
+                    avatar: null,
+                    userId: user.id,
+                };
 
-                    await db
-                        .insert(userProfilesTable)
-                        .values(profileData)
-                        .returning();
+                await db
+                    .insert(userProfilesTable)
+                    .values(profileData)
+                    .returning();
 
-                    await db
-                        .insert(userPasswordsTable)
-                        .values({
-                            id: user.id,
-                            password: await hashPassword(userData.password),
-                        })
-                        .returning();
+                await db
+                    .insert(userPasswordsTable)
+                    .values({
+                        id: user.id,
+                        password: await hashPassword(userData.password),
+                    })
+                    .returning();
 
-                    redirect(302, '/signin');
-                }
-            } catch {
-                return fail(400, {
-                    fields: data.fields,
-                });
+                redirect(302, '/signin');
             }
         } else {
             return data.error;
         }
-
-        return redirect(500, '/signup');
     },
 };

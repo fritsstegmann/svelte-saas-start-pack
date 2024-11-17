@@ -1,4 +1,5 @@
 <script>
+    import PrimaryButton from '$components/ui/PrimaryButton.svelte';
     import TextInput from '$components/ui/TextInput.svelte';
     export let form;
 </script>
@@ -14,7 +15,8 @@
             label="Name"
             placeHolder={'John Doe'}
             value={form?.fields.name}
-            errorBag={form?.errors} />
+            errorBag={form?.errors}
+        />
     </div>
     <div class="mt-3">
         <TextInput
@@ -22,7 +24,8 @@
             label="Email"
             placeHolder={'john@example.com'}
             value={form?.fields.email}
-            errorBag={form?.errors} />
+            errorBag={form?.errors}
+        />
     </div>
     <div class="mt-6">
         <TextInput
@@ -30,7 +33,8 @@
             label="User name"
             placeHolder={'johndoe'}
             value={form?.fields.username}
-            errorBag={form?.errors} />
+            errorBag={form?.errors}
+        />
     </div>
     <div class="mt-6">
         <TextInput
@@ -38,7 +42,8 @@
             label="Password"
             type="password"
             value={form?.fields.password}
-            errorBag={form?.errors} />
+            errorBag={form?.errors}
+        />
     </div>
     <div class="mt-3">
         <TextInput
@@ -46,19 +51,23 @@
             label="Confirm password"
             type="password"
             value={form?.fields.confirmPassword}
-            errorBag={form?.errors} />
+            errorBag={form?.errors}
+        />
     </div>
     <div class="mt-8">
-        <button
-            class="w-full rounded-lg border border-primary-500 bg-primary-500 py-2 text-white shadow transition-all duration-200 hover:bg-primary-400 focus:outline-none focus:ring focus:ring-primary-300">
+        <PrimaryButton
+            type="submit"
+            class="w-full"
+        >
             Sign up
-        </button>
+        </PrimaryButton>
     </div>
     <div class="mt-4 space-x-2">
         <span class="dark:text-gray-300">Already have an account?</span>
         <a
             class="font-bold text-primary-500 hover:text-primary-400"
-            href="/signin">
+            href="/signin"
+        >
             Sign in
         </a>
     </div>
