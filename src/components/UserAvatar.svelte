@@ -8,7 +8,7 @@
 {#if profile?.avatar}
     <img
         alt="profile avatar"
-        class="size-7 overflow-hidden rounded-xl border-2 border-white ring-1 ring-black"
+        class="size-8 overflow-hidden rounded-full border-2 border-white ring-1 ring-black"
         src={profile.avatar}
     />
 {:else}
@@ -18,7 +18,7 @@
         viewBox="0 0 24 24"
         stroke-width="1"
         stroke="currentColor"
-        class="size-7 rounded-xl text-gray-200"
+        class="size-8 rounded-full text-gray-200"
     >
         <path
             stroke-linecap="round"

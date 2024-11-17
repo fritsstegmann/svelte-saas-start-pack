@@ -1,4 +1,4 @@
-import { type Actions } from '@sveltejs/kit';
+import { redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { userProfilesTable } from '$lib/server/schema';
 import { db } from '$lib/server/db';
@@ -62,6 +62,8 @@ export const actions: Actions = {
                 avatar: 'avatar/' + hashResult,
             })
             .where(eq(userProfilesTable.userId, user.id));
+
+        return redirect(302, '/profile/details');
     },
     updateProfile: async ({ request, locals, url }) => {
         const { user } = validateUserSession({ locals, url });
@@ -84,11 +86,6 @@ export const actions: Actions = {
             })
             .where(eq(userProfilesTable.userId, user.id));
 
-        return {
-            message: {
-                type: 'success',
-                message: m.successfullUpdate(),
-            } as { type: string; message: string } | undefined,
-        };
+        return redirect(302, '/profile/details');
     },
 };
