@@ -1,8 +1,5 @@
-<script>
-    /**
-     * @type {{avatar: string} | undefined}
-     */
-    export let profile;
+<script lang="ts">
+    export let profile: { avatar: string | null };
 </script>
 
 {#if profile?.avatar}

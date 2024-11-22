@@ -7,6 +7,7 @@
 
 <Label.Root
     for={id}
-    class="text-gray-600/90 dark:text-gray-300">
+    class="mb-1 text-gray-600/90 dark:text-gray-300"
+>
     <slot />
 </Label.Root>

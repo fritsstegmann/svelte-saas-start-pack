@@ -38,7 +38,14 @@
         </div>
     {/if}
 
-    <div class="text-2xl font-medium text-primary-600">Details</div>
+    <div>
+        <div class="text-2xl font-medium text-primary-600">
+            User Profile Details
+        </div>
+        <div class="mt-1 text-sm text-gray-800">
+            Update user profile information
+        </div>
+    </div>
 
     <div class="mt-12">
         <ProfileAvatarUpload profile={data.profile} />

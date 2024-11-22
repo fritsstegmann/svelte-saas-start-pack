@@ -28,14 +28,15 @@
     </div>
 </div>
 <hr class="my-6" />
-<div class="mx-auto flex w-full">
+<div class="mx-auto flex w-full flex-col sm:flex-row">
     <aside class="mr-8 min-w-64">
-        <ul class="space-y-4">
+        <ul class="mb-10 space-y-4">
             <li>
                 <a
                     data-sveltekit-replacestate
                     class="block rounded-lg px-5 py-3 font-semibold text-gray-700 transition duration-300 hover:bg-primary-200 hover:text-primary-700"
-                    href="/profile/details">
+                    href="/profile/details"
+                >
                     Details
                 </a>
             </li>
@@ -43,7 +44,17 @@
                 <a
                     data-sveltekit-replacestate
                     class="block rounded-lg px-5 py-3 font-semibold text-gray-700 transition duration-300 hover:bg-primary-200 hover:text-primary-700"
-                    href="/profile/security">
+                    href="/profile/settings"
+                >
+                    App Settings
+                </a>
+            </li>
+            <li>
+                <a
+                    data-sveltekit-replacestate
+                    class="block rounded-lg px-5 py-3 font-semibold text-gray-700 transition duration-300 hover:bg-primary-200 hover:text-primary-700"
+                    href="/profile/security"
+                >
                     Security
                 </a>
             </li>
@@ -57,7 +68,8 @@
                     duration: timing,
                     delay: timing + 100,
                 }}
-                out:fade={{ easing: cubicIn, duration: timing }}>
+                out:fade={{ easing: cubicIn, duration: timing }}
+            >
                 <slot />
             </div>
         {/key}

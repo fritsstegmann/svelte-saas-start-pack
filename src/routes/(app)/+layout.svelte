@@ -9,14 +9,27 @@
     $: p = data.pathname.startsWith('/profile') ? 'profile' : data.pathname;
 
     const timing = 100;
+
+    import { open } from '$components/ui/Sidebar.svelte';
 </script>
 
 <div class="flex">
-    <Sidebar profile={data.profile} />
-    <div class="h-screen flex-grow overflow-y-scroll">
+    <Sidebar
+        showOpenCode={false}
+        profile={data.profile!}
+    />
+    <div
+        class:w-14={open()}
+        class:sm:ml-0={open()}
+        class="h-screen flex-grow overflow-y-scroll"
+    >
         <PageHeader />
 
-        <div class="container mx-auto my-16 px-8">
+        <div
+            class:hidden={open()}
+            class:sm:block={open()}
+            class="container mx-auto my-16 px-8"
+        >
             {#key p}
                 <div
                     in:fade={{

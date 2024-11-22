@@ -1,10 +1,9 @@
+import { validateUserSession } from '$lib/server/svelte';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { redirect } from '@sveltejs/kit';
+import { type ServerLoadEvent } from '@sveltejs/kit';
 
-export async function GET(event) {
-    if (!event.locals.user) {
-        redirect(302, '/signin');
-    }
+export async function GET(event: ServerLoadEvent) {
+    validateUserSession(event);
 
     const client = new S3Client({
         endpoint: 'http://127.0.0.1:8333',

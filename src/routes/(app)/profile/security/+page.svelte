@@ -48,7 +48,12 @@
         }
     {/if}
 
-    <div class="text-2xl font-medium text-primary-600">Security</div>
+    <div>
+        <div class="text-2xl font-medium text-primary-600">
+            Security Details
+        </div>
+        <div class="mt-1 text-sm text-gray-800">Security and login details</div>
+    </div>
 
     <form
         class="mt-12"

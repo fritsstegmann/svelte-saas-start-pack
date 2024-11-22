@@ -59,7 +59,7 @@ export const actions: Actions = {
         await db
             .update(userProfilesTable)
             .set({
-                avatar: 'avatar/' + hashResult,
+                avatar: '/avatar/' + hashResult,
             })
             .where(eq(userProfilesTable.userId, user.id));
 

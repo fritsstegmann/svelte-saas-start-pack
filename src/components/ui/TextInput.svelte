@@ -39,13 +39,15 @@
 
 <div>
     {#if label}
-        <InputLabel {id}>{label}</InputLabel>
+        <InputLabel {id}>
+            {label}
+        </InputLabel>
     {/if}
     <div
         onfocusin={() => {
             ref?.focus();
         }}
-        class={`mt-1 flex h-10 items-center rounded-md border-2 border-gray-300 bg-white transition duration-300 focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-300 dark:border-gray-800 dark:bg-gray-700 dark:text-gray-200 dark:focus-within:ring-primary-500 ${clazz}`}
+        class={`flex h-10 items-center rounded-md border-2 border-gray-300 bg-white transition duration-300 focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-300 dark:border-gray-800 dark:bg-gray-700 dark:text-gray-200 dark:focus-within:border-primary-800 dark:focus-within:ring-primary-500 ${clazz}`}
     >
         <div
             tabindex={-1}
@@ -59,8 +61,9 @@
         </div>
         <input
             bind:this={ref}
-            {name}
             {id}
+            {name}
+            {type}
             autocomplete="off"
             oninput={() => {
                 if (errorBag && name && errorBag[name]) {
@@ -69,7 +72,6 @@
             }}
             data-lpignore
             placeholder={placeHolder}
-            {type}
             class="w-full flex-grow bg-inherit px-2 py-1 focus:outline-none"
             bind:value
         />

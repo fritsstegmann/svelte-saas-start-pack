@@ -60,10 +60,11 @@
             in:fade={{
                 duration: 50,
             }}
-            on:keydown|stopPropagation={closeDialog}>
+            on:keydown|stopPropagation={closeDialog}
+        >
             <!-- svelte-ignore a11y-no-static-element-interactions -->
             <div
-                class={`fixed inset-x-0 top-28 z-30 mx-auto overflow-hidden rounded-xl bg-white/75 shadow-xl ring ring-white/10 drop-shadow-xl backdrop-blur-xl transition duration-300 ease-in-out dark:bg-gray-600/40 dark:ring-0 dark:ring-black/10 ${
+                class={`fixed inset-x-0 top-28 z-30 mx-auto overflow-hidden rounded-xl bg-white/50 shadow-xl ring ring-white/10 drop-shadow-xl backdrop-blur-xl backdrop-contrast-200 transition duration-300 ease-in-out dark:bg-gray-600/40 dark:ring-0 dark:ring-black/10 ${
                     clazz || ''
                 }`}
                 in:fade={transitionDetails}
@@ -75,18 +76,21 @@
                 }}
                 on:close={() => {
                     show = false;
-                }}>
+                }}
+            >
                 {#if title}
                     <CardHeader
                         {title}
-                        {description} />
+                        {description}
+                    />
                 {/if}
                 {#if $$slots.default}
                     <!-- svelte-ignore a11y-no-static-element-interactions -->
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <div
                         class:p-4={card}
-                        on:click|stopPropagation>
+                        on:click|stopPropagation
+                    >
                         <slot />
                     </div>
                 {/if}
