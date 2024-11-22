@@ -1,4 +1,4 @@
-import { defineJob } from '../job';
+import { defineJob } from 'quey';
 
 export default defineJob<{ name: string }>(
     'MyJob',
