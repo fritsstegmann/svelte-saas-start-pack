@@ -11,6 +11,7 @@ import type { PageServerLoad } from './$types';
 import validate from '$lib/server/middleware/validate';
 import { Throttler } from '$lib/server/throttling';
 import * as m from '../../../paraglide/messages';
+import userRepository from '$lib/server/repositories/userRepository';
 
 export const load: PageServerLoad = async (event) => {
     const bucket = new TokenBucket('security', 2, 1);
@@ -133,12 +134,9 @@ export const actions: Actions = {
                     user.id
                 );
 
-                await db
-                    .update(usersTable)
-                    .set({
-                        lastPasswordConfirmAt: new Date(),
-                    })
-                    .where(eq(usersTable.id, user.id));
+                await userRepository.update(eq(usersTable.id, user.id), {
+                    lastPasswordConfirmAt: new Date(),
+                });
 
                 setSessionTokenCookie(cookies, session.id, session.expiresAt);
             } catch {

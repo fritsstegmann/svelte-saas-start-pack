@@ -1,6 +1,7 @@
 import { missingInput } from '$i18n/messages';
 import { db } from '$lib/server/db';
 import validate from '$lib/server/middleware/validate';
+import userRepository from '$lib/server/repositories/userRepository';
 import {
     userPasswordsTable,
     userProfilesTable,
@@ -79,12 +80,9 @@ export const actions: Actions = {
             };
 
             const user = (
-                await db
-                    .insert(usersTable)
-                    .values({
-                        userName: data.fields.username,
-                    })
-                    .returning()
+                await userRepository.insert({
+                    userName: data.fields.username,
+                })
             ).at(0);
 
             if (user) {
