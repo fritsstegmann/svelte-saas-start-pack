@@ -11,7 +11,16 @@ export function createReposity<T extends TableConfig>(
         afterDelete: (v: (typeof s.$inferSelect)[]) => void;
     }
 ) {
-    async function select(q: SQL | undefined): Promise<typeof s.$inferSelect> {
+    async function first(
+        q: SQL | undefined
+    ): Promise<typeof s.$inferSelect | undefined> {
+        // @ts-expect-error works but typing errors
+        return (await db.select(s).where(q)).at(0);
+    }
+
+    async function select(
+        q: SQL | undefined
+    ): Promise<(typeof s.$inferSelect)[]> {
         // @ts-expect-error works but typing errors
         return db.select(s).where(q);
     }
@@ -45,6 +54,7 @@ export function createReposity<T extends TableConfig>(
     }
 
     return {
+        first,
         select,
         insert,
         update,

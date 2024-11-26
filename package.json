@@ -1,11 +1,27 @@
 {
-  "packageManager": "bun@1.1.13",
-  "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev"
-  },
-  "workspaces": [
-    "apps/*",
-    "libs/*"
-  ]
+    "packageManager": "bun@1.1.13",
+    "scripts": {
+        "cz": "cz",
+        "build": "turbo build",
+        "dev": "turbo dev",
+        "prepare": "husky"
+    },
+    "workspaces": [
+        "apps/*",
+        "libs/*"
+    ],
+    "lint-staged": {
+        "*.{js,jsx,ts,tsx,svelte}": [
+            "eslint --quiet --fix"
+        ],
+        "*.{json,css,js,ts,jsx,tsx,html,svelte}": [
+            "prettier --write --ignore-unknown"
+        ]
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^19.6.0",
+        "@commitlint/config-conventional": "^19.6.0",
+        "husky": "^9.1.7",
+        "lint-staged": "^15.2.10"
+    }
 }

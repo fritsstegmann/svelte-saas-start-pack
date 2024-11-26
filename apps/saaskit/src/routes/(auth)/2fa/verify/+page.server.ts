@@ -4,10 +4,13 @@ import { error, fail, redirect, type Actions } from '@sveltejs/kit';
 import { TokenBucket } from '$lib/server/ratelimit';
 import validate from '$lib/server/middleware/validate';
 import { z } from 'zod';
-import { sessionTable, usersTable } from '$lib/server/schema';
+import { sessionTable, usersTable, userTotpsTable } from '$lib/server/schema';
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
+import userRepository from '$lib/server/repositories/userRepository';
+import { decryptData } from '$lib/server/aes';
+import { APP_KEY } from '$env/static/private';
 
 export const load: PageServerLoad = async ({ locals, getClientAddress }) => {
     if (!locals.user) redirect(302, '/signin');
@@ -36,22 +39,17 @@ export const actions = {
         );
 
         if (data.isOk) {
-            const user = (
+            const userTotp = (
                 await db
                     .select()
-                    .from(usersTable)
+                    .from(userTotpsTable)
                     .where(eq(usersTable.id, locals.user.id))
             ).at(0);
 
-            if (user && user.totpSecret) {
-                if (
-                    verifyTOTP(
-                        decodeBase64(user.totpSecret),
-                        30,
-                        6,
-                        data.fields.code
-                    )
-                ) {
+            if (userTotp && userTotp.totpSecret) {
+                const totp = await decryptData(APP_KEY, userTotp.totpSecret);
+
+                if (verifyTOTP(decodeBase64(totp), 30, 6, data.fields.code)) {
                     await db
                         .update(sessionTable)
                         .set({
