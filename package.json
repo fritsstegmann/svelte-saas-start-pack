@@ -11,10 +11,10 @@
         "libs/*"
     ],
     "lint-staged": {
-        "*.{js,jsx,ts,tsx,svelte}": [
+        "packages/*.{js,jsx,ts,tsx,svelte}": [
             "eslint --quiet --fix"
         ],
-        "*.{json,css,js,ts,jsx,tsx,html,svelte}": [
+        "packages/*.{json,css,js,ts,jsx,tsx,html,svelte}": [
             "prettier --write --ignore-unknown"
         ]
     },
