@@ -1,4 +1,3 @@
-// src/hooks.server.ts
 import { RATE_LIMIT_SHA, THROTTLING_SHA } from '$env/static/private';
 import { TokenBucket } from '$lib/server/ratelimit';
 import { installRateLimit } from '$lib/server/ratelimit/install';
@@ -10,7 +9,9 @@ import {
 import { validateSessionToken } from '$lib/server/security/session';
 import { validateUserSession } from '$lib/server/svelte';
 import { installThrottling } from '$lib/server/throttling/install';
-import { redirect, type Handle } from '@sveltejs/kit';
+import { type Handle } from '@sveltejs/kit';
+
+await redis.connect();
 
 const rateLimitSha = (await redis.scriptExists(RATE_LIMIT_SHA))[0];
 

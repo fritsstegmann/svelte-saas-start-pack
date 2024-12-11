@@ -1,5 +1,5 @@
 {
-    "name": "quey",
+    "name": "@fritsstegmann/utils",
     "version": "0.0.0",
     "files": [
         "dist"
@@ -9,8 +9,5 @@
     "scripts": {
         "build": "tsc",
         "dev": "tsc --watch"
-    },
-    "dependencies": {
-        "@fritsstegmann/utils": "workspace:^"
     }
 }

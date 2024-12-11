@@ -25,7 +25,7 @@ export class Result<T, E> {
         return new Result(undefined, e);
     }
 
-    async fromPromise(promise: Promise<T>) {
+    static async fromPromise<T>(promise: Promise<T>) {
         try {
             return Result.Ok(await promise);
         } catch (e) {
@@ -41,11 +41,18 @@ export class Result<T, E> {
         }
     }
 
-    match<K, L>(okBranch: (v: T) => K, errBranch: (e: E) => L) {
+    async match<K, L>(
+        okBranch: (v: T) => Promise<K>,
+        errBranch: (e: E) => Promise<L>
+    ) {
         if (this.isOk()) {
-            return Result.Ok(okBranch(this._v!));
+            try {
+                return Result.Ok(await okBranch(this._v!)) as Result<K, L>;
+            } catch (e) {
+                return Result.Err(e) as Result<K, L>;
+            }
         } else {
-            return Result.Err(errBranch(this._e!));
+            return Result.Err(await errBranch(this._e!)) as Result<K, L>;
         }
     }
 

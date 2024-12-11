@@ -1,14 +1,16 @@
-import { SQL } from 'drizzle-orm';
+import type { SQL } from 'drizzle-orm';
 import type { TableConfig, PgTableWithColumns } from 'drizzle-orm/pg-core';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+
+import { Result } from '@fritsstegmann/utils';
 
 export function createReposity<T extends TableConfig>(
     db: PostgresJsDatabase,
     s: PgTableWithColumns<T>,
     callbacks: {
-        afterInsert: (v: (typeof s.$inferSelect)[]) => void;
-        afterUpdate: (v: (typeof s.$inferSelect)[]) => void;
-        afterDelete: (v: (typeof s.$inferSelect)[]) => void;
+        afterInsert: (v: (typeof s.$inferSelect)[]) => Promise<void>;
+        afterUpdate: (v: (typeof s.$inferSelect)[]) => Promise<void>;
+        afterDelete: (v: (typeof s.$inferSelect)[]) => Promise<void>;
     }
 ) {
     async function first(
@@ -31,7 +33,7 @@ export function createReposity<T extends TableConfig>(
         // @ts-expect-error works but typing errors
         const results = await db.insert(s).values(v).returning();
 
-        callbacks.afterInsert(results);
+        await Result.fromPromise(callbacks.afterInsert(results));
 
         return results;
     }
@@ -42,13 +44,14 @@ export function createReposity<T extends TableConfig>(
     ) {
         // @ts-expect-error works but typing errors
         const results = await db.update(s).set(v).where(q).returning();
-        callbacks.afterUpdate(results);
+
+        await Result.fromPromise(callbacks.afterUpdate(results));
     }
 
     async function remove(q: SQL | undefined) {
         const results = await db.delete(s).where(q).returning();
 
-        callbacks.afterDelete(results);
+        await Result.fromPromise(callbacks.afterDelete(results));
 
         return results;
     }
