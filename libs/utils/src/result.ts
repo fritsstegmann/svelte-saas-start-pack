@@ -2,16 +2,6 @@ export class Result<T, E> {
     private _v: T | undefined;
     private _e: E | undefined;
 
-    isOk(): boolean {
-        if (this._v === undefined && this._e !== undefined) {
-            return false;
-        }
-        if (this._v !== undefined && this._e === undefined) {
-            return true;
-        }
-        throw Error('Invalid state');
-    }
-
     private constructor(v: T | undefined, e: E | undefined) {
         this._v = v;
         this._e = e;
@@ -25,6 +15,16 @@ export class Result<T, E> {
         return new Result(undefined, e);
     }
 
+    isOk(): boolean {
+        if (this._v === undefined && this._e !== undefined) {
+            return false;
+        }
+        if (this._v !== undefined && this._e === undefined) {
+            return true;
+        }
+        throw Error('Invalid state');
+    }
+
     static async fromPromise<T>(promise: Promise<T>) {
         try {
             return Result.Ok(await promise);
@@ -33,11 +33,15 @@ export class Result<T, E> {
         }
     }
 
-    unwrap() {
-        if (this.isOk()) {
-            return this._v;
-        } else {
-            throw this._e;
+    static async tryPromise<T>(fn: () => Promise<T>) {
+        return Result.fromPromise(fn());
+    }
+
+    static try<T>(fn: () => T) {
+        try {
+            return Result.Ok(fn());
+        } catch (e) {
+            return Result.Err(e);
         }
     }
 
@@ -61,6 +65,14 @@ export class Result<T, E> {
             return this._v;
         } else {
             return fallback;
+        }
+    }
+
+    unwrap() {
+        if (this.isOk()) {
+            return this._v;
+        } else {
+            throw this._e;
         }
     }
 }

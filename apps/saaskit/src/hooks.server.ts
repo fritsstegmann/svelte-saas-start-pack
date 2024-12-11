@@ -11,8 +11,6 @@ import { validateUserSession } from '$lib/server/svelte';
 import { installThrottling } from '$lib/server/throttling/install';
 import { type Handle } from '@sveltejs/kit';
 
-await redis.connect();
-
 const rateLimitSha = (await redis.scriptExists(RATE_LIMIT_SHA))[0];
 
 if (!rateLimitSha) {
