@@ -1,6 +1,5 @@
 <script>
     import { toggle } from '$components/ui/Sidebar.svelte';
-    import TextInput from '$components/ui/TextInput.svelte';
 </script>
 
 <header class="p-4">
@@ -13,7 +12,7 @@
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="size-5 fill-current text-gray-500 transition duration-300 hover:text-primary-700"
+                class="hover:text-primary-700 size-5 fill-current text-gray-500 transition duration-300"
             >
                 <path
                     stroke-width="1"
