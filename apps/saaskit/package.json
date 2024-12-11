@@ -1,5 +1,5 @@
 {
-    "name": "svelte-saas-starter-pack",
+    "name": "@fs/svelte-saaskit",
     "version": "0.0.1",
     "private": true,
     "scripts": {
@@ -19,6 +19,33 @@
         "build-storybook": "storybook build",
         "i18n:watch": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --watch",
         "postinstall": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide"
+    },
+    "dependencies": {
+        "@fs/components": "workspace:^",
+        "@aws-sdk/client-s3": "^3.645.0",
+        "@noble/hashes": "^1.5.0",
+        "@node-rs/argon2": "^1.8.3",
+        "@oslojs/crypto": "^1.0.1",
+        "@oslojs/encoding": "^1.1.0",
+        "@oslojs/otp": "npm:@oslojs/otp",
+        "bits-ui": "^0.21.12",
+        "clsx": "^2.1.1",
+        "date-fns": "^3.6.0",
+        "drizzle-orm": "^0.31.2",
+        "effect": "^3.6.1",
+        "nodemailer": "^6.9.15",
+        "postgres": "^3.4.4",
+        "prettier-plugin-tailwindcss": "^0.6.6",
+        "redis": "^4.7.0",
+        "svelte": "^5",
+        "svelte-portal": "^2.2.1",
+        "tailwind-merge": "^2.4.0",
+        "tailwind-variants": "^0.2.1",
+        "quey": "workspace:^",
+        "uqr": "npm:uqr",
+        "uuid": "^10.0.0",
+        "winston": "^3.14.2",
+        "zod": "^3.23.8"
     },
     "devDependencies": {
         "@chromatic-com/storybook": "^3.2.2",
@@ -65,32 +92,6 @@
         "vitest": "^1.2.0"
     },
     "type": "module",
-    "dependencies": {
-        "@aws-sdk/client-s3": "^3.645.0",
-        "@noble/hashes": "^1.5.0",
-        "@node-rs/argon2": "^1.8.3",
-        "@oslojs/crypto": "^1.0.1",
-        "@oslojs/encoding": "^1.1.0",
-        "@oslojs/otp": "npm:@oslojs/otp",
-        "bits-ui": "^0.21.12",
-        "clsx": "^2.1.1",
-        "date-fns": "^3.6.0",
-        "drizzle-orm": "^0.31.2",
-        "effect": "^3.6.1",
-        "nodemailer": "^6.9.15",
-        "postgres": "^3.4.4",
-        "prettier-plugin-tailwindcss": "^0.6.6",
-        "redis": "^4.7.0",
-        "svelte": "^5",
-        "svelte-portal": "^2.2.1",
-        "tailwind-merge": "^2.4.0",
-        "tailwind-variants": "^0.2.1",
-        "quey": "workspace:^",
-        "uqr": "npm:uqr",
-        "uuid": "^10.0.0",
-        "winston": "^3.14.2",
-        "zod": "^3.23.8"
-    },
     "eslintConfig": {
         "extends": [
             "plugin:storybook/recommended"

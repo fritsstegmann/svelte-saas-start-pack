@@ -1,5 +1,5 @@
-<script>
-    import PrimaryButton from '$components/ui/PrimaryButton.svelte';
+<script lang="ts">
+    import { PrimaryButton } from '@fs/components';
 </script>
 
 <div class="text-center">

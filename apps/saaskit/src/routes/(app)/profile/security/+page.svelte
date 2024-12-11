@@ -49,7 +49,7 @@
     {/if}
 
     <div>
-        <div class="text-2xl font-medium text-primary-600">
+        <div class="text-primary-600 text-2xl font-medium">
             Security Details
         </div>
         <div class="mt-1 text-sm text-gray-800">Security and login details</div>
@@ -112,17 +112,17 @@
         <div class="mt-4 space-x-1">
             <SecondaryButton
                 type="submit"
-                formaction="?/getEmailChangeCode"
-                on:click={() => {}}
-            >
-                Update email
-            </SecondaryButton>
-            <SecondaryButton
-                type="submit"
                 disabled={data.profile?.emailVerified}
                 formaction="?/getVerifyEmailCode"
             >
                 Verify email
+            </SecondaryButton>
+            <SecondaryButton
+                type="submit"
+                formaction="?/getEmailChangeCode"
+                on:click={() => {}}
+            >
+                Update email
             </SecondaryButton>
         </div>
     </form>
