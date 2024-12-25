@@ -8,7 +8,6 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { createHash } from 'node:crypto';
 import validate from '$lib/server/middleware/validate';
 import { validateUserSession } from '$lib/server/svelte';
-import * as m from '$i18n/messages';
 
 export const load: PageServerLoad = async ({ locals, url }) => {
     const { user } = validateUserSession({ locals, url });
