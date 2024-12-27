@@ -1,25 +1,25 @@
-import colors from 'tailwindcss/colors';
+import colors from "tailwindcss/colors";
 
 /** @type {import('tailwindcss').Config} */
 export default {
-    darkMode: 'class',
-    content: ['./src/**/*.{html,js,svelte,ts}'],
+    darkMode: "class",
+    content: ["./src/**/*.{html,js,svelte,ts}"],
     theme: {
         fontFamily: {
-            inter: ['Inter'],
+            inter: ["Inter"],
             sansTest: [
-                'Red Hat Display',
-                'Noto Sans Display',
-                'Inter Tight',
-                'Arial',
-                'Open Sans',
+                "Red Hat Display",
+                "Noto Sans Display",
+                "Inter Tight",
+                "Arial",
+                "Open Sans",
             ],
             // sans: ['Open Sans'],
-            serif: ['Georgia'],
+            serif: ["Georgia"],
         },
         extend: {
             transitionProperty: {
-                width: 'width',
+                width: "width",
             },
             colors: {
                 primary: colors.violet,

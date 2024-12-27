@@ -22,7 +22,7 @@ export class Result<T, E> {
         if (this._v !== undefined && this._e === undefined) {
             return true;
         }
-        throw Error('Invalid state');
+        throw Error("Invalid state");
     }
 
     static async fromPromise<T>(promise: Promise<T>) {
@@ -47,15 +47,17 @@ export class Result<T, E> {
 
     async match<K, L>(
         okBranch: (v: T) => Promise<K>,
-        errBranch: (e: E) => Promise<L>
+        errBranch: (e: E) => Promise<L>,
     ) {
         if (this.isOk()) {
             try {
+                // biome-ignore lint/style/noNonNullAssertion: we already checked the value with isOk
                 return Result.Ok(await okBranch(this._v!)) as Result<K, L>;
             } catch (e) {
                 return Result.Err(e) as Result<K, L>;
             }
         } else {
+            // biome-ignore lint/style/noNonNullAssertion: we already checked the value with isOk
             return Result.Err(await errBranch(this._e!)) as Result<K, L>;
         }
     }
@@ -63,16 +65,14 @@ export class Result<T, E> {
     unwrapOr(fallback: T) {
         if (this.isOk()) {
             return this._v;
-        } else {
-            return fallback;
         }
+        return fallback;
     }
 
     unwrap() {
         if (this.isOk()) {
             return this._v;
-        } else {
-            throw this._e;
         }
+        throw this._e;
     }
 }

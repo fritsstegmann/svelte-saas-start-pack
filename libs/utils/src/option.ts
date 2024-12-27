@@ -1,4 +1,4 @@
-import { Result } from './result.js';
+import { Result } from "./result.js";
 
 export class Option<T> {
     private _v: T | null;
@@ -8,11 +8,11 @@ export class Option<T> {
     }
 
     static Some<T>(v: T) {
-        return new this(v);
+        return new Option(v);
     }
 
     static None() {
-        return new this(null);
+        return new Option(null);
     }
 
     isSome(): boolean {
@@ -22,17 +22,17 @@ export class Option<T> {
     unwrap<T>(): T {
         if (this.isSome()) {
             return this._v as T;
-        } else {
-            throw Error('Missing value');
         }
+        throw Error("Missing value");
     }
 
     async match<K, L>(
         okBranch: (v: T) => Promise<K>,
-        errBranch: () => Promise<L>
+        errBranch: () => Promise<L>,
     ): Promise<Result<K, L>> {
         if (this.isSome()) {
             try {
+                // biome-ignore lint/style/noNonNullAssertion: we already check the value with isSome
                 return Result.Ok(await okBranch(this._v!)) as Result<K, L>;
             } catch (e) {
                 return Result.Err(e) as Result<K, L>;

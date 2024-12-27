@@ -3,12 +3,16 @@
     "vcs": {
         "enabled": true,
         "clientKind": "git",
-        "useIgnoreFile": true
+        "useIgnoreFile": true,
+        "defaultBranch": "main"
     },
     "files": {
         "ignoreUnknown": false,
         "ignore": [
-            "./src/paraglide"
+            "./apps/saaskit/src/paraglide",
+            "./apps/saaskit/.svelte-kit",
+            "./libs/queue/dist",
+            "./libs/utils/dist"
         ]
     },
     "formatter": {
