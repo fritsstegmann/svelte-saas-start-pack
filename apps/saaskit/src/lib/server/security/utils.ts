@@ -1,9 +1,9 @@
-import { sha256 } from '@oslojs/crypto/sha2';
-import { hash, verify } from '@node-rs/argon2';
+import { hash, verify } from "@node-rs/argon2";
+import { sha256 } from "@oslojs/crypto/sha2";
 import {
     encodeBase32LowerCaseNoPadding,
     encodeHexLowerCase,
-} from '@oslojs/encoding';
+} from "@oslojs/encoding";
 
 type SecureCode = string;
 

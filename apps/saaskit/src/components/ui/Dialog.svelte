@@ -1,53 +1,53 @@
 <script>
-    import CardHeader from '$components/ui/CardHeader.svelte';
-    import { browser } from '$app/environment';
-    import { fade } from 'svelte/transition';
-    import Portal from 'svelte-portal';
-    import { onDestroy } from 'svelte';
-    import { quintInOut } from 'svelte/easing';
+import { browser } from "$app/environment";
+import CardHeader from "$components/ui/CardHeader.svelte";
+import { onDestroy } from "svelte";
+import Portal from "svelte-portal";
+import { quintInOut } from "svelte/easing";
+import { fade } from "svelte/transition";
 
-    /** @type {boolean} */
-    export let show = false;
-    /** @type {boolean} */
-    export let sticky = false;
-    /** @type {boolean} */
-    export let card = false;
+/** @type {boolean} */
+export let show = false;
+/** @type {boolean} */
+export let sticky = false;
+/** @type {boolean} */
+export let card = false;
 
-    /** @type {string | undefined} */
-    export let title;
+/** @type {string | undefined} */
+export let title;
 
-    /** @type {string | undefined} */
-    export let description = undefined;
+/** @type {string | undefined} */
+export let description = undefined;
 
-    /** @type {string | undefined} */
-    let clazz = undefined;
-    export { clazz as class };
+/** @type {string | undefined} */
+let clazz = undefined;
+export { clazz as class };
 
-    /** @param {KeyboardEvent} event */
-    function closeDialog(event) {
-        if (event.key === 'Escape') {
-            show = false;
-        }
+/** @param {KeyboardEvent} event */
+function closeDialog(event) {
+    if (event.key === "Escape") {
+        show = false;
     }
+}
 
-    onDestroy(() => {
-        if (browser) {
-            window.document.body.style.removeProperty('overflow');
-        }
-    });
-
-    $: if (browser) {
-        if (show) {
-            window.document.body.style.setProperty('overflow', 'hidden');
-        } else {
-            window.document.body.style.removeProperty('overflow');
-        }
+onDestroy(() => {
+    if (browser) {
+        window.document.body.style.removeProperty("overflow");
     }
+});
 
-    const transitionDetails = {
-        duration: 200,
-        easing: quintInOut,
-    };
+$: if (browser) {
+    if (show) {
+        window.document.body.style.setProperty("overflow", "hidden");
+    } else {
+        window.document.body.style.removeProperty("overflow");
+    }
+}
+
+const transitionDetails = {
+    duration: 200,
+    easing: quintInOut,
+};
 </script>
 
 {#if show && browser}

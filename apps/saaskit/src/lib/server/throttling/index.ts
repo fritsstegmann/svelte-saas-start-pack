@@ -1,5 +1,5 @@
-import { redis } from '../redis';
-import { THROTTLING_SHA } from '$env/static/private';
+import { THROTTLING_SHA } from "$env/static/private";
+import { redis } from "../redis";
 
 export class Throttler {
     private storageKey: string;
@@ -14,14 +14,10 @@ export class Throttler {
             {
                 keys: [`${this.storageKey}:${key}`],
                 arguments: [Math.floor(Date.now() / 1000).toString()],
-            }
+            },
         )) as { [key: number]: string };
 
-        if (result && result[0]) {
-            return Boolean(result[0]);
-        } else {
-            return false;
-        }
+        return result && result[0] !== undefined ? Boolean(result[0]) : false;
     }
 
     public async reset(key: string): Promise<void> {

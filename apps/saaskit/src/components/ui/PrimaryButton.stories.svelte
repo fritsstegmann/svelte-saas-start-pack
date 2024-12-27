@@ -2,13 +2,13 @@
     lang="ts"
     context="module"
 >
-    import { defineMeta } from '@storybook/addon-svelte-csf';
-    import Button from './PrimaryButton.svelte';
+import { defineMeta } from "@storybook/addon-svelte-csf";
+import Button from "./PrimaryButton.svelte";
 
-    const { Story } = defineMeta({
-        title: 'Primary button',
-        component: Button,
-    });
+const { Story } = defineMeta({
+    title: "Primary button",
+    component: Button,
+});
 </script>
 
 {#snippet buttonText()}

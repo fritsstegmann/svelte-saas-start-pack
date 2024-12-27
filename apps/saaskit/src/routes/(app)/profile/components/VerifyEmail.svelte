@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { enhance } from '$app/forms';
-    import Dialog from '$components/ui/Dialog.svelte';
-    import PrimaryButton from '$components/ui/PrimaryButton.svelte';
-    import SecureCodeInput from '$components/ui/SecureCodeInput.svelte';
+import { enhance } from "$app/forms";
+import Dialog from "$components/ui/Dialog.svelte";
+import PrimaryButton from "$components/ui/PrimaryButton.svelte";
+import SecureCodeInput from "$components/ui/SecureCodeInput.svelte";
 
-    export let show = false;
+export let show = false;
 
-    let value = '';
+let value = "";
 </script>
 
 <Dialog

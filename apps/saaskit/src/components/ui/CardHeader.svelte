@@ -1,8 +1,8 @@
 <script>
-    /** @type {string} title */
-    export let title;
-    /** @type {string | undefined} */
-    export let description;
+/** @type {string} title */
+export let title;
+/** @type {string | undefined} */
+export let description;
 </script>
 
 <div class="px-4 pt-4 text-gray-600 dark:text-gray-400">

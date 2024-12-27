@@ -1,26 +1,23 @@
-import type { PageServerLoad } from './$types';
-import { redirect, type Actions } from '@sveltejs/kit';
-import { forgotPasswordTable, usersTable } from '$lib/server/schema';
-import { and, eq } from 'drizzle-orm';
-import { db } from '$lib/server/db';
-import { z } from 'zod';
-import { checkUrlSignature } from '$lib/server/urlSignature';
-import { APP_KEY } from '$env/static/private';
-import {
-    generateHashFromCode as generateHashFromCode,
-    hashPassword,
-} from '$lib/server/security/utils';
-import validate from '$lib/server/middleware/validate';
+import { APP_KEY } from "$env/static/private";
+import { db } from "$lib/server/db";
+import validate from "$lib/server/middleware/validate";
+import { forgotPasswordTable, usersTable } from "$lib/server/schema";
+import { generateHashFromCode, hashPassword } from "$lib/server/security/utils";
+import { checkUrlSignature } from "$lib/server/urlSignature";
+import { type Actions, redirect } from "@sveltejs/kit";
+import { and, eq } from "drizzle-orm";
+import { z } from "zod";
+import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async (event) => {
     if (!checkUrlSignature(event.request.url, APP_KEY)) {
-        redirect(302, '/signin');
+        redirect(302, "/signin");
     }
 
-    const code = event.url.searchParams.get('code');
+    const code = event.url.searchParams.get("code");
 
     if (!code) {
-        redirect(302, '/signin');
+        redirect(302, "/signin");
     }
 
     const passwordReset = (
@@ -31,7 +28,7 @@ export const load: PageServerLoad = async (event) => {
     ).at(0);
 
     if (!passwordReset) {
-        redirect(302, '/signin');
+        redirect(302, "/signin");
     }
 };
 
@@ -42,23 +39,23 @@ export const actions = {
                 password: z.string().min(10),
                 confirmPassword: z.string().min(10),
             }),
-            request
+            request,
         );
 
         if (data.isOk) {
             if (!checkUrlSignature(request.url, APP_KEY)) {
-                redirect(302, '/signin');
+                redirect(302, "/signin");
             }
 
-            const code = url.searchParams.get('code');
-            const email = url.searchParams.get('email');
+            const code = url.searchParams.get("code");
+            const email = url.searchParams.get("email");
 
             if (!code) {
-                redirect(302, '/signin');
+                redirect(302, "/signin");
             }
 
             if (!email) {
-                redirect(302, '/signin');
+                redirect(302, "/signin");
             }
 
             const hashedCode = generateHashFromCode(code);
@@ -70,17 +67,19 @@ export const actions = {
                     .where(
                         and(
                             eq(forgotPasswordTable.email, email),
-                            eq(forgotPasswordTable.id, hashedCode)
-                        )
+                            eq(forgotPasswordTable.id, hashedCode),
+                        ),
                     )
             ).at(0);
 
             if (passwordReset) {
                 const { password, confirmPassword } = data.fields;
 
-                if (password != confirmPassword) {
-                    redirect(302, '/signin');
+                if (password !== confirmPassword) {
+                    redirect(302, "/signin");
                 }
+
+                // TODO: fix this
 
                 await db
                     .update(usersTable)
@@ -96,6 +95,6 @@ export const actions = {
         } else {
             return data.error;
         }
-        redirect(302, '/signin');
+        redirect(302, "/signin");
     },
 } satisfies Actions;

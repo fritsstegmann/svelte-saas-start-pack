@@ -1,5 +1,5 @@
 <script>
-    import { toggle } from '$components/ui/Sidebar.svelte';
+import { toggle } from "$components/ui/Sidebar.svelte";
 </script>
 
 <header class="p-4">

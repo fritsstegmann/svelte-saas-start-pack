@@ -1,7 +1,7 @@
-import { eq } from 'drizzle-orm';
-import { sessionTable, usersTable } from '../schema';
-import { generateHashFromCode, generateSecureCode } from './utils';
-import { db } from '../db';
+import { eq } from "drizzle-orm";
+import { db } from "../db";
+import { sessionTable, usersTable } from "../schema";
+import { generateHashFromCode, generateSecureCode } from "./utils";
 
 const daysValid = 2;
 
@@ -11,7 +11,7 @@ export function generateSessionToken(): string {
 
 export async function createSession(
     token: string,
-    userId: string
+    userId: string,
 ): Promise<Session> {
     const session = {
         id: token,
@@ -52,7 +52,7 @@ export async function validateSessionToken(token: string) {
         session.expiresAt.getTime() - 1000 * 60 * 60 * 25 * (daysValid / 2)
     ) {
         session.expiresAt = new Date(
-            Date.now() + 1000 * 60 * 60 * 24 * daysValid
+            Date.now() + 1000 * 60 * 60 * 24 * daysValid,
         );
         await db
             .update(sessionTable)

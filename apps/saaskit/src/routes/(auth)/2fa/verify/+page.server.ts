@@ -1,22 +1,21 @@
-import { verifyTOTP } from '@oslojs/otp';
-import { decodeBase64 } from '@oslojs/encoding';
-import { error, fail, redirect, type Actions } from '@sveltejs/kit';
-import { TokenBucket } from '$lib/server/ratelimit';
-import validate from '$lib/server/middleware/validate';
-import { z } from 'zod';
-import { sessionTable, usersTable, userTotpsTable } from '$lib/server/schema';
-import { db } from '$lib/server/db';
-import { eq } from 'drizzle-orm';
-import type { PageServerLoad } from './$types';
-import userRepository from '$lib/server/repositories/userRepository';
-import { decryptData } from '$lib/server/aes';
-import { APP_KEY } from '$env/static/private';
+import { APP_KEY } from "$env/static/private";
+import { decryptData } from "$lib/server/aes";
+import { db } from "$lib/server/db";
+import validate from "$lib/server/middleware/validate";
+import { TokenBucket } from "$lib/server/ratelimit";
+import { sessionTable, userTotpsTable, usersTable } from "$lib/server/schema";
+import { decodeBase64 } from "@oslojs/encoding";
+import { verifyTOTP } from "@oslojs/otp";
+import { type Actions, error, fail, redirect } from "@sveltejs/kit";
+import { eq } from "drizzle-orm";
+import { z } from "zod";
+import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals, getClientAddress }) => {
-    if (!locals.user) redirect(302, '/signin');
-    if (!locals.session) redirect(302, '/signin');
+    if (!locals.user) redirect(302, "/signin");
+    if (!locals.session) redirect(302, "/signin");
 
-    const bucket = new TokenBucket('security', 2, 1);
+    const bucket = new TokenBucket("security", 2, 1);
     if (!(await bucket.consume(getClientAddress(), 1))) {
         error(429);
     }
@@ -24,10 +23,10 @@ export const load: PageServerLoad = async ({ locals, getClientAddress }) => {
 
 export const actions = {
     default: async ({ locals, getClientAddress, request }) => {
-        if (!locals.user) redirect(302, '/signin');
-        if (!locals.session) redirect(302, '/signin');
+        if (!locals.user) redirect(302, "/signin");
+        if (!locals.session) redirect(302, "/signin");
 
-        const bucket = new TokenBucket('security', 2, 1);
+        const bucket = new TokenBucket("security", 2, 1);
         if (!(await bucket.consume(getClientAddress(), 1))) {
             error(429);
         }
@@ -35,7 +34,7 @@ export const actions = {
             z.object({
                 code: z.string().min(1).max(6),
             }),
-            request
+            request,
         );
 
         if (data.isOk) {
@@ -46,7 +45,7 @@ export const actions = {
                     .where(eq(usersTable.id, locals.user.id))
             ).at(0);
 
-            if (userTotp && userTotp.totpSecret) {
+            if (userTotp?.totpSecret) {
                 const totp = await decryptData(APP_KEY, userTotp.totpSecret);
 
                 if (verifyTOTP(decodeBase64(totp), 30, 6, data.fields.code)) {
@@ -62,13 +61,13 @@ export const actions = {
                             code: data.fields.code,
                         },
                         errors: {
-                            code: ['Invalid code'],
+                            code: ["Invalid code"],
                         },
                     });
                 }
             }
 
-            redirect(302, '/');
+            redirect(302, "/");
         } else {
             return data.error;
         }

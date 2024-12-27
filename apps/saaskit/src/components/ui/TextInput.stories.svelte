@@ -2,13 +2,13 @@
     lang="ts"
     context="module"
 >
-    import { defineMeta } from '@storybook/addon-svelte-csf';
-    import Widget from './TextInput.svelte';
+import { defineMeta } from "@storybook/addon-svelte-csf";
+import Widget from "./TextInput.svelte";
 
-    const { Story } = defineMeta({
-        title: 'Text input',
-        component: Widget,
-    });
+const { Story } = defineMeta({
+    title: "Text input",
+    component: Widget,
+});
 </script>
 
 {#snippet prefix()}

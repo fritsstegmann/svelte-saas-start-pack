@@ -1,48 +1,48 @@
 <script lang="ts">
-    import SecureCodeInputElement from './SecureCodeInputElement.svelte';
+import SecureCodeInputElement from "./SecureCodeInputElement.svelte";
 
-    export let name: string | undefined = undefined;
-    export let size: number;
-    export let value: string | undefined = undefined;
+export let name: string | undefined = undefined;
+export let size: number;
+export let value: string | undefined = undefined;
 
-    export let values: Array<string> = Array(size);
+export let values: Array<string> = Array(size);
 
-    let ref: HTMLDivElement;
+let ref: HTMLDivElement;
 
-    const codes: string[] = Array(size);
+const codes: string[] = Array(size);
 
-    export let errorBag: import('./ErrorBag').ErrorBag | undefined = undefined;
+export let errorBag: import("./ErrorBag").ErrorBag | undefined = undefined;
 
-    function findFocusedItem(): HTMLDivElement | null {
-        const focusItem: HTMLDivElement | null = ref.querySelector(
-            'div:has(input:focus)'
+function findFocusedItem(): HTMLDivElement | null {
+    const focusItem: HTMLDivElement | null = ref.querySelector(
+        "div:has(input:focus)",
+    );
+
+    return focusItem;
+}
+
+const keyDown = ({ detail }: { detail: string }) => {
+    const focusItem = findFocusedItem();
+    if (focusItem) {
+        const index = Array.prototype.indexOf.call(ref.children, focusItem);
+
+        codes[index] = detail;
+
+        const nextIndex = index + 2;
+        const nextItem: HTMLDivElement | null = ref.querySelector(
+            `div:nth-child(${nextIndex})`,
         );
 
-        return focusItem;
-    }
-
-    const keyDown = ({ detail }: { detail: string }) => {
-        const focusItem = findFocusedItem();
-        if (focusItem) {
-            const index = Array.prototype.indexOf.call(ref.children, focusItem);
-
-            codes[index] = detail;
-
-            const nextIndex = index + 2;
-            const nextItem: HTMLDivElement | null = ref.querySelector(
-                'div:nth-child(' + nextIndex + ')'
-            );
-
-            if (nextItem === null) {
-                focusItem.blur();
-                value = codes.join('');
-            } else {
-                nextItem.focus();
-            }
+        if (nextItem === null) {
+            focusItem.blur();
+            value = codes.join("");
+        } else {
+            nextItem.focus();
         }
-    };
+    }
+};
 
-    let width = size * 5;
+let width = size * 5;
 </script>
 
 <div

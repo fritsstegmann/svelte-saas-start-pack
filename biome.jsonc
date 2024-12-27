@@ -1,0 +1,55 @@
+{
+    "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": true
+    },
+    "files": {
+        "ignoreUnknown": false,
+        "ignore": [
+            "./src/paraglide"
+        ]
+    },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 4
+    },
+    "organizeImports": {
+        "enabled": true
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true
+        }
+    },
+    "javascript": {
+        "formatter": {
+            "indentStyle": "space",
+            "indentWidth": 4,
+            "quoteStyle": "double"
+        }
+    },
+    "overrides": [
+        {
+            "include": [
+                "*.svelte",
+                "*.astro",
+                "*.vue"
+            ],
+            "linter": {
+                "rules": {
+                    "style": {
+                        "useConst": "off",
+                        "useImportType": "off"
+                    },
+                    "suspicious": {
+                        "noImplicitAnyLet": "off"
+                    }
+                }
+            }
+        }
+    ]
+}

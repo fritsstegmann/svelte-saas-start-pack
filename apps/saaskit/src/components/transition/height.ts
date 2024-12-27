@@ -1,14 +1,14 @@
-import { quartInOut } from 'svelte/easing';
+import { quartInOut } from "svelte/easing";
 
 export default function height(
     node: HTMLElement,
-    { duration }: { duration: number }
+    { duration }: { duration: number },
 ) {
-    const height = parseInt(getComputedStyle(node).height);
-    const paddingTop = parseInt(getComputedStyle(node).paddingTop);
-    const paddingBottom = parseInt(getComputedStyle(node).paddingBottom);
-    const marginTop = parseInt(getComputedStyle(node).marginTop);
-    const marginBottom = parseInt(getComputedStyle(node).marginBottom);
+    const height = Number.parseInt(getComputedStyle(node).height);
+    const paddingTop = Number.parseInt(getComputedStyle(node).paddingTop);
+    const paddingBottom = Number.parseInt(getComputedStyle(node).paddingBottom);
+    const marginTop = Number.parseInt(getComputedStyle(node).marginTop);
+    const marginBottom = Number.parseInt(getComputedStyle(node).marginBottom);
     const opacity = +getComputedStyle(node).opacity;
 
     return {

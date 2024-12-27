@@ -1,27 +1,27 @@
-import type { Cookies } from '@sveltejs/kit';
+import type { Cookies } from "@sveltejs/kit";
 
 export function setSessionTokenCookie(
     cookies: Cookies,
     token: string,
-    expiresAt: Date
+    expiresAt: Date,
 ): void {
-    cookies.set('session', token, {
+    cookies.set("session", token, {
         httpOnly: true,
-        sameSite: 'lax',
+        sameSite: "lax",
         expires: expiresAt,
-        path: '/',
+        path: "/",
     });
 }
 
 export function deleteSessionTokenCookie(cookies: Cookies): void {
-    cookies.set('session', '', {
+    cookies.set("session", "", {
         httpOnly: true,
-        sameSite: 'lax',
+        sameSite: "lax",
         maxAge: 0,
-        path: '/',
+        path: "/",
     });
 }
 
 export function getSessionTokenCookie(cookies: Cookies) {
-    return cookies.get('session');
+    return cookies.get("session");
 }

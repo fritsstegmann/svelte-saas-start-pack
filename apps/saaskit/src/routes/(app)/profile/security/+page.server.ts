@@ -1,35 +1,35 @@
-import { error, fail, redirect, type Actions } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
+import { missingInput } from "$i18n/messages";
+import { db } from "$lib/server/db";
+import { sendMail } from "$lib/server/mail";
+import validate from "$lib/server/middleware/validate";
+import { TokenBucket } from "$lib/server/ratelimit";
 import {
     changeEmailRequestTable,
     emailValidationTable,
     userProfilesTable,
     usersTable,
-} from '$lib/server/schema';
-import { db } from '$lib/server/db';
-import { eq } from 'drizzle-orm';
-import { z } from 'zod';
-import validate from '$lib/server/middleware/validate';
-import { sendEmailVerificationCode } from '$lib/server/security/verifyEmail';
+} from "$lib/server/schema";
+import { passwordConfirmValid } from "$lib/server/security/confirmPassword";
 import {
-    generateHashFromCode as generateHashFromCode,
+    generateHashFromCode,
     generateShortCode,
     hashPassword,
     verifyPassword,
-} from '$lib/server/security/utils';
-import { TokenBucket } from '$lib/server/ratelimit';
-import { passwordConfirmValid } from '$lib/server/security/confirmPassword';
-import { sendMail } from '$lib/server/mail';
+} from "$lib/server/security/utils";
+import { sendEmailVerificationCode } from "$lib/server/security/verifyEmail";
 import {
     validateConfirmedPassword,
     validateUserSession,
-} from '$lib/server/svelte';
-import { missingInput } from '$i18n/messages';
+} from "$lib/server/svelte";
+import { type Actions, error, fail, redirect } from "@sveltejs/kit";
+import { eq } from "drizzle-orm";
+import { z } from "zod";
+import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals, url }) => {
     const { user } = validateUserSession({ locals, url });
 
-    validateConfirmedPassword({ locals }, '/profile/security');
+    validateConfirmedPassword({ locals }, "/profile/security");
 
     const profile = (
         await db
@@ -48,12 +48,12 @@ export const actions: Actions = {
     changeEmail: async ({ request, locals, url, getClientAddress }) => {
         const { user } = validateUserSession({ locals, url });
 
-        const bucket = new TokenBucket('security', 1, 1);
+        const bucket = new TokenBucket("security", 1, 1);
         if (!(await bucket.consume(getClientAddress(), 1))) {
             error(429);
         }
 
-        validateConfirmedPassword({ locals }, '/profile/security');
+        validateConfirmedPassword({ locals }, "/profile/security");
 
         const profile = (
             await db
@@ -71,7 +71,7 @@ export const actions: Actions = {
                         })
                         .min(7),
                 }),
-                request
+                request,
             );
             if (v.isOk) {
                 const hashedCode = generateHashFromCode(v.fields.code);
@@ -98,8 +98,8 @@ export const actions: Actions = {
                 } else {
                     return {
                         message: {
-                            type: 'error',
-                            message: 'Invalid verification code',
+                            type: "error",
+                            message: "Invalid verification code",
                         } as { type: string; message: string } | undefined,
                     };
                 }
@@ -107,8 +107,8 @@ export const actions: Actions = {
         } else {
             return {
                 message: {
-                    type: 'error',
-                    message: 'Invalid verification code',
+                    type: "error",
+                    message: "Invalid verification code",
                 } as { type: string; message: string } | undefined,
             };
         }
@@ -116,12 +116,12 @@ export const actions: Actions = {
     getEmailChangeCode: async ({ request, locals, url, getClientAddress }) => {
         const { user } = validateUserSession({ locals, url });
 
-        const bucket = new TokenBucket('security', 1, 1);
+        const bucket = new TokenBucket("security", 1, 1);
         if (!(await bucket.consume(getClientAddress(), 1))) {
             error(429);
         }
 
-        validateConfirmedPassword({ locals }, '/profile/security');
+        validateConfirmedPassword({ locals }, "/profile/security");
 
         const v = await validate(
             z.object({
@@ -133,7 +133,7 @@ export const actions: Actions = {
                     .max(256)
                     .email(),
             }),
-            request
+            request,
         );
 
         if (v.isOk) {
@@ -147,10 +147,10 @@ export const actions: Actions = {
             });
 
             await sendMail(
-                'saaskit@example.com',
+                "saaskit@example.com",
                 v.fields.email,
-                'Change email code',
-                `Verifcation code for email: ${shortCode}`
+                "Change email code",
+                `Verifcation code for email: ${shortCode}`,
             );
 
             const profile = (
@@ -162,10 +162,10 @@ export const actions: Actions = {
 
             if (profile) {
                 await sendMail(
-                    'saaskit@example.com',
+                    "saaskit@example.com",
                     profile.email,
-                    'Change email code',
-                    `An email address change has been requested`
+                    "Change email code",
+                    "An email address change has been requested",
                 );
             }
         } else {
@@ -174,15 +174,15 @@ export const actions: Actions = {
     },
     verifyEmail: async ({ request, locals, getClientAddress }) => {
         if (!locals.user) {
-            redirect(302, '/signin');
+            redirect(302, "/signin");
         }
 
-        const bucket = new TokenBucket('security', 1, 1);
+        const bucket = new TokenBucket("security", 1, 1);
         if (!(await bucket.consume(getClientAddress(), 1))) {
             error(429);
         }
 
-        validateConfirmedPassword({ locals }, '/profile/security');
+        validateConfirmedPassword({ locals }, "/profile/security");
 
         const profile = (
             await db
@@ -200,7 +200,7 @@ export const actions: Actions = {
                         })
                         .min(6),
                 }),
-                request
+                request,
             );
 
             if (v.isOk) {
@@ -226,35 +226,33 @@ export const actions: Actions = {
                         .where(eq(emailValidationTable.id, verifyEmail.id));
                     return {
                         message: {
-                            type: 'success',
-                            message: 'Email has succesfully been verified',
-                        } as { type: string; message: string } | undefined,
-                    };
-                } else {
-                    return {
-                        message: {
-                            type: 'error',
-                            message: 'Invalid verification code',
+                            type: "success",
+                            message: "Email has succesfully been verified",
                         } as { type: string; message: string } | undefined,
                     };
                 }
-            } else {
-                return v.error;
+                return {
+                    message: {
+                        type: "error",
+                        message: "Invalid verification code",
+                    } as { type: string; message: string } | undefined,
+                };
             }
+            return v.error;
         }
     },
     getVerifyEmailCode: async ({ locals, getClientAddress }) => {
         if (!locals.user) {
-            redirect(302, '/signin');
+            redirect(302, "/signin");
         }
 
-        const bucket = new TokenBucket('getVerifyEmailCode', 1, 1);
+        const bucket = new TokenBucket("getVerifyEmailCode", 1, 1);
         if (!(await bucket.consume(getClientAddress(), 1))) {
             error(429);
         }
 
         if (!passwordConfirmValid(locals.user.lastPasswordConfirmAt)) {
-            redirect(302, '/confirm-password?redirect=/profile/security');
+            redirect(302, "/confirm-password?redirect=/profile/security");
         }
 
         const profile = (
@@ -270,7 +268,7 @@ export const actions: Actions = {
     },
     updatePassword: async ({ request, locals }) => {
         if (!locals.user) {
-            redirect(302, '/signin');
+            redirect(302, "/signin");
         }
 
         const v = await validate(
@@ -295,16 +293,16 @@ export const actions: Actions = {
                 .superRefine(({ confirmPassword, newPassword }, ctx) => {
                     if (confirmPassword !== newPassword) {
                         ctx.addIssue({
-                            code: 'custom',
-                            path: ['newPassword'],
-                            message: 'The passwords did not match',
+                            code: "custom",
+                            path: ["newPassword"],
+                            message: "The passwords did not match",
                         });
                     }
                 }),
-            request
+            request,
         );
 
-        if (v.isOk == false) {
+        if (v.isOk === false) {
             return v.error;
         }
 
@@ -316,24 +314,28 @@ export const actions: Actions = {
         ).at(0);
 
         if (!existingUser) {
-            redirect(307, '/signout');
+            redirect(307, "/signout");
         }
 
+        // TODO: read poassword from password table
+
         const validPassword = await verifyPassword(
-            existingUser?.password ?? '',
-            v.fields.oldPassword
+            existingUser?.password ?? "",
+            v.fields.oldPassword,
         );
 
         if (!validPassword) {
             return fail(400, {
                 errors: {
-                    oldPassword: ['Invalid password'],
+                    oldPassword: ["Invalid password"],
                 },
                 fields: v.fields,
             });
         }
 
         const newPassword = await hashPassword(v.fields.newPassword);
+
+        // TODO: read poassword from password table
 
         await db
             .update(usersTable)
@@ -344,30 +346,30 @@ export const actions: Actions = {
 
         return {
             message: {
-                type: 'success',
-                message: 'Successfully updated password',
+                type: "success",
+                message: "Successfully updated password",
             } as { type: string; message: string } | undefined,
         };
     },
     updateEmail: async ({ getClientAddress, request, locals }) => {
         if (!locals.user) {
-            redirect(302, '/signin');
+            redirect(302, "/signin");
         }
 
-        const bucket = new TokenBucket('updateEmail', 2, 1);
+        const bucket = new TokenBucket("updateEmail", 2, 1);
         if (!(await bucket.consume(getClientAddress(), 1))) {
             error(429);
         }
 
         if (!passwordConfirmValid(locals.user.lastPasswordConfirmAt)) {
-            redirect(302, '/confirm-password?redirect=/profile/security');
+            redirect(302, "/confirm-password?redirect=/profile/security");
         }
 
         const v = await validate(
             z.object({
                 email: z.string().min(1).max(256),
             }),
-            request
+            request,
         );
 
         if (!v.isOk) {
@@ -383,8 +385,8 @@ export const actions: Actions = {
 
         return {
             message: {
-                type: 'success',
-                message: 'Successfully updated email',
+                type: "success",
+                message: "Successfully updated email",
             } as { type: string; message: string } | undefined,
         };
     },

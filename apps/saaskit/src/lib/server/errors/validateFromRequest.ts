@@ -1,6 +1,6 @@
-import { z } from 'zod';
-import FormValidationError from '$lib/server/errors/FormValidateError';
-import mapValidationErrors from '$lib/server/errors/mapValidationErrors';
+import FormValidationError from "$lib/server/errors/FormValidateError";
+import mapValidationErrors from "$lib/server/errors/mapValidationErrors";
+import { z } from "zod";
 
 function filesFromFormData(formData: FormData): Record<string, File> {
     const results: Record<string, File> = {};
@@ -18,18 +18,18 @@ function objectFromFormData(formData: FormData): Record<string, unknown> {
     const result: Record<string, unknown> = {};
     formData.forEach((value, key) => {
         if (!(value instanceof File)) {
-            if (key.endsWith('[]')) {
-                const arrayKey = key.replace('[]', '');
+            if (key.endsWith("[]")) {
+                const arrayKey = key.replace("[]", "");
                 if (!result[arrayKey]) {
                     result[arrayKey] = [];
                 }
-                if (value === '') {
+                if (value === "") {
                     (result[arrayKey] as unknown[]).push(null);
                 } else {
                     (result[arrayKey] as unknown[]).push(value);
                 }
             } else {
-                if (value === '') {
+                if (value === "") {
                     result[key] = null;
                 } else {
                     result[key] = value;
@@ -45,7 +45,7 @@ function objectFromFormData(formData: FormData): Record<string, unknown> {
 
 async function validateForm<T>(
     schema: z.ZodType<T>,
-    body: Record<string, unknown> | FormData
+    body: Record<string, unknown> | FormData,
 ): Promise<T> {
     try {
         if (body instanceof FormData) {
@@ -61,14 +61,10 @@ async function validateForm<T>(
             if (body instanceof FormData) {
                 throw new FormValidationError(
                     mapValidationErrors(e.errors),
-                    objectFromFormData(body)
-                );
-            } else {
-                throw new FormValidationError(
-                    mapValidationErrors(e.errors),
-                    body
+                    objectFromFormData(body),
                 );
             }
+            throw new FormValidationError(mapValidationErrors(e.errors), body);
         }
 
         throw new FormValidationError(mapValidationErrors([]), {});
@@ -77,14 +73,14 @@ async function validateForm<T>(
 
 export default async function validateFromRequest<T, K extends string>(
     schema: z.ZodType<T>,
-    request: Request
+    request: Request,
 ): Promise<{
     formData: T;
     files: Record<K, File>;
 }> {
-    let formData;
+    let formData: FormData;
     let files: Record<K, File> = {} as Record<K, File>;
-    if (request.headers.get('Content-Type') === 'application/json') {
+    if (request.headers.get("Content-Type") === "application/json") {
         formData = await request.json();
     } else {
         formData = await request.formData();
@@ -93,7 +89,7 @@ export default async function validateFromRequest<T, K extends string>(
 
     const validatedData = await validateForm<z.infer<typeof schema>>(
         schema,
-        formData
+        formData,
     );
 
     return { formData: validatedData, files };

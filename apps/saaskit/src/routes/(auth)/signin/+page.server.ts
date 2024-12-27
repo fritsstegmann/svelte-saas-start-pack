@@ -1,20 +1,20 @@
-import { db } from '$lib/server/db';
-import { userPasswordsTable, usersTable } from '$lib/server/schema';
-import { createSession } from '$lib/server/security/session';
-import { setSessionTokenCookie } from '$lib/server/security/cookies';
-import { redirect, type Actions, fail, error } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
-import z from 'zod';
-import { generateSecureCode, verifyPassword } from '$lib/server/security/utils';
-import { TokenBucket } from '$lib/server/ratelimit';
-import type { PageServerLoad } from './$types';
-import validate from '$lib/server/middleware/validate';
-import { Throttler } from '$lib/server/throttling';
-import * as m from '../../../paraglide/messages';
-import userRepository from '$lib/server/repositories/userRepository';
+import { db } from "$lib/server/db";
+import validate from "$lib/server/middleware/validate";
+import { TokenBucket } from "$lib/server/ratelimit";
+import userRepository from "$lib/server/repositories/userRepository";
+import { userPasswordsTable, usersTable } from "$lib/server/schema";
+import { setSessionTokenCookie } from "$lib/server/security/cookies";
+import { createSession } from "$lib/server/security/session";
+import { generateSecureCode, verifyPassword } from "$lib/server/security/utils";
+import { Throttler } from "$lib/server/throttling";
+import { type Actions, error, fail, redirect } from "@sveltejs/kit";
+import { eq } from "drizzle-orm";
+import z from "zod";
+import * as m from "../../../paraglide/messages";
+import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async (event) => {
-    const bucket = new TokenBucket('security', 2, 1);
+    const bucket = new TokenBucket("security", 2, 1);
     if (!(await bucket.consume(event.getClientAddress(), 1))) {
         error(429);
     }
@@ -22,8 +22,8 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
     default: async ({ request, cookies, getClientAddress }) => {
-        const bucket = new TokenBucket('security', 2, 1);
-        const throttler = new Throttler('signin');
+        const bucket = new TokenBucket("security", 2, 1);
+        const throttler = new Throttler("signin");
 
         if (!(await bucket.consume(getClientAddress(), 1))) {
             return fail(422, {
@@ -31,8 +31,8 @@ export const actions: Actions = {
                     username: [m.tooManyRequests()],
                 },
                 fields: {
-                    username: '',
-                    password: '',
+                    username: "",
+                    password: "",
                 },
             });
         }
@@ -52,7 +52,7 @@ export const actions: Actions = {
                     .min(10)
                     .max(256),
             }),
-            request
+            request,
         );
 
         if (data.isOk) {
@@ -64,8 +64,8 @@ export const actions: Actions = {
                         .where(
                             eq(
                                 usersTable.userName,
-                                data.fields.username.toLowerCase()
-                            )
+                                data.fields.username.toLowerCase(),
+                            ),
                         )
                 ).at(0);
 
@@ -73,23 +73,23 @@ export const actions: Actions = {
                     await db
                         .select()
                         .from(userPasswordsTable)
-                        .where(eq(userPasswordsTable.id, user?.id ?? ''))
+                        .where(eq(userPasswordsTable.id, user?.id ?? ""))
                 ).at(0);
 
                 const validPassword = await verifyPassword(
-                    userDb?.password ?? '',
-                    data.fields.password
+                    userDb?.password ?? "",
+                    data.fields.password,
                 );
 
                 if (!validPassword) {
                     if (!(await throttler.consume(data.fields.username))) {
                         return fail(422, {
                             errors: {
-                                username: ['Too many requests'],
+                                username: ["Too many requests"],
                             },
                             fields: {
                                 username: data.fields.username,
-                                password: '',
+                                password: "",
                             },
                         });
                     }
@@ -99,7 +99,7 @@ export const actions: Actions = {
                         },
                         fields: {
                             username: data.fields.username,
-                            password: '',
+                            password: "",
                         },
                     });
                 }
@@ -112,7 +112,7 @@ export const actions: Actions = {
                             },
                             fields: {
                                 username: data.fields.username,
-                                password: '',
+                                password: "",
                             },
                         });
                     }
@@ -122,7 +122,7 @@ export const actions: Actions = {
                         },
                         fields: {
                             username: data.fields.username,
-                            password: '',
+                            password: "",
                         },
                     });
                 }
@@ -131,7 +131,7 @@ export const actions: Actions = {
 
                 const session = await createSession(
                     generateSecureCode(),
-                    user.id
+                    user.id,
                 );
 
                 await userRepository.update(eq(usersTable.id, user.id), {
@@ -147,17 +147,17 @@ export const actions: Actions = {
                         },
                         fields: {
                             username: data.fields.username,
-                            password: '',
+                            password: "",
                         },
                     });
                 }
                 return fail(422, {
                     errors: {
-                        username: ['The credentials do not match our records'],
+                        username: ["The credentials do not match our records"],
                     },
                     fields: {
                         username: data.fields.username,
-                        password: '',
+                        password: "",
                     },
                 });
             }
@@ -169,12 +169,12 @@ export const actions: Actions = {
                     },
                     fields: {
                         username: data.error.data.fields.username,
-                        password: '',
+                        password: "",
                     },
                 });
             }
             return data.error;
         }
-        redirect(303, '/');
+        redirect(303, "/");
     },
 };

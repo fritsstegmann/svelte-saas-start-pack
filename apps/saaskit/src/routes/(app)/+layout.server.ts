@@ -1,8 +1,8 @@
-import type { LayoutServerLoad } from './$types';
-import { db } from '$lib/server/db';
-import { eq } from 'drizzle-orm';
-import { userProfilesTable } from '$lib/server/schema';
-import { validateUserSession } from '$lib/server/svelte';
+import { db } from "$lib/server/db";
+import { userProfilesTable } from "$lib/server/schema";
+import { validateUserSession } from "$lib/server/svelte";
+import { eq } from "drizzle-orm";
+import type { LayoutServerLoad } from "./$types";
 
 export const load: LayoutServerLoad = async (event) => {
     const { user } = validateUserSession(event);

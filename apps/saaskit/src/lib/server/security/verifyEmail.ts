@@ -1,8 +1,8 @@
-import { db } from '../db';
-import { sendMail } from '../mail';
-import { emailValidationTable } from '../schema';
-import { generateHashFromCode, generateShortCode } from './utils';
-import { add } from 'date-fns';
+import { add } from "date-fns";
+import { db } from "../db";
+import { sendMail } from "../mail";
+import { emailValidationTable } from "../schema";
+import { generateHashFromCode, generateShortCode } from "./utils";
 
 export async function sendEmailVerificationCode(email: string, userId: string) {
     const code = generateShortCode();
@@ -20,9 +20,9 @@ export async function sendEmailVerificationCode(email: string, userId: string) {
     });
 
     await sendMail(
-        'saaskit@example.com',
+        "saaskit@example.com",
         email,
-        'Email verification code',
-        `Verifcation code for email: ${code}`
+        "Email verification code",
+        `Verifcation code for email: ${code}`,
     );
 }

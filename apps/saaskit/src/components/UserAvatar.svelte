@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let profile: { avatar: string | null };
+export let profile: { avatar: string | null };
 </script>
 
 {#if profile?.avatar}

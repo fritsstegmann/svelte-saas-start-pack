@@ -1,8 +1,8 @@
-import { sha1 } from '@noble/hashes/sha1';
-import { sha512 } from '@noble/hashes/sha512';
+import { sha1 } from "@noble/hashes/sha1";
+import { sha512 } from "@noble/hashes/sha512";
 
 export function checkUrlSignature(rawUrl: string, salt: string) {
-    const [url, signature] = rawUrl.split('&signature=');
+    const [url, signature] = rawUrl.split("&signature=");
 
     const gSignature = generateSignature(url, salt);
 

@@ -1,8 +1,8 @@
-import { createClient } from 'redis';
+import { createClient } from "redis";
 
 export async function installThrottling() {
     const redis = await createClient({
-        url: 'redis://127.0.0.1:6379',
+        url: "redis://127.0.0.1:6379",
     }).connect();
 
     const script = `

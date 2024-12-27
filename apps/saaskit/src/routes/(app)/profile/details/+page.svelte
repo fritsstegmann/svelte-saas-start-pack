@@ -1,13 +1,13 @@
 <script lang="ts">
-    import SecondaryButton from '$components/ui/SecondaryButton.svelte';
-    import TextInput from '$components/ui/TextInput.svelte';
-    import ProfileAvatarUpload from '../components/ProfileAvatarUpload.svelte';
-    import { fade } from 'svelte/transition';
-    import { applyAction, enhance } from '$app/forms';
-    import height from '$components/transition/height';
+import { applyAction, enhance } from "$app/forms";
+import height from "$components/transition/height";
+import SecondaryButton from "$components/ui/SecondaryButton.svelte";
+import TextInput from "$components/ui/TextInput.svelte";
+import { fade } from "svelte/transition";
+import ProfileAvatarUpload from "../components/ProfileAvatarUpload.svelte";
 
-    export let data;
-    export let form;
+export let data;
+export let form;
 </script>
 
 <div>
@@ -39,7 +39,7 @@
     {/if}
 
     <div>
-        <div class="text-2xl font-medium text-primary-600">
+        <div class="text-primary-600 text-2xl font-medium">
             User Profile Details
         </div>
         <div class="mt-1 text-sm text-gray-800">

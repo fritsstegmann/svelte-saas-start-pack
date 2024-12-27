@@ -1,24 +1,23 @@
 <script lang="ts">
-    import { fade } from 'svelte/transition';
-    import { cubicIn, cubicOut } from 'svelte/easing';
-    import { onNavigate } from '$app/navigation';
+import { onNavigate } from "$app/navigation";
+import { cubicIn, cubicOut } from "svelte/easing";
+import { fade } from "svelte/transition";
+import { PageData, type PageParentData } from "./$types";
 
-    export let data;
+let { data }: { data: PageData | PageParentData } = $props();
 
-    $: p = data.pathname;
+const timing = 100;
 
-    const timing = 100;
+onNavigate((navigation) => {
+    if (!document.startViewTransition) return;
 
-    onNavigate((navigation) => {
-        if (!document.startViewTransition) return;
-
-        return new Promise((resolve) => {
-            document.startViewTransition(async () => {
-                resolve();
-                await navigation.complete;
-            });
+    return new Promise((resolve) => {
+        document.startViewTransition(async () => {
+            resolve();
+            await navigation.complete;
         });
     });
+});
 </script>
 
 <div class="text-gray-900">
@@ -34,7 +33,7 @@
             <li>
                 <a
                     data-sveltekit-replacestate
-                    class="block rounded-lg px-5 py-3 font-semibold text-gray-700 transition duration-300 hover:bg-primary-200 hover:text-primary-700"
+                    class="hover:bg-primary-200 hover:text-primary-700 block rounded-lg px-5 py-3 font-semibold text-gray-700 transition duration-300"
                     href="/profile/details"
                 >
                     Details
@@ -43,7 +42,7 @@
             <li>
                 <a
                     data-sveltekit-replacestate
-                    class="block rounded-lg px-5 py-3 font-semibold text-gray-700 transition duration-300 hover:bg-primary-200 hover:text-primary-700"
+                    class="hover:bg-primary-200 hover:text-primary-700 block rounded-lg px-5 py-3 font-semibold text-gray-700 transition duration-300"
                     href="/profile/settings"
                 >
                     App Settings
@@ -52,7 +51,7 @@
             <li>
                 <a
                     data-sveltekit-replacestate
-                    class="block rounded-lg px-5 py-3 font-semibold text-gray-700 transition duration-300 hover:bg-primary-200 hover:text-primary-700"
+                    class="hover:bg-primary-200 hover:text-primary-700 block rounded-lg px-5 py-3 font-semibold text-gray-700 transition duration-300"
                     href="/profile/security"
                 >
                     Security
@@ -61,7 +60,7 @@
         </ul>
     </aside>
     <div class="mx-auto max-w-4xl flex-grow">
-        {#key p}
+        {#key data.pathname}
             <div
                 in:fade={{
                     easing: cubicOut,
@@ -70,7 +69,7 @@
                 }}
                 out:fade={{ easing: cubicIn, duration: timing }}
             >
-                <slot />
+                {@render children?.()}
             </div>
         {/key}
     </div>

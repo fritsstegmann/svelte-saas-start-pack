@@ -1,5 +1,5 @@
-import { redis } from '../redis';
-import { RATE_LIMIT_SHA } from '$env/static/private';
+import { RATE_LIMIT_SHA } from "$env/static/private";
+import { redis } from "../redis";
 
 export class TokenBucket {
     private storageKey: string;
@@ -10,7 +10,7 @@ export class TokenBucket {
     constructor(
         storageKey: string,
         max: number,
-        refillIntervalSeconds: number
+        refillIntervalSeconds: number,
     ) {
         this.storageKey = storageKey;
         this.max = max;
@@ -28,13 +28,12 @@ export class TokenBucket {
                     cost.toString(),
                     Math.floor(Date.now() / 1000).toString(),
                 ],
-            }
+            },
         )) as { [key: number]: string };
 
-        if (result && result[0]) {
+        if (result?.[0]) {
             return Boolean(result[0]);
-        } else {
-            return false;
         }
+        return false;
     }
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import PrimaryButton from '$components/ui/PrimaryButton.svelte';
+import PrimaryButton from "$components/ui/PrimaryButton.svelte";
 </script>
 
 <div class="text-center">

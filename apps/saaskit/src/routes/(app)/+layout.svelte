@@ -1,16 +1,16 @@
 <script lang="ts">
-    import { fade } from 'svelte/transition';
-    import PageHeader from './page_header.svelte';
-    import { cubicIn, cubicOut } from 'svelte/easing';
-    import Sidebar from '$components/ui/Sidebar.svelte';
+import Sidebar from "$components/ui/Sidebar.svelte";
+import { cubicIn, cubicOut } from "svelte/easing";
+import { fade } from "svelte/transition";
+import PageHeader from "./page_header.svelte";
 
-    export let data;
+export let data;
 
-    $: p = data.pathname.startsWith('/profile') ? 'profile' : data.pathname;
+$: p = data.pathname.startsWith("/profile") ? "profile" : data.pathname;
 
-    const timing = 100;
+const timing = 100;
 
-    import { open } from '$components/ui/Sidebar.svelte';
+import { open } from "$components/ui/Sidebar.svelte";
 </script>
 
 <div class="flex">

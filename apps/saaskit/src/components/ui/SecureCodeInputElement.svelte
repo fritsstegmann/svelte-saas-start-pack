@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { createEventDispatcher } from 'svelte';
+import { createEventDispatcher } from "svelte";
 
-    export let value = '';
+export let value = "";
 
-    let ref: HTMLDivElement | undefined = undefined;
+let ref: HTMLDivElement | undefined = undefined;
 
-    const dispatch = createEventDispatcher();
+const dispatch = createEventDispatcher();
 </script>
 
 <div

@@ -1,14 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/svelte';
+import type { Meta, StoryObj } from "@storybook/svelte";
 
-import Sidebar from './Sidebar.svelte';
+import Sidebar from "./Sidebar.svelte";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
-    title: 'Sidebar',
+    title: "Sidebar",
     component: Sidebar,
-    tags: ['autodocs'],
+    tags: ["autodocs"],
     parameters: {
-        layout: 'fullscreen',
+        layout: "fullscreen",
     },
     argTypes: {},
 } satisfies Meta<Sidebar>;
@@ -20,7 +20,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
     args: {
         profile: {
-            name: 'Test',
+            name: "Test",
         },
     },
 };

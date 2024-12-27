@@ -1,15 +1,15 @@
-import { RATE_LIMIT_SHA, THROTTLING_SHA } from '$env/static/private';
-import { TokenBucket } from '$lib/server/ratelimit';
-import { installRateLimit } from '$lib/server/ratelimit/install';
-import { redis } from '$lib/server/redis';
+import { RATE_LIMIT_SHA, THROTTLING_SHA } from "$env/static/private";
+import { TokenBucket } from "$lib/server/ratelimit";
+import { installRateLimit } from "$lib/server/ratelimit/install";
+import { redis } from "$lib/server/redis";
 import {
     deleteSessionTokenCookie,
     getSessionTokenCookie,
-} from '$lib/server/security/cookies';
-import { validateSessionToken } from '$lib/server/security/session';
-import { validateUserSession } from '$lib/server/svelte';
-import { installThrottling } from '$lib/server/throttling/install';
-import { type Handle } from '@sveltejs/kit';
+} from "$lib/server/security/cookies";
+import { validateSessionToken } from "$lib/server/security/session";
+import { validateUserSession } from "$lib/server/svelte";
+import { installThrottling } from "$lib/server/throttling/install";
+import type { Handle } from "@sveltejs/kit";
 
 const rateLimitSha = (await redis.scriptExists(RATE_LIMIT_SHA))[0];
 
@@ -29,7 +29,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
     const ip = event.getClientAddress();
 
-    const bucket = new TokenBucket('global', 10, 2);
+    const bucket = new TokenBucket("global", 10, 2);
     if (!(await bucket.consume(ip, 1))) {
         return new Response(null, {
             status: 429,

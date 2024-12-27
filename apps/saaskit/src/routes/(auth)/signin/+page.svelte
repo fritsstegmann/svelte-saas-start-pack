@@ -1,7 +1,7 @@
 <script lang="ts">
-    import PrimaryButton from '$components/ui/PrimaryButton.svelte';
-    import TextInput from '$components/ui/TextInput.svelte';
-    export let form;
+import PrimaryButton from "$components/ui/PrimaryButton.svelte";
+import TextInput from "$components/ui/TextInput.svelte";
+export let form;
 </script>
 
 <form method="post">
@@ -29,7 +29,7 @@
             errorBag={form?.errors}
         />
     </div>
-    <div class="mt-4 flex justify-end font-medium text-primary-900">
+    <div class="text-primary-900 mt-4 flex justify-end font-medium">
         <a href="/forgot-password">Forgot password?</a>
     </div>
     <div class="mt-4">
@@ -43,7 +43,7 @@
     <div class="mt-4 space-x-2">
         <span class="dark:text-gray-300">Don't have account?</span>
         <a
-            class="font-bold text-primary-500 hover:text-primary-400"
+            class="text-primary-500 hover:text-primary-400 font-bold"
             href="/signup"
         >
             Sign up

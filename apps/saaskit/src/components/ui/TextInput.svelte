@@ -1,40 +1,40 @@
 <script lang="ts">
-    import type { Snippet } from 'svelte';
-    import InputLabel from './InputLabel.svelte';
+import type { Snippet } from "svelte";
+import InputLabel from "./InputLabel.svelte";
 
-    let {
-        id = undefined,
-        name = undefined,
-        label = undefined,
-        value = undefined,
-        placeHolder = undefined,
-        type = 'text',
-        errorBag = undefined,
-        defaultValue = undefined,
-        class: clazz,
-        prefix,
-        suffix,
-        hint,
-    }: Partial<{
-        id: string | undefined;
-        name: string | undefined;
-        label: string | undefined;
-        value: string | undefined;
-        placeHolder: string | undefined;
-        type: 'text' | 'password' | 'file';
-        errorBag: import('./ErrorBag').ErrorBag | undefined;
-        defaultValue: string | undefined;
-        class: string | undefined;
-        prefix: Snippet;
-        suffix: Snippet;
-        hint: Snippet;
-    }> = $props();
+let {
+    id,
+    name,
+    label,
+    value,
+    placeHolder,
+    type = "text",
+    errorBag,
+    defaultValue,
+    class: clazz,
+    prefix,
+    suffix,
+    hint,
+}: Partial<{
+    id: string | undefined;
+    name: string | undefined;
+    label: string | undefined;
+    value: string | undefined;
+    placeHolder: string | undefined;
+    type: "text" | "password" | "file";
+    errorBag: import("./ErrorBag").ErrorBag | undefined;
+    defaultValue: string | undefined;
+    class: string | undefined;
+    prefix: Snippet;
+    suffix: Snippet;
+    hint: Snippet;
+}> = $props();
 
-    if (value == undefined && typeof defaultValue == 'string') {
-        value = defaultValue;
-    }
+if (value === undefined && typeof defaultValue === "string") {
+    value = defaultValue;
+}
 
-    let ref: HTMLInputElement | undefined = undefined;
+let reference: HTMLInputElement | undefined;
 </script>
 
 <div>
@@ -45,22 +45,22 @@
     {/if}
     <div
         onfocusin={() => {
-            ref?.focus();
+            reference?.focus();
         }}
-        class={`flex h-10 items-center rounded-md border-2 border-gray-300 bg-white transition duration-300 focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-300 dark:border-gray-800 dark:bg-gray-700 dark:text-gray-200 dark:focus-within:border-primary-800 dark:focus-within:ring-primary-500 ${clazz}`}
+        class={`focus-within:border-primary-500 focus-within:ring-primary-300 dark:focus-within:border-primary-800 dark:focus-within:ring-primary-500 flex h-10 items-center rounded-md border-2 border-gray-300 bg-white transition duration-300 focus-within:ring-2 dark:border-gray-800 dark:bg-gray-700 dark:text-gray-200 ${clazz}`}
     >
         <div
             tabindex={-1}
             role="button"
             onfocusin={() => {
-                ref?.focus();
+                reference?.focus();
             }}
             class="mr-2 cursor-text px-3 py-1 empty:hidden"
         >
             {@render prefix?.()}
         </div>
         <input
-            bind:this={ref}
+            bind:this={reference}
             {id}
             {name}
             {type}
@@ -79,7 +79,7 @@
             tabindex={-1}
             role="button"
             onfocusin={() => {
-                ref?.focus();
+                reference?.focus();
             }}
             class="mr-2 flex cursor-text px-3 py-1 empty:hidden"
         >

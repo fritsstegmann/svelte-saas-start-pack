@@ -1,14 +1,14 @@
-import { sha256 } from '@oslojs/crypto/sha2';
-import { decodeBase64, encodeBase64 } from '@oslojs/encoding';
+import { sha256 } from "@oslojs/crypto/sha2";
+import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
 
 async function generateKey(keyData: string) {
     const keyBytes = await crypto.subtle.digest(
-        'SHA-256',
-        new TextEncoder().encode(keyData)
+        "SHA-256",
+        new TextEncoder().encode(keyData),
     );
-    return crypto.subtle.importKey('raw', keyBytes, 'AES-GCM', false, [
-        'encrypt',
-        'decrypt',
+    return crypto.subtle.importKey("raw", keyBytes, "AES-GCM", false, [
+        "encrypt",
+        "decrypt",
     ]);
 }
 
@@ -21,15 +21,15 @@ export async function encryptData(keyData: string, data: string) {
     const encodedContent = new Uint8Array(
         await crypto.subtle.encrypt(
             {
-                name: 'AES-GCM',
+                name: "AES-GCM",
                 iv,
                 additionalData: new TextEncoder().encode(
-                    encodeBase64(sha256(sha256(iv)))
+                    encodeBase64(sha256(sha256(iv))),
                 ),
             },
             key,
-            encodedData
-        )
+            encodedData,
+        ),
     );
 
     const finalData = [...iv, ...encodedContent];
@@ -45,15 +45,15 @@ export async function decryptData(keyData: string, encryptedData: string) {
     const content = new Uint8Array(
         await crypto.subtle.decrypt(
             {
-                name: 'AES-GCM',
+                name: "AES-GCM",
                 iv,
                 additionalData: new TextEncoder().encode(
-                    encodeBase64(sha256(sha256(iv)))
+                    encodeBase64(sha256(sha256(iv))),
                 ),
             },
             key,
-            data
-        )
+            data,
+        ),
     );
 
     return new TextDecoder().decode(content);

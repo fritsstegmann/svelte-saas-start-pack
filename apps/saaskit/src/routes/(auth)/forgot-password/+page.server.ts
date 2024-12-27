@@ -1,19 +1,19 @@
-import { APP_KEY } from '$env/static/private';
+import { APP_KEY } from "$env/static/private";
 
-import { add } from 'date-fns';
-import { z } from 'zod';
-import { db } from '$lib/server/db';
-import { forgotPasswordTable, userProfilesTable } from '$lib/server/schema';
-import { eq } from 'drizzle-orm';
-import type { Actions } from './$types';
-import { redirect } from '@sveltejs/kit';
-import { sendMail } from '$lib/server/mail';
-import { createUrlWithSignature } from '$lib/server/urlSignature';
+import { db } from "$lib/server/db";
+import { sendMail } from "$lib/server/mail";
+import validate from "$lib/server/middleware/validate";
+import { forgotPasswordTable, userProfilesTable } from "$lib/server/schema";
 import {
     generateHashFromCode,
     generateSecureCode,
-} from '$lib/server/security/utils';
-import validate from '$lib/server/middleware/validate';
+} from "$lib/server/security/utils";
+import { createUrlWithSignature } from "$lib/server/urlSignature";
+import { redirect } from "@sveltejs/kit";
+import { add } from "date-fns";
+import { eq } from "drizzle-orm";
+import { z } from "zod";
+import type { Actions } from "./$types";
 
 export const actions = {
     default: async ({ request }) => {
@@ -21,7 +21,7 @@ export const actions = {
             z.object({
                 email: z.string(),
             }),
-            request
+            request,
         );
 
         if (validationResult.isOk) {
@@ -51,19 +51,18 @@ export const actions = {
                 const url = `/reset-password?code=${code}&email=${email}`;
 
                 const parsedUrl = new URL(request.url);
-                let completeUrl =
-                    parsedUrl.protocol + '//' + parsedUrl.host + url;
+                let completeUrl = `${parsedUrl.protocol}//${parsedUrl.host}${url}`;
 
                 completeUrl = createUrlWithSignature(completeUrl, APP_KEY);
 
                 await sendMail(
-                    'saaskit@example.com',
+                    "saaskit@example.com",
                     profile.email,
-                    'Forgot password email',
-                    `<a href="${completeUrl}">Reset password</a>`
+                    "Forgot password email",
+                    `<a href="${completeUrl}">Reset password</a>`,
                 );
 
-                redirect(302, '/signin');
+                redirect(302, "/signin");
             }
         } else {
             return validationResult.error;

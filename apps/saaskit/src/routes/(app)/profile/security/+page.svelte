@@ -1,18 +1,18 @@
 <script lang="ts">
-    import SecondaryButton from '$components/ui/SecondaryButton.svelte';
-    import TextInput from '$components/ui/TextInput.svelte';
-    import VerifyEmail from '../components/VerifyEmail.svelte';
-    import { fade } from 'svelte/transition';
-    import { applyAction, enhance } from '$app/forms';
-    import ChangeEmail from '../components/ChangeEmail.svelte';
-    import height from '$components/transition/height';
-    import type { ActionData } from './$types.js';
+import { applyAction, enhance } from "$app/forms";
+import height from "$components/transition/height";
+import SecondaryButton from "$components/ui/SecondaryButton.svelte";
+import TextInput from "$components/ui/TextInput.svelte";
+import { fade } from "svelte/transition";
+import ChangeEmail from "../components/ChangeEmail.svelte";
+import VerifyEmail from "../components/VerifyEmail.svelte";
+import type { ActionData } from "./$types.js";
 
-    export let data;
-    export let form: ActionData;
+export let data;
+export let form: ActionData;
 
-    let showVerifyDialog = false;
-    let showChangeEmailDialog = false;
+let showVerifyDialog = false;
+let showChangeEmailDialog = false;
 </script>
 
 <div class="w-full">

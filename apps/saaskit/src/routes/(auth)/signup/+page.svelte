@@ -1,7 +1,7 @@
 <script>
-    import PrimaryButton from '$components/ui/PrimaryButton.svelte';
-    import TextInput from '$components/ui/TextInput.svelte';
-    export let form;
+import PrimaryButton from "$components/ui/PrimaryButton.svelte";
+import TextInput from "$components/ui/TextInput.svelte";
+export let form;
 </script>
 
 <form method="post">
@@ -65,7 +65,7 @@
     <div class="mt-4 space-x-2">
         <span class="dark:text-gray-300">Already have an account?</span>
         <a
-            class="font-bold text-primary-500 hover:text-primary-400"
+            class="text-primary-500 hover:text-primary-400 font-bold"
             href="/signin"
         >
             Sign in

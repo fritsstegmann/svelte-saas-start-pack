@@ -1,31 +1,31 @@
-import { createTOTPKeyURI, verifyTOTP } from '@oslojs/otp';
-import { encodeBase64, decodeBase64 } from '@oslojs/encoding';
-import { renderSVG } from 'uqr';
-import { error, redirect, type Actions } from '@sveltejs/kit';
-import { passwordConfirmValid } from '$lib/server/security/confirmPassword';
-import { TokenBucket } from '$lib/server/ratelimit';
-import validate from '$lib/server/middleware/validate';
-import { z } from 'zod';
-import { sessionTable, usersTable, userTotpsTable } from '$lib/server/schema';
-import { db } from '$lib/server/db';
-import { eq } from 'drizzle-orm';
-import type { PageServerLoad } from './$types';
-import { encryptData } from '$lib/server/aes';
-import { APP_KEY } from '$env/static/private';
+import { APP_KEY } from "$env/static/private";
+import { encryptData } from "$lib/server/aes";
+import { db } from "$lib/server/db";
+import validate from "$lib/server/middleware/validate";
+import { TokenBucket } from "$lib/server/ratelimit";
+import { sessionTable, userTotpsTable, usersTable } from "$lib/server/schema";
+import { passwordConfirmValid } from "$lib/server/security/confirmPassword";
 import {
     validateConfirmedPassword,
     validateUserSession,
-} from '$lib/server/svelte';
+} from "$lib/server/svelte";
+import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
+import { createTOTPKeyURI, verifyTOTP } from "@oslojs/otp";
+import { type Actions, error, redirect } from "@sveltejs/kit";
+import { eq } from "drizzle-orm";
+import { renderSVG } from "uqr";
+import { z } from "zod";
+import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals, getClientAddress }) => {
-    if (!locals.user) redirect(302, '/signin');
-    if (!locals.session) redirect(302, '/signin');
+    if (!locals.user) redirect(302, "/signin");
+    if (!locals.session) redirect(302, "/signin");
 
     if (!passwordConfirmValid(locals.user.lastPasswordConfirmAt)) {
-        redirect(302, '/confirm-password?redirect=/profile/security');
+        redirect(302, "/confirm-password?redirect=/profile/security");
     }
 
-    const bucket = new TokenBucket('security', 2, 1);
+    const bucket = new TokenBucket("security", 2, 1);
     if (!(await bucket.consume(getClientAddress(), 1))) {
         error(429);
     }
@@ -35,11 +35,11 @@ export const load: PageServerLoad = async ({ locals, getClientAddress }) => {
     const encodedKey = encodeBase64(totpKey);
 
     const keyURI = createTOTPKeyURI(
-        'SaasKit',
+        "SaasKit",
         locals.user.userName,
         totpKey,
         30,
-        6
+        6,
     );
 
     const qrCode = renderSVG(keyURI);
@@ -54,9 +54,9 @@ export const actions = {
     verify: async ({ locals, url, getClientAddress, request }) => {
         const { user, session } = validateUserSession({ locals, url });
 
-        validateConfirmedPassword({ locals }, '/profile/security');
+        validateConfirmedPassword({ locals }, "/profile/security");
 
-        const bucket = new TokenBucket('security', 2, 1);
+        const bucket = new TokenBucket("security", 2, 1);
         if (!(await bucket.consume(getClientAddress(), 1))) {
             error(429);
         }
@@ -65,7 +65,7 @@ export const actions = {
                 code: z.string().min(1).max(6),
                 key: z.string().min(1).max(256),
             }),
-            request
+            request,
         );
 
         if (data.isOk) {
@@ -74,7 +74,7 @@ export const actions = {
                     decodeBase64(data.fields.key),
                     30,
                     6,
-                    data.fields.code
+                    data.fields.code,
                 )
             ) {
                 await db
@@ -95,7 +95,7 @@ export const actions = {
                         .set({
                             totpSecret: await encryptData(
                                 APP_KEY,
-                                data.fields.key
+                                data.fields.key,
                             ),
                         })
                         .where(eq(userTotpsTable.id, user.id));
@@ -109,7 +109,7 @@ export const actions = {
                     .where(eq(sessionTable.id, session.id));
             }
 
-            redirect(302, '/profile/security');
+            redirect(302, "/profile/security");
         } else {
             return data.error;
         }

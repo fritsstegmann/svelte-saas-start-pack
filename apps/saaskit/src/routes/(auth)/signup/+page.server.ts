@@ -1,16 +1,16 @@
-import { missingInput } from '$i18n/messages';
-import { db } from '$lib/server/db';
-import validate from '$lib/server/middleware/validate';
-import userRepository from '$lib/server/repositories/userRepository';
+import { missingInput } from "$i18n/messages";
+import { db } from "$lib/server/db";
+import validate from "$lib/server/middleware/validate";
+import userRepository from "$lib/server/repositories/userRepository";
 import {
     userPasswordsTable,
     userProfilesTable,
     usersTable,
-} from '$lib/server/schema';
-import { hashPassword } from '$lib/server/security/utils';
-import { error, fail, redirect, type Actions } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
-import z from 'zod';
+} from "$lib/server/schema";
+import { hashPassword } from "$lib/server/security/utils";
+import { type Actions, error, fail, redirect } from "@sveltejs/kit";
+import { eq } from "drizzle-orm";
+import z from "zod";
 
 export const actions: Actions = {
     default: async ({ request }) => {
@@ -34,7 +34,7 @@ export const actions: Actions = {
                             ).length;
 
                             return count < 1;
-                        }, 'Email has been taken'),
+                        }, "Email has been taken"),
                     username: z
                         .string({
                             message: missingInput(),
@@ -49,7 +49,7 @@ export const actions: Actions = {
                             ).length;
 
                             return count < 1;
-                        }, 'User name has been taken'),
+                        }, "User name has been taken"),
                     password: z
                         .string({
                             message: missingInput(),
@@ -64,13 +64,13 @@ export const actions: Actions = {
                 .superRefine(({ confirmPassword, password }, ctx) => {
                     if (confirmPassword !== password) {
                         ctx.addIssue({
-                            path: ['confirmPassword'],
-                            code: 'custom',
-                            message: 'The passwords did not match',
+                            path: ["confirmPassword"],
+                            code: "custom",
+                            message: "The passwords did not match",
                         });
                     }
                 }),
-            request
+            request,
         );
 
         if (data.isOk) {
@@ -106,7 +106,7 @@ export const actions: Actions = {
                     })
                     .returning();
 
-                redirect(302, '/signin');
+                redirect(302, "/signin");
             }
         } else {
             return data.error;

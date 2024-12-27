@@ -1,16 +1,16 @@
-import type { z, ZodType } from 'zod';
-import FormValidationError from '$lib/server/errors/FormValidateError';
-import validateFromRequest from '$lib/server/errors/validateFromRequest';
-import { fail } from '@sveltejs/kit';
+import FormValidationError from "$lib/server/errors/FormValidateError";
+import validateFromRequest from "$lib/server/errors/validateFromRequest";
+import { fail } from "@sveltejs/kit";
+import type { ZodType, z } from "zod";
 
 export default async function validate<T extends ZodType>(
     schema: T,
-    request: Request
+    request: Request,
 ): Promise<
     | { isOk: true; fields: z.infer<T>; files: Record<string, File> }
     | {
           isOk: false;
-          error: import('@sveltejs/kit').ActionFailure<{
+          error: import("@sveltejs/kit").ActionFailure<{
               fields: z.infer<T>;
               errors: Record<keyof z.infer<T>, string[] | null>;
           }>;
@@ -19,7 +19,7 @@ export default async function validate<T extends ZodType>(
     try {
         const { formData: fields, files } = await validateFromRequest(
             schema,
-            request
+            request,
         );
 
         return { isOk: true, fields, files };
