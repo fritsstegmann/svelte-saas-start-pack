@@ -1,9 +1,11 @@
-<script>
+<script lang="ts">
 import "../app.scss";
+
+const { children } = $props();
 </script>
 
 <div class="select-none">
-    <slot />
+    {@render children?.()}
 </div>
 
 <style lang="postcss">

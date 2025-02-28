@@ -4,7 +4,7 @@ import { encodeBase64 } from "@oslojs/encoding";
 import { createTOTPKeyURI } from "@oslojs/otp";
 import { error, redirect } from "@sveltejs/kit";
 import { renderSVG } from "uqr";
-import type { PageServerLoadEvent } from "../$types";
+import type { PageServerLoadEvent } from "./$types";
 
 export async function load({ locals, getClientAddress }: PageServerLoadEvent) {
     if (!locals.user) redirect(302, "/signin");
